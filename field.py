@@ -6,11 +6,14 @@ def randCoord(size):
     return randint(0, size - 1), randint(0, size - 1)
 
 class Field:
-    OUTOFBOUND = -1
-    BOMB = 9
-    CLOSED = 0
-    OPEN = 1
-    PENDING = 2
+    MASKFACTOR = 4
+    VALUE      = (0x1 << MASKFACTOR) - 1
+    MASK       = VALUE << MASKFACTOR
+    OUTOFBOUND = -1  #Not a field value, critical value if asked for value outside of bounds
+    BOMB       = 9   #field value - indicates that on (x, y) lays a bomb
+    CLOSED     = 0 << MASKFACTOR  #mask value - indicates that point wasn't open yet
+    OPEN       = 1 << MASKFACTOR  #mask value - indicates that point was open
+    PENDING    = 2 << MASKFACTOR  #mask value - used only during reveal, means already in stack
 
     @staticmethod
     def isBomb(data):
@@ -19,7 +22,6 @@ class Field:
     def __init__(self, size, bombsPercent):
         self.size = size
         self.field = [ [ 0 for _ in range(size) ] for _ in range(size) ]
-        self.mask  = [ [ Field.CLOSED for _ in range(size) ] for _ in range(size) ]
         self.bombs = round(size * size * bombsPercent)
         self.__randomizeBombs()
         self.__calcFieldBombs()
@@ -32,27 +34,28 @@ class Field:
     def __call__(self, row, column):
         if self.__isOutOfBounds(row, column):
             return Field.OUTOFBOUND
-        return self.mask[row][column]
+        return self.field[row][column] & Field.MASK
 
     #fix missunderstandint row/column and x/y args!!!
     def __getitem__(self, coords):
         row, column = coords
         if self.__isOutOfBounds(row, column):
             return Field.OUTOFBOUND
-        return self.field[row][column]
+        return self.field[row][column] & Field.VALUE
 
     def __setitem__(self, coords, value):
         row, column = coords
         if self.__isOutOfBounds(row, column):
             raise ValueError('Out of bound coordinates')
-        self.field[row][column] = value
+        mask = self(row, column)
+        self.field[row][column] = mask | value
 
     def __randomizeBombs(self):
         for i in range(self.bombs):
             x, y = randCoord(self.size)
             while Field.isBomb(self[x, y]):
                 x, y = randCoord(self.size)
-            self.field[x][y] = Field.BOMB
+            self[x, y] = Field.BOMB
 
     def __calcFieldBombs(self):
         for i in range(self.size):
@@ -66,10 +69,12 @@ class Field:
                 self[i, j] = bombsAround
 
     def __maskOpen(self, x, y):
-        self.mask[x][y] = Field.OPEN
+        value = self[x, y]
+        self.field[x][y] = Field.OPEN | value
 
     def __maskPending(self, x, y):
-        self.mask[x][y] = Field.PENDING
+        value = self[x, y]
+        self.field[x][y] = Field.PENDING | value
 
     def reveal(self, x, y):
         if Field.isBomb(self[x, y]): return True
@@ -121,10 +126,11 @@ for row in field.field:
     print()
 
 revCoord = (field.size // 2, field.size // 2)
+print(f'Revealed at (0, 0):', not field.reveal(0, 0))
 print(f'Revealed at {revCoord}:', not field.reveal(revCoord[0], revCoord[1]))
-for row in field.mask:
-    for cell in row:
-        print(cell if cell else ' ', end='')
+for x in range(field.size):
+    for y in range(field.size):
+        print(field(x, y) >> Field.MASKFACTOR if field(x, y) else ' ', end='')
     print()
 
 print('Field with mask:')
