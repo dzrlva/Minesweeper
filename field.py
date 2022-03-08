@@ -1,16 +1,16 @@
 from random import randint
 from minepoint import MinePoint, Value, Mask, Flag
 
-def randCoord(size):
-    return randint(0, size - 1), randint(0, size - 1)
+def randCoord(width, height):
+    return randint(0, width - 1), randint(0, height - 1)
 
 class Field:
     OUTOFBOUND = -1
 
     def __init__(self, size, bombsPercent):
         self.size = size
-        self.__field = [ [ MinePoint() for _ in range(size) ] for _ in range(size) ]
         self.bombs = round(size * size * bombsPercent)
+        self.__field = [ [ MinePoint() for _ in range(size) ] for _ in range(size) ]
         self.__randomizeBombs()
         self.__calcFieldBombs()
 
@@ -33,9 +33,9 @@ class Field:
 
     def __randomizeBombs(self):
         for _ in range(self.bombs):
-            x, y = randCoord(self.size)
+            x, y = randCoord(self.size, self.size)
             while self[x, y] == Value.bomb:
-                x, y = randCoord(self.size)
+                x, y = randCoord(self.size, self.size)
             self[x, y] = Value.bomb
 
     def __calcFieldBombs(self):
