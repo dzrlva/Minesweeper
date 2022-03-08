@@ -105,4 +105,4 @@ class MinePoint:
         return bin(self.__data)
 
     def __str__(self):
-        return bin(self.__data)
+        return str(self.value)
