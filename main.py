@@ -28,10 +28,14 @@ def printPixel(x, y, pixel, color=term.noraml):
 
 def printFieldPixel(field, x, y):
     cell = field[x, y]
-    if cell == Mask.closed: printPixel(x, y, '?')
-    elif cell == Value.bomb: printPixel(x, y, '*', BOMB)
-    elif cell == Value.empty: printPixel(x, y, ' ')
-    else: printPixel(x, y, str(cell), colors[cell.value])
+    if cell == Mask.closed:
+        if   cell == Flag.noflag: printPixel(x, y, '?')
+        elif cell == Flag.guess:  printPixel(x, y, '▻')
+        elif cell == Flag.sure:   printPixel(x, y, '►')
+    else:
+        if   cell == Value.bomb:  printPixel(x, y, '*', BOMB)
+        elif cell == Value.empty: printPixel(x, y, ' ')
+        else: printPixel(x, y, str(cell), colors[cell.value])
 
 def clamp(min, max, val):
     if val < min: return min
@@ -46,7 +50,7 @@ def printField(field):
     print(term.normal)
 
 
-field = Field(20, .1)
+field = Field(5, .1)
 cursor = ( 0, 0 )
 movement = { 'up': 'w', 'down': 's', 'left': 'a', 'right': 'd' }
 keys = { 'open': ' ' }
@@ -54,8 +58,11 @@ keys = { 'open': ' ' }
 # print('Field with mask:')
 printField(field)
 printPixel(*cursor, '◉')
+activeBombs = field.bombs
+closedCells = field.size * field.size
+print(term.move_xy(0, field.size) + 'CHEAT Bombs remain: ' + str(activeBombs))
 
-with term.cbreak():
+with term.cbreak(), term.hidden_cursor():
     val = ''
     while val.lower() != 'q':
         val = term.inkey(timeout=3)
@@ -73,12 +80,40 @@ with term.cbreak():
             cursor = (x, y)
             printPixel(x, y, '◉')
         elif val == ' ':
+            if field[cursor[0], cursor[1]] == Flag.sure: continue
             bombed = field.reveal(*cursor)
             printField(field)
-            printPixel(x, y, '◉')
             if bombed:
                 print('LMAO')
                 break
+            printPixel(*cursor, '◉')
+            closedCells = 0
+            for x in range(field.size):
+                for y in range(field.size):
+                    if field[x, y] == Mask.closed:
+                        closedCells += 1
+        elif val == 'm':
+            cell = field[cursor[0], cursor[1]]
+            flag = cell.flag
+
+            if flag == Flag.noflag:
+                flag = Flag.sure
+                if cell == Value.bomb:
+                    activeBombs -= 1
+            elif flag == Flag.sure:
+                flag = Flag.guess
+                if cell == Value.bomb:
+                    activeBombs += 1
+            elif flag == Flag.guess:
+                flag = Flag.noflag
+            field[cursor[0], cursor[1]].set(flag)
+
+        closedMarkedCells = closedCells - field.bombs + activeBombs
+        print(term.move_xy(0, field.size) + 'CHEAT Bombs remain: ' + str(activeBombs) + ' '*10)
+        print(term.move_xy(0, field.size + 1) + 'Cells remain: ' + str(closedMarkedCells) + ' '*10)
+        if closedMarkedCells == 0:
+            print('Good job')
+            break
 
 exit(1)
 
