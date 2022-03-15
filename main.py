@@ -1,48 +1,71 @@
+#!/usr/bin/env python
+
+"""This module realises gameplay."""
+
 from blessed import Terminal
 from field import Field
-from minepoint import MinePoint, Value, Mask, Flag
+from minepoint import Value, Mask, Flag
 
 
 def printCell(cell):
-    if cell == Value.bomb:    color, char = BOMB, '*'
-    elif cell == Value.empty: color, char = term.normal, ' '
-    else: color, char = colors[cell.value], str(cell)
+    """Draw bomb or empty cell when it open."""
+    if cell == Value.bomb:
+        color, char = BOMB, '*'
+    elif cell == Value.empty:
+        color, char = term.normal, ' '
+    else:
+        color, char = colors[cell.value], str(cell)
     print(color + char + term.normal, end='')
 
 
 term = Terminal()
-ONE   = term.color(38)
-TWO   = term.color(73)
+ONE = term.color(38)
+TWO = term.color(73)
 THREE = term.color(40)
-FOUR  = term.color(136)
-FIVE  = term.color(172)
-SIX   = term.color(202)
+FOUR = term.color(136)
+FIVE = term.color(172)
+SIX = term.color(202)
 SEVEN = term.color(161)
 EIGHT = term.color(124)
-BOMB  = term.color(9)
-colors = [ term.normal, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, BOMB ]
+BOMB = term.color(9)
+colors = [term.normal, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, BOMB]
 
 
 def printPixel(x, y, pixel, color=term.noraml):
+    """Draw pixel by coordinates."""
     print(term.move_xy(x, y) + color + pixel + term.normal)
 
+
 def printFieldPixel(field, x, y):
+    """Draw cell by coordinates."""
     cell = field[x, y]
     if cell == Mask.closed:
-        if   cell == Flag.noflag: printPixel(x, y, '?')
-        elif cell == Flag.guess:  printPixel(x, y, '▻')
-        elif cell == Flag.sure:   printPixel(x, y, '►')
+        if cell == Flag.noflag:
+            printPixel(x, y, '?')
+        elif cell == Flag.guess:
+            printPixel(x, y, '▻')
+        elif cell == Flag.sure:
+            printPixel(x, y, '►')
     else:
-        if   cell == Value.bomb:  printPixel(x, y, '*', BOMB)
-        elif cell == Value.empty: printPixel(x, y, ' ')
-        else: printPixel(x, y, str(cell), colors[cell.value])
+        if cell == Value.bomb:
+            printPixel(x, y, '*', BOMB)
+        elif cell == Value.empty:
+            printPixel(x, y, ' ')
+        else:
+            printPixel(x, y, str(cell), colors[cell.value])
+
 
 def clamp(min, max, val):
-    if val < min: return min
-    if val > max: return max
+    """Doesn't let cursor go out field."""
+    if val < min:
+        return min
+    if val > max:
+        return max
     return val
 
+
 def printField(field):
+    """Print all field."""
     print(term.clear)
     for x in range(field.size):
         for y in range(field.size):
@@ -51,9 +74,9 @@ def printField(field):
 
 
 field = Field(5, .1)
-cursor = ( 0, 0 )
-movement = { 'up': 'w', 'down': 's', 'left': 'a', 'right': 'd' }
-keys = { 'open': ' ' }
+cursor = (0, 0)
+movement = {'up': 'w', 'down': 's', 'left': 'a', 'right': 'd'}
+keys = {'open': ' '}
 
 # print('Field with mask:')
 printField(field)
@@ -66,21 +89,27 @@ with term.cbreak(), term.hidden_cursor():
     val = ''
     while val.lower() != 'q':
         val = term.inkey(timeout=3)
-        if not val: continue
+        if not val:
+            continue
 
         if val in movement.values():
             x, y = cursor
             printFieldPixel(field, x, y)
-            if   val == movement['up']:    y -= 1
-            elif val == movement['down']:  y += 1
-            elif val == movement['left']:  x -= 1
-            elif val == movement['right']: x += 1
+            if val == movement['up']:
+                y -= 1
+            elif val == movement['down']:
+                y += 1
+            elif val == movement['left']:
+                x -= 1
+            elif val == movement['right']:
+                x += 1
             x = clamp(0, field.size - 1, x)
             y = clamp(0, field.size - 1, y)
             cursor = (x, y)
             printPixel(x, y, '◉')
         elif val == ' ':
-            if field[cursor[0], cursor[1]] == Flag.sure: continue
+            if field[cursor[0], cursor[1]] == Flag.sure:
+                continue
             bombed = field.reveal(*cursor)
             printField(field)
             if bombed:
@@ -109,8 +138,10 @@ with term.cbreak(), term.hidden_cursor():
             field[cursor[0], cursor[1]].set(flag)
 
         closedMarkedCells = closedCells - field.bombs + activeBombs
-        print(term.move_xy(0, field.size) + 'CHEAT Bombs remain: ' + str(activeBombs) + ' '*10)
-        print(term.move_xy(0, field.size + 1) + 'Cells remain: ' + str(closedMarkedCells) + ' '*10)
+        print(term.move_xy(0, field.size) + 'CHEAT Bombs remain: ' +
+                                            str(activeBombs) + ' '*10)
+        print(term.move_xy(0, field.size + 1) +
+              'Cells remain: ' + str(closedMarkedCells) + ' '*10)
         if closedMarkedCells == 0:
             print('Good job')
             break
@@ -135,4 +166,3 @@ for x in range(field.size):
     for y in range(field.size):
         print(field[x, y].mask if field[x, y].mask != Mask.closed else ' ', end='')
     print()
-

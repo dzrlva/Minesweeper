@@ -1,38 +1,54 @@
+#!/usr/bin/env python
+
+"""Description elemets of field."""
+
 from enum import IntEnum
 
 
 class Value(IntEnum):
+    """Values of field items."""
+
     empty = 0b0000
-    one   = 0b0001
-    two   = 0b0010
+    one = 0b0001
+    two = 0b0010
     three = 0b0011
-    four  = 0b0100
-    five  = 0b0101
-    six   = 0b0110
+    four = 0b0100
+    five = 0b0101
+    six = 0b0110
     seven = 0b0111
     eight = 0b1000
-    bomb  = 0b1111
+    bomb = 0b1111
+
 
 class Flag(IntEnum):
+    """Types of flag for closed cells.
+
+    noflag - unflagged cell,
+    guess - mark supposed bomb,
+    sure - flag for 100% bomb.
+    """
+
     noflag = 0b00
-    guess  = 0b01
-    sure   = 0b10
+    guess = 0b01
+    sure = 0b10
+
 
 class Mask(IntEnum):
-    closed  = 0b00
+    closed = 0b00
     pending = 0b11
-    opened  = 0b01
+    opened = 0b01
+
 
 class MinePoint:
     VFACTOR = 4
     MFACTOR = 2
     FFACTOR = 2
-    MSHIFT  = VFACTOR
-    FSHIFT  = VFACTOR + MFACTOR
+    MSHIFT = VFACTOR
+    FSHIFT = VFACTOR + MFACTOR
 
-    VALUE =  (0x1 << VFACTOR) - 1
-    MASK  = ((0x1 << MFACTOR) - 1) << MSHIFT
-    FLAG  = ((0x1 << FFACTOR) - 1) << FSHIFT
+    VALUE = (0x1 << VFACTOR) - 1
+    MASK = ((0x1 << MFACTOR) - 1) << MSHIFT
+    FLAG = ((0x1 << FFACTOR) - 1) << FSHIFT
 
     def __init__(self):
         self.__data = 0
