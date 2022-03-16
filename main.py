@@ -5,6 +5,8 @@
 from blessed import Terminal
 from field import Field
 from minepoint import Value, Mask, Flag
+from gamestat import Stat, printstat
+import time
 
 
 def printCell(cell):
@@ -87,6 +89,7 @@ print(term.move_xy(0, field.size) + 'CHEAT Bombs remain: ' + str(activeBombs))
 
 with term.cbreak(), term.hidden_cursor():
     val = ''
+    starttime = time.time()
     while val.lower() != 'q':
         val = term.inkey(timeout=3)
         if not val:
@@ -114,6 +117,7 @@ with term.cbreak(), term.hidden_cursor():
             printField(field)
             if bombed:
                 print('LMAO')
+                Stat.win = 0
                 break
             printPixel(*cursor, '◉')
             closedCells = 0
@@ -144,7 +148,11 @@ with term.cbreak(), term.hidden_cursor():
               'Cells remain: ' + str(closedMarkedCells) + ' '*10)
         if closedMarkedCells == 0:
             print('Good job')
+            Stat.win = 1
             break
+
+Stat.gametime = round(time.time() - starttime, 1)
+printstat()
 
 exit(1)
 
