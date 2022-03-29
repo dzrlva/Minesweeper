@@ -1,93 +1,111 @@
-from blessed import Terminal
-from .screen import Screen, Color
+from .screen import Color
 from util.minepoint import Flag, Mask, Value
 from util.coord import Coord
-from logic.field import Field
 
 
 VALUECOLORS = [ 0, 38, 73, 40, 136, 172, 202, 161, 124, 9 ]
+KEYS = { 'up': 'w', 'down': 's', 'left': 'a', 'right': 'd', 'open': ' ', 'mark': 'f' }
 
 
-def cellInfo(cell):
-    """Draw cell by coordinates."""
-    if cell == Mask.closed:
-        if cell == Flag.noflag:
-            return ' ', Color.bg.grey
-        elif cell == Flag.guess:
-            return 'G', Color.yellow
-        elif cell == Flag.sure:
-            return 'F', Color.banana
-    else:
-        if cell == Value.bomb:
-            return '*', Color.red
-        elif cell == Value.empty:
-            return ' ', Color.white
+class Game:
+    def __init__(self, screen, field):
+        self.screen = screen
+        self.field = field
+        self.pos = Coord(0, 0)
+        # self.pos = Coord.random(field.size)
+        self.cursor = Color(239, bg=True)
+        self.stat = field.statistic()
+        self.status = 'active'
+
+    def draw(self):
+        if self.status == 'active':
+            self.drawField([0, 4])
+            self.drawInfoBars()
+            self.drawCursor([0, 4])
+        elif self.status == 'lose':
+            self.gameover([0, 4])
+        elif self.status == 'win':
+            self.drawField([0, 4])
+            self.win([0, 0])
         else:
-            return str(cell), Color(VALUECOLORS[cell.value])
+            self.screen[0, 0, Color.red].print(f'[Error] UNKNOWN GAME STATUS: {self.status}').whip()
 
+    def cellInfo(self, cell):
+        """Draw cell by coordinates."""
+        if cell == Mask.closed:
+            if cell == Flag.noflag:
+                return ' ', Color.bg.grey
+            elif cell == Flag.guess:
+                return 'G', Color.yellow
+            elif cell == Flag.sure:
+                return 'F', Color.banana
+        else:
+            if cell == Value.bomb:
+                return '*', Color.red
+            elif cell == Value.empty:
+                return ' ', Color.white
+            else:
+                return str(cell), Color(VALUECOLORS[cell.value])
 
-term = Terminal()
-screen = Screen()
-field = Field(10, .1)
-cursor = Coord(0, 0)
-cursorColor = Color(239, bg=True)
+    def drawCursor(self, offset):
+        pos = self.pos + Coord(offset)
+        char, color = self.cellInfo(self.field[self.pos])
+        self.screen.drawPixel(pos.x, pos.y, char, color + self.cursor)
 
-with term.cbreak(), term.hidden_cursor():
-    screen.clear()
-    key = ''
+    def drawField(self, offset):
+        offset = Coord(offset)
+        for x, y in self.field:
+            char, color = self.cellInfo(self.field[x, y])
+            self.screen.drawPixel(x + offset.x, y + offset.y, char, color)
 
-    while key != 'q':
-        cellsOpened = 0
-        allBombsCorrect = True
-        bombsMarked = 0
+    def drawInfoBars(self):
+        stat = self.stat
+        self.screen[0, 0].print(f"Cells: {stat['cellsTotal']}/{self.field.size**2}").whip()
+        self.screen[0, 1].print(f"Bombs left: {stat['bombsMarked']}/{self.field.bombs}").whip()
+        self.screen[0, 2].print('[debug]', stat).whip()
 
-        for x, y in field:
-            screen.drawPixel(x, y + 3, *cellInfo(field[x, y]))
-            if field[x, y] == Flag.sure or field[x, y] == Mask.opened:
-                cellsOpened += 1
-            if field[x, y] == Flag.sure:
-                bombsMarked += 1
-            if field[x, y] != Value.bomb and field[x, y] == Flag.sure:
-                allBombsCorrect = False
-        char, color = cellInfo(field[cursor])
-        screen.drawPixel(cursor.x, cursor.y + 3, char, color + cursorColor)
+    def move(self, direct):
+        if self.field.inBounds(self.pos + direct):
+            self.pos += direct
 
-        screen[0, 0].print(f'[Progress] | Cells: {cellsOpened}/{field.size**2}').whip()
-        screen[0, 1].print(f'[Progress] Bombs left: {bombsMarked}/{field.bombs}').whip()
-        screen[0, 2].print(f'[debug] {allBombsCorrect}').whip()
+    def keyAction(self, key):
+        if key == KEYS['up']:
+            self.move(Coord(0, -1))
+        elif key == KEYS['down']:
+            self.move(Coord(0, 1))
+        elif key == KEYS['left']:
+            self.move(Coord(-1, 0))
+        elif key == KEYS['right']:
+            self.move(Coord(1, 0))
+        else:
+            if key == KEYS['mark']:
+                if self.field[self.pos] == Mask.closed:
+                    self.field.cycleFlag(self.pos)
+            elif key == KEYS['open']:
+                if self.field[self.pos] != Flag.sure and self.field.reveal(self.pos):
+                    self.status = 'lose'
+            self.checkWin()
 
-        if cellsOpened == field.size**2 and allBombsCorrect:
-            screen[0, 0, Color.lime].print('Congrats!').whip()[0, field.size + 3]
-            break
+    def updateStat(self):
+        self.stat = self.field.statistic()
+        return self.stat
 
-        key = term.inkey(timeout=3)
-        if not key:
-            continue
-        if key.is_sequence:
-            key = key.name
+    def checkWin(self):
+        self.updateStat()
+        if self.stat['cellsRemaning'] == 0 and self.stat['allBombsCorrect']:
+            self.status = 'win'
 
-        if key == 'w':
-            cursor.y = max(0, cursor.y - 1)
-        elif key == 's':
-            cursor.y = min(field.size - 1, cursor.y + 1)
-        elif key == 'a':
-            cursor.x = max(0, cursor.x - 1)
-        elif key == 'd':
-            cursor.x = min(field.size - 1, cursor.x + 1)
-        elif key == 'f' or key == 'e':
-            if field[cursor] == Mask.closed:
-                field.cycleFlag(cursor)
-        elif key == ' ' and field[cursor] != Flag.sure:
-            if field.reveal(cursor):
-                screen[0, 0, Color(32)].print('You lost').whip()
+    def win(self, offset):
+        offset = Coord(offset)
+        self.screen[offset, Color.lime].print('Congrats!').whip()
 
-                sleepTime = 2.0 / field.bombs
-                for x, y in field:
-                    if field[x, y] == Value.bomb:
-                        field[x, y] = Mask.opened
-                        screen.drawPixel(x, y + 3, *cellInfo(field[x, y]))
-                        if term.inkey(timeout=sleepTime) == 'q':
-                            break
-                        sleepTime = max(0, sleepTime - .001)
-                screen[field.size + 3]
-                break
+    def gameover(self, offset):
+        offset = Coord(offset)
+        self.screen[0, 0, Color.red].print('You have lost!').whip()
+
+        for x, y in self.field:
+            if self.field[x, y] == Value.bomb:
+                self.field[x, y] = Mask.opened
+                char, color = self.cellInfo(self.field[x, y])
+                self.screen.drawPixel(x + offset.x, y + offset.y, char, color)
+        self.screen[offset + self.field.size]
