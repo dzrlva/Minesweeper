@@ -1,3 +1,4 @@
+"""Move, print, color your terminal screen."""
 import blessed
 from color import Color
 from coord import Coord
@@ -8,18 +9,20 @@ term = blessed.Terminal()
 
 class Screen:
     """
-    Wrap around blessed Terminal
+    Wrap around blessed Terminal.
+
     Commands can be chained togethe, yet result is the same
     Example: scr.setColor(Color.red).print('Hello').setColor(Color.blue).print(' world!')
     """
 
     def __init__(self):
+        """Init screen."""
         self.__term = term
         self.cursor = Coord(0, 0)
         self.color = Color('white')
 
     def clear(self):
-        """Clear screen"""
+        """Clear screen."""
         print(self.__term.clear())
 
     def print(self, *args, sep=' '):
@@ -50,7 +53,7 @@ class Screen:
         return self
 
     def setColor(self, color, bg=None):
-        """Set current color"""
+        """Set current color."""
         if color is None:
             return self
         if isinstance(color, str):
@@ -77,7 +80,8 @@ class Screen:
 
     def __getitem__(self, coords):
         """
-        Set cursor position and color
+        Set cursor position and color.
+
         [x:y:Color]    set x, y and color with slice
         [x, y, Color]  set x, y and color with tuple/list
         [x:y, Color]   set cursor with slice and color with a value
