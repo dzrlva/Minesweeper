@@ -3,6 +3,8 @@ from random import randint
 
 
 class Coord:
+    """Class that represents integer coordinates."""
+
     @staticmethod
     def __convert(val):
         """Converts value to Coord class if needed."""
@@ -19,12 +21,12 @@ class Coord:
         if end is None:
             start, end = 0, start
         start, end = Coord.__convert(start), Coord.__convert(end)
-        if start.x > end.x:
+        if start.x >= end.x:
             raise ValueError('Start x cannot be greater than end x')
-        if start.y > end.y:
+        if start.y >= end.y:
             raise ValueError('Start y cannot be greater than end y')
-        x = randint(start.x, end.x)
-        y = randint(start.y, end.y)
+        x = randint(start.x, end.x - 1)
+        y = randint(start.y, end.y - 1)
         return Coord(x, y)
 
     @staticmethod

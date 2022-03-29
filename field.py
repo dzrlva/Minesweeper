@@ -1,23 +1,18 @@
 #!/usr/bin/env python
 
-"""Create field."""
+"""Module for the Field class."""
 
-from random import randint
-from minepoint import MinePoint, Value, Mask
-
-
-def randCoord(width, height):
-    """Return random coordinates of a object."""
-    return randint(0, width - 1), randint(0, height - 1)
+from coord import Coord
+from minepoint import MinePoint, Value, Mask, Flag
 
 
 class Field:
-    """Class, which create field."""
+    """Logic for minesweeper minefield."""
 
     OUTOFBOUND = -1
 
     def __init__(self, size, bombsPercent):
-        """Place bombs and numbers on field."""
+        """Initialize field with size and bombs. Randomly fill it."""
         self.size = size
         self.bombs = round(size * size * bombsPercent)
         self.__field = [[MinePoint() for _ in range(size)]
@@ -25,69 +20,81 @@ class Field:
         self.__randomizeBombs()
         self.__calcFieldBombs()
 
-    def __isOutOfBounds(self, x, y):
-        if x < 0 or x >= self.size:
-            return True
-        if y < 0 or y >= self.size:
-            return True
-        return False
+    def __isOutOfBounds(self, x, y=None):
+        x, y = Coord(x, y)
+        return x < 0 or y < 0 or x >= self.size or y >= self.size
 
     def __getitem__(self, coords):
-        """Find and return item by coordinates."""
-        x, y = coords
+        """Return field minepoint if in bound else OUTOFBOUND value."""
+        x, y = Coord(coords)
         if self.__isOutOfBounds(x, y):
             return Field.OUTOFBOUND
         return self.__field[x][y]
 
     def __setitem__(self, coords, value):
-        """Set item."""
-        x, y = coords
+        """Set minepoint value if in bound."""
+        x, y = Coord(coords)
         if self.__isOutOfBounds(x, y):
             raise ValueError(f'Coords {coords} are out of bounds')
         self.__field[x][y].set(value)
 
     def __randomizeBombs(self):
-        """Place bombs."""
+        """Randomize bomb position."""
         for _ in range(self.bombs):
-            x, y = randCoord(self.size, self.size)
+            x, y = Coord.random(self.size)
             while self[x, y] == Value.bomb:
-                x, y = randCoord(self.size, self.size)
+                x, y = Coord.random(self.size)
             self[x, y] = Value.bomb
 
     def __calcFieldBombs(self):
-        """Calculate the numbers, which show how many bombs is around."""
-        for x in range(self.size):
-            for y in range(self.size):
-                if self[x, y] == Value.bomb:
-                    continue
-                bombsAround = 0
-                for biasX in range(-1, 2):
-                    for biasY in range(-1, 2):
-                        if biasX == 0 and biasY == 0:
-                            continue
-                        bombsAround += self[x + biasX, y + biasY] == Value.bomb
-                self[x, y] = Value(bombsAround)
+        """Calculate bombs for each point on the field."""
+        for point in Coord.range(self.size):
+            if self[point] == Value.bomb:
+                continue
+            bombsAround = 0
+            for bias in Coord.range(-1, 2):
+                if bias != (0, 0):
+                    bombsAround += self[point + bias] == Value.bomb
+            self[point] = Value(bombsAround)
 
-    def reveal(self, x, y):
-        """Return True if under cell was a bomb."""
-        if self[x, y] == Value.bomb:
+    def __iter__(self):
+        """Iterate over all cordinates of the field."""
+        yield from Coord.range(self.size)
+
+    def cycleFlag(self, x, y=None):
+        """Change flag value on a point."""
+        x, y = Coord(x, y)
+        if self[x, y] == Flag.noflag:
+            self[x, y] = Flag.sure
+        elif self[x, y] == Flag.sure:
+            self[x, y] = Flag.guess
+        elif self[x, y] == Flag.guess:
+            self[x, y] = Flag.noflag
+
+    def reveal(self, x, y=None):
+        """
+        Reveal all possible minepoints around coordinate
+        Return True if revealed point has a bomb
+        """
+        point = Coord(x, y)
+        if self[point] == Value.bomb:
             return True
-        if self[x, y] == Mask.opened:
+        if self[point] == Mask.opened:
             return False
 
-        stack = [(x, y)]
+        stack = [point]
         while len(stack):
-            x, y = stack.pop()
-            self[x, y] = Mask.opened
-            for biasX in range(-1, 2):
-                for biasY in range(-1, 2):
-                    cx, cy = x + biasX, y + biasY
-                    if self[cx, cy] != Mask.closed:
-                        continue
+            point = stack.pop()
+            self[point] = Mask.opened
 
-                    if self[cx, cy] == Value.empty:
-                        self[cx, cy] = Mask.pending
-                        stack.append((cx, cy))
-                    elif self[cx, cy] != Value.bomb:
-                        self[cx, cy] = Mask.opened
+            for bias in Coord.range(-1, 2):
+                curPos = point + bias
+                if self[curPos] != Mask.closed:
+                    continue
+
+                if self[curPos] == Value.empty:
+                    self[curPos] = Mask.pending
+                    stack.append(curPos)
+                elif self[curPos] != Value.bomb:
+                    self[curPos] = Mask.opened
         return False
