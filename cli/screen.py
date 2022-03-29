@@ -106,13 +106,17 @@ class Screen:
                     else:
                         raise ValueError('Unsupported length of coordinates')
                 elif isinstance(coords[0], slice):
-                    x, y = coords.start, coords.stop
+                    x, y, color = coords[0].start, coords[0].stop, coords[1]
+                elif isinstance(coords[0], Coord):
+                    x, y, color = *coords[0], coords[1]
                 else:
                     x, y, color = *coords, None
             elif len(coords) == 1:
                 x, y, color = None, int(coords), None
             else:
                 raise ValueError('Unsupported length of coordinates')
+        elif isinstance(coords, Coord):
+            x, y, color = *coords, None
         elif isinstance(coords, int) or isinstance(coords, float):
             x, y, color = None, int(coords), None
         else:

@@ -22,6 +22,9 @@ class Field:
         x, y = Coord(x, y)
         return x < 0 or y < 0 or x >= self.size or y >= self.size
 
+    def inBounds(self, x, y=None):
+        return not self.__isOutOfBounds(x, y)
+
     def __getitem__(self, coords):
         """Return field minepoint if in bound else OUTOFBOUND value."""
         x, y = Coord(coords)
@@ -96,3 +99,28 @@ class Field:
                 elif self[curPos] != Value.bomb:
                     self[curPos] = Mask.opened
         return False
+
+    def statistic(self):
+        res = {
+            'cellsOpened': 0,
+            'bombsMarked': 0,
+            'bombsGuessed': 0,
+            'cellsRemaning': 0,
+            'cellsTotal': 0,
+            'bombsLeft': 0,
+            'allBombsCorrect': True
+        }
+        for x, y in Coord.range(self.size):
+            cell = self[x, y]
+            if cell == Mask.opened:
+                res['cellsOpened'] += 1
+            else:
+                if cell == Flag.sure:
+                    res['bombsMarked'] += 1
+                if cell == Value.bomb and cell == Flag.sure:
+                    res['bombsGuessed'] += 1
+        res['cellsTotal'] = res['cellsOpened'] + res['bombsMarked']
+        res['cellsRemaning'] = self.size**2 - res['cellsOpened'] - res['bombsGuessed']
+        res['bombsLeft'] = self.bombs - res['bombsMarked']
+        res['allBombsCorrect'] = res['bombsGuessed'] == self.bombs
+        return res
