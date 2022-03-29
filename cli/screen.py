@@ -1,7 +1,7 @@
 """Move, print, color your terminal screen."""
 import blessed
-from color import Color
-from coord import Coord
+from .color import Color
+from util.coord import Coord
 
 
 term = blessed.Terminal()

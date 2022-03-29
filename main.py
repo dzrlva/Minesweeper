@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-"""This module realises gameplay."""
+import cli.game
+exit(0)
 
 from blessed import Terminal
 from field import Field
@@ -32,7 +33,7 @@ SIX = term.color(202)
 SEVEN = term.color(161)
 EIGHT = term.color(124)
 BOMB = term.color(9)
-colors = [term.normal, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, BOMB]
+colors = [ term.normal, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, BOMB ]
 username = "Gamer1"
 
 
@@ -156,12 +157,7 @@ with term.cbreak(), term.hidden_cursor():
             field[cursor[0], cursor[1]].set(flag)
 
         closedMarkedCells = closedCells - field.bombs + activeBombs
-        print(
-            term.move_xy(0, field.size)
-            + "CHEAT Bombs remain: "
-            + str(activeBombs)
-            + " " * 10
-        )
+        print(term.move_xy(0, field.size) + f"CHEAT Bombs remain: {activeBombs} {' '*10}")
         print(
             term.move_xy(0, field.size + 1)
             + "Cells remain: "
@@ -190,7 +186,7 @@ for x in range(field.size):
     print()
 
 revCoord = (field.size // 2, field.size // 2)
-print(f"Revealed at (0, 0):", not field.reveal(0, 0))
+print("Revealed at (0, 0):", not field.reveal(0, 0))
 print(f"Revealed at {revCoord}:", not field.reveal(revCoord[0], revCoord[1]))
 for x in range(field.size):
     for y in range(field.size):

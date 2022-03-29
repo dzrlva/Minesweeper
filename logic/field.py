@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-
 """Module for the Field class."""
 
-from coord import Coord
-from minepoint import MinePoint, Value, Mask, Flag
+from util.coord import Coord
+from util.minepoint import MinePoint, Value, Mask, Flag
 
 
 class Field:
