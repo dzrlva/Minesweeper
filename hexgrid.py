@@ -178,10 +178,10 @@ class App(tk.Tk):
 
                 if debug:
                     coords = "{}, {}".format(r, c)
-                    self.can.create_text((r * (size * sqrt(3))) + offset + (size),
-                                         c * (size * 1.5) + (size / 2),
+                    self.can.create_text((r * (size * sqrt(3))) + offset + (size) +  y_offset - 15,
+                                         c * (size * 1.5) + (size / 2) + 25, anchor=W, font="Purisa", fill="black",
                                          text=coords)
-        self.can.create_text(400, 760, anchor=W, font="TimesNewRoman", fill="black", text="Minesweeper")
+        self.can.create_text(400, 760, anchor=W, font="Purisa 20", fill="black", text="Minesweeper")
         
     def click(self, evt):
         """
