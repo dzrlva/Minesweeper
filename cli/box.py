@@ -29,9 +29,10 @@ class Box:
         'bold dashed': ['dashed', 'bold'],
     }
 
-    def __init__(self, width, height, style='sharp'):
+    def __init__(self, width, height, style='sharp', color=None):
         self.width, self.height = width, height
         self.style = style
+        self.color = color
 
     @property
     def style(self):
@@ -53,12 +54,12 @@ class Box:
         topright = [self.width, 0] + topleft
 
         for x in range(1, self.width):
-            screen.drawPixel([x, 0] + topleft, self.sides['hor'])
-            screen.drawPixel([x, 0] + botleft, self.sides['hor'])
+            screen.drawPixel([x, 0] + topleft, self.sides['hor'], self.color)
+            screen.drawPixel([x, 0] + botleft, self.sides['hor'], self.color)
         for y in range(1, self.height):
-            screen.drawPixel([0, y] + topleft, self.sides['ver'])
-            screen.drawPixel([0, y] + topright, self.sides['ver'])
-        screen.drawPixel(topleft, self.corners['tl'])
-        screen.drawPixel(topright, self.corners['tr'])
-        screen.drawPixel(botleft, self.corners['bl'])
-        screen.drawPixel(botright, self.corners['br'])
+            screen.drawPixel([0, y] + topleft, self.sides['ver'], self.color)
+            screen.drawPixel([0, y] + topright, self.sides['ver'], self.color)
+        screen.drawPixel(topleft, self.corners['tl'], self.color)
+        screen.drawPixel(topright, self.corners['tr'], self.color)
+        screen.drawPixel(botleft, self.corners['bl'], self.color)
+        screen.drawPixel(botright, self.corners['br'], self.color)
