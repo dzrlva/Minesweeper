@@ -31,11 +31,17 @@ class Box:
 
     def __init__(self, width, height, style='sharp'):
         self.width, self.height = width, height
-        self.setStyle(style)
+        self.style = style
 
-    def setStyle(self, style):
+    @property
+    def style(self):
+        return self.__style
+
+    @style.setter
+    def style(self, style):
         if style not in Box.styles:
             raise ValueError(f'Unknown Box style: {style}')
+        self.__style = style
         sides, corners = Box.styles[style]
         self.sides = SIDES[sides]
         self.corners = CORNERS[corners]
