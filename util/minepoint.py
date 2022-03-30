@@ -34,12 +34,16 @@ class Flag(IntEnum):
 
 
 class Mask(IntEnum):
+    """Mask for field cell."""
+
     closed = 0b00
     pending = 0b11
     opened = 0b01
 
 
 class MinePoint:
+    """Represent point on the field."""
+
     VFACTOR = 4
     MFACTOR = 2
     FFACTOR = 2
@@ -51,6 +55,7 @@ class MinePoint:
     FLAG = ((0x1 << FFACTOR) - 1) << FSHIFT
 
     def __init__(self):
+        """Create empty MinePoint."""
         self.__data = 0
 
     def __rawFlag(self):
@@ -73,32 +78,39 @@ class MinePoint:
 
     @property
     def flag(self):
+        """Get flag value of the cell."""
         return self.__rawFlag() >> MinePoint.FSHIFT
 
     @flag.setter
     def flag(self, flag):
+        """Set flag value of the cell."""
         self.__clearFlag()
         self.__data |= (flag << MinePoint.FSHIFT) & MinePoint.FLAG
 
     @property
     def mask(self):
+        """Get mask value of the cell."""
         return self.__rawMask() >> MinePoint.MSHIFT
 
     @mask.setter
     def mask(self, mask):
+        """Set mask value of the cell."""
         self.__clearMask()
         self.__data |= (mask << MinePoint.MSHIFT) & MinePoint.MASK
 
     @property
     def value(self):
+        """Get bombs value of the cell."""
         return self.__rawValue()
 
     @value.setter
     def value(self, value):
+        """Set bombs value of the cell."""
         self.__clearValue()
         self.__data |= value & MinePoint.VALUE
 
     def __eq__(self, oth):
+        """Compare cell to Value, Mask or Flag."""
         if isinstance(oth, Value):
             return self.value == oth
         elif isinstance(oth, Mask):
@@ -108,6 +120,7 @@ class MinePoint:
         raise TypeError(f'Unexpected type {type(oth)} to compare to')
 
     def set(self, oth):
+        """Set cell value, mask or flag."""
         if isinstance(oth, Value):
             self.value = oth
         elif isinstance(oth, Mask):
@@ -118,7 +131,9 @@ class MinePoint:
             raise TypeError(f'Unexpected type {type(oth)} to set to')
 
     def __repr__(self):
+        """Show binary value of cell."""
         return bin(self.__data)
 
     def __str__(self):
+        """Convert to value to string."""
         return str(self.value)

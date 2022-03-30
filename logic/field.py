@@ -36,6 +36,7 @@ class Field:
         return x < 0 or y < 0 or x >= self.width or y >= self.height
 
     def inBounds(self, x, y=None):
+        """Return if point is in field bounds."""
         return not self.__isOutOfBounds(x, y)
 
     def __getitem__(self, coords):
@@ -87,8 +88,9 @@ class Field:
 
     def reveal(self, x, y=None):
         """
-        Reveal all possible minepoints around coordinate
-        Return True if revealed point has a bomb
+        Reveal all possible minepoints around coordinate.
+
+        Return True if revealed point has a bomb.
         """
         point = Coord(x, y)
         if self[point] == Value.bomb:
@@ -114,6 +116,7 @@ class Field:
         return False
 
     def statistic(self):
+        """Return current field statistic."""
         res = {
             'cellsOpened': 0,
             'bombsMarked': 0,

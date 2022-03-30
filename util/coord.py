@@ -7,13 +7,14 @@ class Coord:
 
     @staticmethod
     def __convert(val):
-        """Converts value to Coord class if needed."""
+        """Convert value to Coord class if needed."""
         return val if isinstance(val, Coord) else Coord(val)
 
     @staticmethod
     def random(start, end=None):
         """
-        Generats random coordinate in provided range
+        Return random coordinate in given range.
+
         Provided values converted to Coord if needed
         By default start = Coord(0, 0), end = value as Coord
         Result is x = randint(start.x, end.x), y = randint(start.y, end.y)
@@ -32,7 +33,8 @@ class Coord:
     @staticmethod
     def range(start, end=None, step=None):
         """
-        Generates range for coordinates
+        Return range for coordinates.
+
         Provided values convert to Coord if needed
         By default start = Coord(0, 0), end = value as Coord, step = Coord(1, 1)
         Result - all coordinates of a square with certain step
@@ -52,7 +54,8 @@ class Coord:
 
     def __init__(self, val, y=None):
         """
-        Creates Coord instance
+        Create Coord instance.
+
         Takes one or two parameters
         If only one value is present assuming following:
         * Coord                  -> just a copy
@@ -80,14 +83,14 @@ class Coord:
             self.x, self.y = int(val), int(y)
 
     def __getitem__(self, idx):
-        """Allows to access x/y by 0/1 or a string."""
+        """Access x/y by 0/1 or a string."""
         if idx == 0 or idx == 'x':
             return self.x
         if idx == 1 or idx == 'y':
             return self.y
 
     def __setitem__(self, idx, val):
-        """Allows to set x/y by 0/1 or a string."""
+        """Set x/y by 0/1 or a string."""
         if idx == 0 or idx == 'x':
             self.x = int(val)
         if idx == 1 or idx == 'y':
@@ -119,21 +122,21 @@ class Coord:
         return self.x == val.x and self.y == val.y
 
     def __iter__(self):
-        """Returns iterator for x and y values."""
+        """Return iterator for x and y values."""
         return iter((self.x, self.y))
 
     def __neg__(self):
-        """Returns negative of coords."""
+        """Return negative of coords."""
         return Coord(-self.x, -self.y)
 
     def __invert__(self):
-        """Flips x and y places."""
+        """Flip x and y places."""
         return Coord(self.y, self.x)
 
     def __repr__(self):
-        """Represents Coord in console."""
+        """Represent Coord in console."""
         return f'Coord <{self.x}, {self.y}>'
 
     def __str__(self):
-        """String converter."""
+        """Convert to string."""
         return f'({self.x}, {self.y})'

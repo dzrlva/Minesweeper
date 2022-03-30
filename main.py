@@ -9,7 +9,7 @@ from blessed import Terminal
 import time
 
 
-field = Field(20, 10, 0.2)
+field = Field(30, 20, 0.15)
 term = Terminal()
 screen = Screen()
 game = Game(field)

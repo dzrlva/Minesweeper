@@ -1,3 +1,4 @@
+"""CLI version of game interface."""
 from .screen import Screen, Color
 from .box import Box
 from util.minepoint import Flag, Mask, Value
@@ -18,7 +19,10 @@ screen = Screen()
 
 
 class Game:
+    """Game class."""
+
     def __init__(self, field):
+        """Create game."""
         self.field = field
         self.oldPos = None
         self.pos = Coord.random([field.width, field.height])
@@ -32,6 +36,7 @@ class Game:
         self.cheats = False
 
     def draw(self):
+        """Draw game attributes."""
         if self.status == 'active':
             if self.fullredraw:
                 self.fullredraw = False
@@ -51,6 +56,7 @@ class Game:
             screen[0, 0, Color.red].print(f'[Error] UNKNOWN GAME STATUS: {self.status}').whip()
 
     def drawCursor(self, offset):
+        """Draw cursor in current position."""
         offset = Coord(offset)
         char, color = self.cellInfo(self.pos)
         if self.cheats and self.field[self.pos] == Value.bomb:
@@ -61,19 +67,21 @@ class Game:
             screen.drawPixel(self.oldPos + offset, char, color)
 
     def drawField(self, offset):
+        """Draw field at current state."""
         offset = Coord(offset)
         for x, y in self.field:
             char, color = self.cellInfo(x, y)
             screen.drawPixel(x + offset.x, y + offset.y, char, color)
 
     def drawInfoBars(self):
+        """Draw info bars."""
         stat = self.stat
         cheats = ' [CHEATS]' if self.cheats else ''
         screen[1, 0].print(f"Cells: {stat['cellsTotal']}/{self.field.size}").whip()
         screen[1, 1].print(f"Bombs{cheats}: {stat['bombsMarked']}/{self.field.bombs}").whip()
 
     def cellInfo(self, x, y=None):
-        """Draw cell by coordinates."""
+        """Get cell draw character and color used."""
         if y is None:
             cell = self.field[Coord(x)]
         else:
@@ -95,11 +103,13 @@ class Game:
                 return str(cell), Color(VALUECOLORS[cell.value])
 
     def move(self, direct):
+        """Move cursor at certain direction."""
         if self.field.inBounds(self.pos + direct):
             self.oldPos = Coord(self.pos.x, self.pos.y)
             self.pos += direct
 
     def keyAction(self, key):
+        """React to key press."""
         if key == KEYS['up']:
             self.move(Coord(0, -1))
         elif key == KEYS['down']:
@@ -121,19 +131,23 @@ class Game:
             self.checkWin()
 
     def updateStat(self):
+        """Update field statistic."""
         self.stat = self.field.statistic()
         return self.stat
 
     def checkWin(self):
+        """Check if game is complete."""
         self.updateStat()
         if self.stat['cellsRemaning'] == 0 and self.stat['allBombsCorrect']:
             self.status = 'win'
 
     def win(self, offset):
+        """Draw win state."""
         offset = Coord(offset)
         screen[offset, Color.lime].print('Congrats!').whip()
 
     def gameover(self, offset):
+        """Draw lose state."""
         offset = Coord(offset)
         screen[0, 0, Color.red].print('You have lost!').whip()
 

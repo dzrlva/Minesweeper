@@ -1,3 +1,4 @@
+"""Draw different boxes with ease."""
 from .screen import Screen
 from util.coord import Coord
 
@@ -20,6 +21,8 @@ screen = Screen()
 
 
 class Box:
+    """Box class to create boxes in terminal."""
+
     styles = {
         'sharp':       ['light', 'light'],
         'soft':        ['light', 'round'],
@@ -30,16 +33,19 @@ class Box:
     }
 
     def __init__(self, width, height, style='sharp', color=None):
+        """Init box with width and height, one of N styles and color."""
         self.width, self.height = width, height
         self.style = style
         self.color = color
 
     @property
     def style(self):
+        """Get current style."""
         return self.__style
 
     @style.setter
     def style(self, style):
+        """Set one of N styles."""
         if style not in Box.styles:
             raise ValueError(f'Unknown Box style: {style}')
         self.__style = style
@@ -48,6 +54,7 @@ class Box:
         self.corners = CORNERS[corners]
 
     def draw(self, topleft=Coord(0, 0)):
+        """Draw the box at some coordinates."""
         topleft = Coord(topleft)
         botleft = [0, self.height] + topleft
         botright = [self.width, self.height] + topleft

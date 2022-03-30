@@ -14,7 +14,9 @@ class Screen:
     Commands can be chained togethe, yet result is the same
     Example: scr.setColor(Color.red).print('Hello').setColor(Color.blue).print(' world!')
     """
+
     def __init__(self):
+        """Create screen."""
         self.cursor = Coord(0, 0)
         self.color = Color.white
 
