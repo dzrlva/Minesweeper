@@ -44,8 +44,8 @@ class Stat:
             pickle.dump([*self.__old, list(self.__data.values())], f)
 
     def findBest(self):
-        bestWinTime = self['gametime'] if self['win'] else None
-        meanWinTime = self['gametime'] if self['win'] else None
+        bestWinTime = self['gametime'] if self['win'] else 0
+        meanWinTime = self['gametime'] if self['win'] else 0
         gamesWon = int(self['win'])
         for history in self.__old:
             hTime, hWin = history
@@ -54,7 +54,7 @@ class Stat:
                 meanWinTime += hTime
                 if bestWinTime > hTime:
                     bestWinTime = hTime
-        meanWinTime = None if gamesWon == 0 else meanWinTime / gamesWon
+        meanWinTime = 0 if gamesWon == 0 else meanWinTime / gamesWon
         return bestWinTime, meanWinTime, gamesWon
 
     def print(self):
