@@ -1,10 +1,10 @@
 """Move, print, color your terminal screen."""
-import blessed
+from blessed import Terminal
 from .color import Color
 from util.coord import Coord
 
 
-term = blessed.Terminal()
+term = Terminal()
 
 
 class Screen:
@@ -14,16 +14,13 @@ class Screen:
     Commands can be chained togethe, yet result is the same
     Example: scr.setColor(Color.red).print('Hello').setColor(Color.blue).print(' world!')
     """
-
     def __init__(self):
-        """Init screen."""
-        self.__term = term
         self.cursor = Coord(0, 0)
-        self.color = Color('white')
+        self.color = Color.white
 
     def clear(self):
         """Clear screen."""
-        print(self.__term.clear())
+        print(term.clear())
 
     def print(self, *args, sep=' '):
         """Print something at screen."""
@@ -36,7 +33,7 @@ class Screen:
         """Whips (clears) current line after last printed char."""
         x = self.cursor.x
         self.setCursor(x + self.__printLen)
-        self.print(' ' * (self.__term.width - self.cursor.x))
+        self.print(' ' * (term.width - self.cursor.x))
         self.setCursor(x)
         return self
 
@@ -49,7 +46,7 @@ class Screen:
                 self.cursor.y = int(y)
         except TypeError:
             raise TypeError('Coordinates must be integer')
-        print(self.__term.move_xy(self.cursor.x, self.cursor.y), end='')
+        print(term.move_xy(self.cursor.x, self.cursor.y), end='')
         return self
 
     def setColor(self, color, bg=None):
@@ -65,8 +62,12 @@ class Screen:
         print(color, end='')
         return self
 
-    def drawPixel(self, x, y, pixel, color=None):
+    def drawPixel(self, x, y, pixel=None, color=None):
         """Draw pixel at (x, y) with color."""
+        if isinstance(x, Coord):
+            x, y, pixel, color = *x, y, pixel
+        elif pixel is None:
+            raise ValueError('Cannot draw None pixel')
         self.setCursor(x, y)
         self.setColor(color)
         self.print(pixel)
