@@ -3,6 +3,18 @@
 from util.coord import Coord
 from util.minepoint import MinePoint, Value, Mask, Flag
 
+NoramlPattern = [
+    Coord(-1, -1), Coord(0, -1), Coord(1, -1),
+    Coord(-1, 0), Coord(1, 0),
+    Coord(-1, 1), Coord(0, 1), Coord(1, 1)
+]
+
+HexagonPatter = [
+    Coord(-1, -1), Coord(0, -1),
+    Coord(-1, 0), Coord(1, 0),
+    Coord(-1, 1), Coord(0, 1),
+]
+
 
 class Field:
     """Logic for minesweeper minefield."""
