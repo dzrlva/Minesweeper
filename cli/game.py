@@ -5,7 +5,15 @@ from util.coord import Coord
 
 
 VALUECOLORS = [ 0, 38, 73, 40, 136, 172, 202, 161, 124, 9 ]
-KEYS = { 'up': 'w', 'down': 's', 'left': 'a', 'right': 'd', 'open': ' ', 'mark': 'f' }
+KEYS = {
+    'up':     'w',
+    'down':   's',
+    'left':   'a',
+    'right':  'd',
+    'open':   ' ',
+    'mark':   'f',
+    'cheats': 'x'
+}
 screen = Screen()
 
 
@@ -21,6 +29,7 @@ class Game:
         self.redraw = True
         self.fullredraw = True
         self.barsHeight = 2
+        self.cheats = False
 
     def draw(self):
         if self.status == 'active':
@@ -31,7 +40,7 @@ class Game:
             if self.redraw:
                 self.redraw = False
                 self.drawField([1, self.barsHeight + 1])
-                self.drawInfoBars()
+            self.drawInfoBars()
             self.drawCursor([1, self.barsHeight + 1])
         elif self.status == 'lose':
             self.gameover([1, self.barsHeight + 1])
@@ -44,6 +53,8 @@ class Game:
     def drawCursor(self, offset):
         offset = Coord(offset)
         char, color = self.cellInfo(self.pos)
+        if self.cheats and self.field[self.pos] == Value.bomb:
+            char = '*'
         screen.drawPixel(self.pos + offset, char, color + self.cursor)
         if self.oldPos is not None:
             char, color = self.cellInfo(self.oldPos)
@@ -57,8 +68,9 @@ class Game:
 
     def drawInfoBars(self):
         stat = self.stat
+        cheats = ' [CHEATS]' if self.cheats else ''
         screen[1, 0].print(f"Cells: {stat['cellsTotal']}/{self.field.size}").whip()
-        screen[1, 1].print(f"Bombs left: {stat['bombsMarked']}/{self.field.bombs}").whip()
+        screen[1, 1].print(f"Bombs{cheats}: {stat['bombsMarked']}/{self.field.bombs}").whip()
 
     def cellInfo(self, x, y=None):
         """Draw cell by coordinates."""
@@ -96,6 +108,8 @@ class Game:
             self.move(Coord(-1, 0))
         elif key == KEYS['right']:
             self.move(Coord(1, 0))
+        elif key == KEYS['cheats']:
+            self.cheats = not self.cheats
         else:
             if key == KEYS['mark']:
                 if self.field[self.pos] == Mask.closed:
