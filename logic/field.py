@@ -9,18 +9,19 @@ class Field:
 
     OUTOFBOUND = -1
 
-    def __init__(self, size, bombsPercent):
+    def __init__(self, width, height, bombsPercent):
         """Initialize field with size and bombs. Randomly fill it."""
-        self.size = size
-        self.bombs = round(size * size * bombsPercent)
-        self.__field = [[MinePoint() for _ in range(size)]
-                        for _ in range(size)]
+        self.size = width * height
+        self.width, self.height = width, height
+        self.bombs = round(self.size * bombsPercent)
+        self.__field = [[MinePoint() for _ in range(height)]
+                        for _ in range(width)]
         self.__randomizeBombs()
         self.__calcFieldBombs()
 
     def __isOutOfBounds(self, x, y=None):
         x, y = Coord(x, y)
-        return x < 0 or y < 0 or x >= self.size or y >= self.size
+        return x < 0 or y < 0 or x >= self.width or y >= self.height
 
     def inBounds(self, x, y=None):
         return not self.__isOutOfBounds(x, y)
@@ -42,14 +43,14 @@ class Field:
     def __randomizeBombs(self):
         """Randomize bomb position."""
         for _ in range(self.bombs):
-            x, y = Coord.random(self.size)
+            x, y = Coord.random([self.width, self.height])
             while self[x, y] == Value.bomb:
-                x, y = Coord.random(self.size)
+                x, y = Coord.random([self.width, self.height])
             self[x, y] = Value.bomb
 
     def __calcFieldBombs(self):
         """Calculate bombs for each point on the field."""
-        for point in Coord.range(self.size):
+        for point in self:
             if self[point] == Value.bomb:
                 continue
             bombsAround = 0
@@ -60,7 +61,7 @@ class Field:
 
     def __iter__(self):
         """Iterate over all cordinates of the field."""
-        yield from Coord.range(self.size)
+        yield from Coord.range([self.width, self.height])
 
     def cycleFlag(self, x, y=None):
         """Change flag value on a point."""
@@ -110,7 +111,7 @@ class Field:
             'bombsLeft': 0,
             'allBombsCorrect': True
         }
-        for x, y in Coord.range(self.size):
+        for x, y in self:
             cell = self[x, y]
             if cell == Mask.opened:
                 res['cellsOpened'] += 1
@@ -120,7 +121,7 @@ class Field:
                 if cell == Value.bomb and cell == Flag.sure:
                     res['bombsGuessed'] += 1
         res['cellsTotal'] = res['cellsOpened'] + res['bombsMarked']
-        res['cellsRemaning'] = self.size**2 - res['cellsOpened'] - res['bombsGuessed']
+        res['cellsRemaning'] = self.size - res['cellsOpened'] - res['bombsGuessed']
         res['bombsLeft'] = self.bombs - res['bombsMarked']
         res['allBombsCorrect'] = res['bombsGuessed'] == self.bombs
         return res
