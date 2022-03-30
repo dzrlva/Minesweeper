@@ -49,7 +49,7 @@ class FillHexagon:
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.img = Image.open("resources/flag.png").resize((50, 50))
+        self.img = Image.open("resources/flag0.png").resize((47, 47))
         self.img = ImageTk.PhotoImage(self.img)
 
         self.title("Hexagon Grid")
@@ -153,6 +153,7 @@ class App(tk.Tk):
             i.isNeighbour = False
             self.can.itemconfigure(i.tags, fill=i.color)
         clicked = self.can.find_closest(x, y)[0]  # find closest
+        print("CLICKED = ", clicked)
         st[int(clicked) - 1] = self.hexagons[int(clicked) - 1].selected
 
         self.hexagons[int(clicked) - 1].selected = True
