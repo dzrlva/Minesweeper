@@ -1,58 +1,13 @@
 #!/usr/bin/python
 
 import tkinter as tk
+from tkinter import *
+from PIL import ImageTk, Image
 from tkinter.constants import *
 from tkinter import PhotoImage
 from math import cos, sin, sqrt, radians
 
 diag = 12
-
-class Field:
-    types = {
-        "grass": "#a1e2a1",
-        "water": "#60ace6",
-        "moutain": "#a1603a"
-    }
-
-    def __init__(self, parent, x, y, kind, size):
-        self.parent = parent
-        self.x = x
-        self.y = y
-        self.kind = kind
-        self.color = Field.types[self.kind]
-        self.selected = False
-
-    def draw(self):
-        FillHexagon(self.parent, self.x, self.y, self.size, self.color)
-
-
-class StrokeHexagon:
-    def __init__(self, parent, x, y, length, color):
-        self.parent = parent  # canvas
-        self.x = x  # top left x
-        self.y = y  # top left y
-        self.length = length  # length of a side
-        self.color = color  # outline color
-
-        self.draw()
-
-    def draw(self):
-        start_x = self.x
-        start_y = self.y
-        angle = 60
-
-        for i in range(6):
-            end_x = start_x + self.length * cos(radians(angle * i))
-            end_y = start_y + self.length * sin(radians(angle * i))
-            self.parent.create_line(start_x,
-                                    start_y,
-                                    end_x,
-                                    end_y,
-                                    fill=self.color)
-            start_x = end_x
-            start_y = end_y
-
-
 
 class FillHexagon:
     def getx(self):
@@ -61,7 +16,7 @@ class FillHexagon:
         return self.y
     def __init__(self, parent, x, y, length, color, tags):
         self.parent = parent  # canvas
-    
+
         self.x = x  # top left x
         self.y = y  # top left y
         self.length = length  # length of a side
@@ -88,7 +43,7 @@ class FillHexagon:
                                    coords[4][0],coords[4][1],
                                    coords[5][0],coords[5][1],
                                    fill=self.color,
-                                   outline="white",
+                                   outline="blue",
                                    tags=self.tags)
 
 class App(tk.Tk):
@@ -98,7 +53,11 @@ class App(tk.Tk):
         self.can = tk.Canvas(self, width=900, height=900, bg="#ffffff")
         self.can.pack(expand=YES, fill=BOTH)
         self.hexagons = []
-        
+        self.oldFlag = None
+
+        self.img = Image.open("./resources/flag.png").resize((32, 32))
+        self.img = ImageTk.PhotoImage(self.img)
+
         if diag == 12:
             ssize = 34
         elif diag == 14:
@@ -121,12 +80,12 @@ class App(tk.Tk):
             ssize = 11
         else:
             ssize = 10
-        
+
         self.initGrid(diag + 2, diag, ssize, debug=False)
 
         self.can.bind("<Button-1>", self.click)
 
-    
+
     def initGrid(self, cols, rows, size, debug):
         """
         2d grid of hexagons
@@ -159,15 +118,15 @@ class App(tk.Tk):
                     x -= 1
                     if c % 2 != 0:
                         x_offset += 1
-                        
-            rx_offset = x + x_offset 
+
+            rx_offset = x + x_offset
             for r in range(rows):
-                
+
                 if r < x_offset or r >= rx_offset:
                     colour = "#ffffff"
                 else :
                     colour = "#e8f48c"
-                
+
                 h = FillHexagon(self.can,
                                 c * (size * 1.5) + 30,
                                 (r * (size * sqrt(3))) + offset + y_offset,
@@ -181,12 +140,14 @@ class App(tk.Tk):
                     self.can.create_text((r * (size * sqrt(3))) + offset + (size) +  y_offset - 15,
                                          c * (size * 1.5) + (size / 2) + 25, anchor=W, font="Purisa", fill="black",
                                          text=coords)
-        self.can.create_text(400, 760, anchor=W, font="Purisa 20", fill="black", text="Minesweeper")
-        
+        self.can.create_text(400, 760, anchor=W,font="Purisa 20", fill="black", text="Minesweeper")
+
     def click(self, evt):
         """
         hexagon detection on mouse click
         """
+
+
         st = [0]*len(self.hexagons)
         x, y = evt.x, evt.y
         for i in self.hexagons:
@@ -195,12 +156,14 @@ class App(tk.Tk):
             self.can.itemconfigure(i.tags, fill=i.color)
         clicked = self.can.find_closest(x, y)[0]  # find closest
         st[int(clicked) - 1] = self.hexagons[int(clicked) - 1].selected
-        
+
+
         self.hexagons[int(clicked) - 1].selected = True
         j = -1
         for i in self.hexagons:  # re-configure selected only
             j += 1
             if i.selected:
+                self.can.create_image(i.y + 30, i.x + 15, image=self.img)
                 if i.color == "#ffffff":
                     i.selected = False
                     st[j] = False
@@ -210,13 +173,14 @@ class App(tk.Tk):
                     st[j] = False
                 else:
                     self.can.itemconfigure(i.tags, fill="#53ca53")
-                
+
             if i.isNeighbour:
                 self.can.itemconfigure(i.tags, fill="#76d576")
 
 if __name__ == '__main__':
-    print("Please, select the diameter of the playing field:")
-    print("(in range from 12 to 50 any multiple of 2)")
-    diag = int(input())
+    # print("Please, select the diameter of the playing field:")
+    # print("(in range from 12 to 50 any multiple of 2)")
+    # diag = int(input())
+    diag = 12
     app = App()
     app.mainloop()
