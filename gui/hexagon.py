@@ -10,7 +10,7 @@ COEF = tan(radians(ANGLE))
 
 class Hexagon:
 
-    def __init__(self, canvas, x, y, length, color, outline, tags):
+    def __init__(self, canvas, x, y, length, color, outline, tags, hover=None):
         self.canvas = canvas  # canvas
 
         self.length = length
@@ -20,6 +20,9 @@ class Hexagon:
         whH = Coord(self.width / 2, -self.height / 2, dtype=float)
         self.center = self.topleft + whH
 
+        self.hovered = False
+        self.hover = hover
+        self.unhover = color
         self.color = color
         self.outline = outline
         self.selected = False
@@ -46,13 +49,29 @@ class Hexagon:
 
     def changeFill(self, color):
         self.color = color
+        self.unhover = self.color
         if self.__item:
             self.canvas.itemconfigure(self.__item, fill=color)
+
+    def onEnter(self, event):
+        self.hovered = True
+        if self.hover:
+            temp = self.color
+            self.changeFill(self.hover)
+            self.unhover = temp
+
+    def onLeave(self, event):
+        self.hovered = False
+        if self.hover:
+            self.changeFill(self.unhover)
 
     def draw(self):
         if self.__item:
             self.canvas.delete(self.__item)
         self.__item = self.canvas.create_polygon(
-            *self.coords, fill=self.color, outline=self.outline, tags=self.tags
+            *self.coords, fill=self.color, outline=self.outline, tags=self.tags,
         )
+        if self.hover:
+            self.canvas.tag_bind(self.__item, '<Enter>', self.onEnter)
+            self.canvas.tag_bind(self.__item, '<Leave>', self.onLeave)
         return self.__item
