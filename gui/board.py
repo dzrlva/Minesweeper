@@ -10,8 +10,9 @@ IMAGES = {
     'flag': ['./resources/flag.png', (32, 32)],
 }
 COLORS = {
-    'active': '#53ca53',
-    'inactive': '#e8f48c',
+    'active': '#0081a3',
+    'inactive': '#ffffff',
+    'outline': '#003153',
 }
 
 
@@ -69,11 +70,13 @@ class Board:
             for row in range(self.rows):
                 if row < x_offset or row >= rx_offset:
                     continue  # do not create hexagon if it out of field
-                color = "#e8f48c"
                 hexX = row * self.size * sqrt(3) + offset + y_offset
                 hexY = col * self.size * 1.5 + 30
                 hexTags = f'{row}.{col}'
-                hxg = Hexagon(self.app.canvas, hexX, hexY, self.size, color, 'blue', hexTags)
+                hxg = Hexagon(
+                    self.app.canvas, hexX, hexY,
+                    self.size, COLORS['inactive'], COLORS['outline'], hexTags
+                )
 
                 self.hexagons.append(hxg)
                 if self.debug:
