@@ -1,3 +1,4 @@
+"""Single hexagon. WARNING: coordinates are sligtly messed up."""
 from math import sin, cos, tan, radians, sqrt
 from util.coord import Coord
 
@@ -16,7 +17,6 @@ class Hexagon:
         self.height = COEF * self.length / sqrt(COEF**2 + 1)
         self.width = COEF * self.height / 2
         self.topleft = Coord(x, y + self.height / 4, dtype=float)
-        self.pos = Coord(x, y, dtype=float)
         whH = Coord(self.width / 2, -self.height / 2, dtype=float)
         self.center = self.topleft + whH
 
