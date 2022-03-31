@@ -13,6 +13,7 @@ COLORS = {
     'active': '#0081a3',
     'inactive': '#ffffff',
     'outline': '#003153',
+    'hover': '#03dfaa',
 }
 
 
@@ -75,7 +76,8 @@ class Board:
                 hexTags = f'{row}.{col}'
                 hxg = Hexagon(
                     self.app.canvas, hexX, hexY,
-                    self.size, COLORS['inactive'], COLORS['outline'], hexTags
+                    self.size, COLORS['inactive'], COLORS['outline'], hexTags,
+                    COLORS['hover'],
                 )
 
                 self.hexagons.append(hxg)
@@ -112,14 +114,9 @@ class Board:
         self.cols, self.rows = diag + 2, diag
 
     def findClicked(self, pos):
-        minDist = None
-        minHgn = None
-        for i, hgn in enumerate(self.hexagons):
-            curDist = hgn.distance(pos)
-            if minDist is None or curDist < minDist:
-                minDist = curDist
-                minHgn = hgn
-        return minHgn
+        for hgn in self.hexagons:
+            if hgn.hovered:
+                return hgn
 
     def onRightClick(self, event):
         pos = Coord(event.x, event.y, dtype=float)
@@ -131,7 +128,7 @@ class Board:
             del self.marked[clicked]
         else:
             x, y = clicked.center
-            flag = self.app.canvas.create_image(x, y, image=self.img['flag'])
+            flag = self.app.canvas.create_image(x, y, image=self.img['flag'], state='disabled')
             self.marked[clicked] = flag
 
     def onLeftClick(self, event):
