@@ -6,16 +6,13 @@ from PIL import ImageTk, Image
 from tkinter.constants import *
 from tkinter import PhotoImage
 from math import cos, sin, sqrt, radians
+from time import sleep
 
 diag = 12
 
 class FillHexagon:
-    def getx(self):
-        return self.x
-    def gety(self):
-        return self.y
-    def __init__(self, parent, x, y, length, color, tags):
-        self.parent = parent  # canvas
+    def __init__(self, canvas, x, y, length, color, tags):
+        self.canvas = canvas  # canvas
 
         self.x = x  # top left x
         self.y = y  # top left y
@@ -24,6 +21,12 @@ class FillHexagon:
         self.selected = False
         self.tags = tags
         self.draw()
+
+    def getx(self):
+        return self.x
+
+    def gety(self):
+        return self.y
 
     def draw(self):
         start_x = self.x
@@ -36,7 +39,7 @@ class FillHexagon:
             coords.append([start_y, start_x])
             start_x = end_x
             start_y = end_y
-        self.parent.create_polygon(coords[0][0],coords[0][1],
+        self.canvas.create_polygon(coords[0][0],coords[0][1],
                                    coords[1][0],coords[1][1],
                                    coords[2][0],coords[2][1],
                                    coords[3][0],coords[3][1],
@@ -120,7 +123,6 @@ class App(tk.Tk):
 
             rx_offset = x + x_offset
             for r in range(rows):
-
                 if r < x_offset or r >= rx_offset:
                     colour = "#003153"
                 else :
@@ -128,8 +130,8 @@ class App(tk.Tk):
 
                 h = FillHexagon(self.can,
                                 c * (size * 1.5) + 30,
-                                (r * (size * sqrt(3))) + offset + y_offset,
-                                size,
+                                (r * (size * sqrt(3))) + offset + y_offset - 20,
+                                size - 5,
                                 colour,
                                 "{}.{}".format(r, c))
                 self.hexagons.append(h)
@@ -173,7 +175,7 @@ class App(tk.Tk):
                     self.can.itemconfigure(i.tags, fill="#ffffff")
 
             if i.isNeighbour:
-                self.can.itemconfigure(i.tags, fill="#76d576")
+                self.can.itemconfigure(i.tags, fill="#FF0000")
 
 if __name__ == '__main__':
     #print("Please, select the diameter of the playing field:")
