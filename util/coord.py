@@ -6,6 +6,12 @@ class Coord:
     """Class that represents integer coordinates."""
 
     @staticmethod
+    def __combineTypes(t1, t2):
+        if t1 is float or t2 is float:
+            return float
+        return int
+
+    @staticmethod
     def __convert(val):
         """Convert value to Coord class if needed."""
         return val if isinstance(val, Coord) else Coord(val)
@@ -52,7 +58,7 @@ class Coord:
             for y in range(start.y, end.y, step.y):
                 yield Coord(x, y)
 
-    def __init__(self, val, y=None):
+    def __init__(self, val, y=None, *, dtype=int):
         """
         Create Coord instance.
 
@@ -66,21 +72,23 @@ class Coord:
         If both arguments are given, assuming they are numbers:
         Coord(val, y), both converted to int
         """
+        self.__dtype = dtype
+
         if y is None:
             if isinstance(val, Coord):
-                self.x, self.y = val.x, val.y
+                self.x, self.y, self.__dtype = val.x, val.y, val.__dtype
             elif isinstance(val, tuple) or isinstance(val, list):
                 if len(val) != 2:
                     raise ValueError('Cannot convert list/tuple to Coord with length != 2')
-                self.x, self.y = int(val[0]), int(val[1])
+                self.x, self.y = self.__dtype(val[0]), self.__dtype(val[1])
             elif isinstance(val, dict) and 'x' in val and 'y' in val:
-                self.x, self.y = int(val['x']), int(val['y'])
+                self.x, self.y = self.__dtype(val['x']), self.__dtype(val['y'])
             elif isinstance(val, int) or isinstance(val, float):
-                self.x, self.y = int(val), int(val)
+                self.x, self.y = self.__dtype(val), self.__dtype(val)
             else:
                 raise ValueError(f'Cannot convert type {type(val)} to Coord')
         else:
-            self.x, self.y = int(val), int(y)
+            self.x, self.y = self.__dtype(val), self.__dtype(y)
 
     def __getitem__(self, idx):
         """Access x/y by 0/1 or a string."""
@@ -92,29 +100,33 @@ class Coord:
     def __setitem__(self, idx, val):
         """Set x/y by 0/1 or a string."""
         if idx == 0 or idx == 'x':
-            self.x = int(val)
+            self.x = self.__dtype(val)
         if idx == 1 or idx == 'y':
-            self.y = int(val)
+            self.y = self.__dtype(val)
 
     def __radd__(self, oth):
         """Addition of two Coord, given value converted if needed."""
         val = Coord.__convert(oth)
-        return Coord(val.x + self.x, val.y + self.y)
+        dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
+        return Coord(val.x + self.x, val.y + self.y, dtype=dtype)
 
     def __rsub__(self, oth):
         """Addition of two Coord, given value converted if needed."""
         val = Coord.__convert(oth)
-        return Coord(val.x - self.x, val.y - self.y)
+        dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
+        return Coord(val.x - self.x, val.y - self.y, dtype=dtype)
 
     def __sub__(self, oth):
         """Addition of two Coord, given value converted if needed."""
         val = Coord.__convert(oth)
-        return Coord(self.x - val.x, self.y - val.y)
+        dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
+        return Coord(self.x - val.x, self.y - val.y, dtype=dtype)
 
     def __add__(self, oth):
         """Addition of two Coord, given value converted if needed."""
         val = Coord.__convert(oth)
-        return Coord(self.x + val.x, self.y + val.y)
+        dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
+        return Coord(self.x + val.x, self.y + val.y, dtype=dtype)
 
     def __eq__(self, oth):
         """Addition of two Coord, given value converted if needed."""
