@@ -1,12 +1,29 @@
 #!/usr/bin/env python
-from sys import argv
+import sys
+from argparse import ArgumentParser
 from gui.app import App as GUIAPP
 from cli.app import App as CLIAPP
 
-app = None
-if len(argv) == 2 and argv[1] == '--cli':
-    app = CLIAPP()
-else:
-    app = GUIAPP()
 
-app.mainloop()
+def main():
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--gui",
+        action="store_true",
+        help="graphical user interface of minesweaper",
+    )
+    parser.add_argument(
+        "--cli",
+        action="store_true",
+        help="command line interface of minesweaper",
+    )
+    args = parser.parse_args()
+    if args.cli:
+        CLIAPP().mainloop()
+    else:
+        GUIAPP().mainloop()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
