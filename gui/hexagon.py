@@ -1,6 +1,6 @@
 """Single hexagon. WARNING: coordinates are sligtly messed up."""
 from math import sin, cos, tan, radians, sqrt
-from util.coord import Coord
+from util import Coord
 
 
 ANGLE = 60
@@ -16,8 +16,8 @@ class Hexagon:
         self.length = length
         self.height = COEF * self.length / sqrt(COEF**2 + 1)
         self.width = COEF * self.height / 2
-        self.topleft = Coord(x, y + self.height / 4, dtype=float)
-        whH = Coord(self.width / 2, -self.height / 2, dtype=float)
+        self.topleft = Coord(x, y + self.height / 4)
+        whH = Coord(self.width / 2, -self.height / 2)
         self.center = self.topleft + whH
 
         self.hovered = False
@@ -29,7 +29,7 @@ class Hexagon:
         self.tags = tags
         self.__item = None
         self.__calculate()
-        self.pos = Coord(self.coords[0], self.coords[1], dtype=float)
+        self.pos = Coord(self.coords[0], self.coords[1])
 
     def __calculate(self):
         startX, startY = self.center
@@ -44,7 +44,7 @@ class Hexagon:
             startX, startY = endX, endY
 
     def distance(self, x, y=None):
-        diff = Coord(x, y, dtype=float) - self.center
+        diff = Coord(x, y) - self.center
         return sqrt(diff.x**2 + diff.y**2)
 
     def changeFill(self, color):

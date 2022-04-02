@@ -1,7 +1,7 @@
 """Module that draws the game board."""
 
 from util import loadImage
-from util.coord import Coord
+from util import Point
 from math import sqrt
 from .hexagon import Hexagon
 
@@ -29,7 +29,6 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
         self.setDimensions(diagonal)
         self.__createBoard()
         self.__draw()
-
 
     def __draw(self):
         for i, hgn in enumerate(self.hexagons):
@@ -78,7 +77,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
                     self.size, COLORS['inactive'], COLORS['outline'], hexTags,
                     COLORS['hover'],
                 )
-                self.__data[Coord(row, col)]['hexagon'] = hxg
+                self.__data[Point(row, col)]['hexagon'] = hxg
 
                 self.hexagons.append(hxg)
                 if self.debug:
@@ -113,32 +112,9 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
             self.size = 10
         self.cols, self.rows = diag + 2, diag
 
-    def findClicked(self, pos):
+    def findClicked(self, pixel):
+        pos = Point(?, ?)
         for hgn in self.hexagons:
             if hgn.hovered:
                 return hgn
-
-    def onRightClick(self, event):
-        pos = Coord(event.x, event.y, dtype=float)
-        clicked = self.findClicked(pos)
-
-        if clicked in self.marked:
-            flag = self.marked[clicked]
-            self.app.canvas.delete(flag)
-            del self.marked[clicked]
-        else:
-            x, y = clicked.center
-            flag = self.app.canvas.create_image(x, y, image=self.img['flag'], state='disabled')
-            self.marked[clicked] = flag
-
-    def onLeftClick(self, event):
-        pos = Coord(event.x, event.y, dtype=float)
-        clicked = self.findClicked(pos)
-
-        if clicked in self.selected:
-            clicked.changeFill(COLORS['inactive'])
-            self.selected.remove(clicked)
-        else:
-            clicked.changeFill(COLORS['active'])
-            self.selected.add(clicked)
-
+        return pos

@@ -2,6 +2,10 @@
 
 import tkinter as tk
 from util.minepoint import Value, Mask
+from util import Coord, Point
+from .board import Board
+from logic.field import Field
+
 
 class Game(tk.Tk):
     def __init__(self, app):
@@ -18,10 +22,10 @@ class Game(tk.Tk):
                     self.board.drawBomb(x, y)
                 else:
                     self.board.drawOpenCell(x, y, color, str(self.field[x, y].value))
-                    
+
     def onRightClick(self, event):
-        pos = Coord(event.x, event.y, dtype=float)
-        clicked = self.findClicked(pos)
+        pixel = Coord(event.x, event.y)
+        clicked = self.findClicked(pixel)
 
         if clicked in self.marked:
             flag = self.marked[clicked]
@@ -35,8 +39,8 @@ class Game(tk.Tk):
             self.marked[clicked] = flag
 
     def onLeftClick(self, event):
-        pos = Coord(event.x, event.y, dtype=float)
-        clicked = self.findClicked(pos)
+        pixel = Coord(event.x, event.y)
+        clicked = self.findClicked(pixel)
 
         self.draw_hex()
 
