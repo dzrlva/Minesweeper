@@ -7,7 +7,7 @@ from .hexagon import Hexagon
 
 
 IMAGES = {
-    'flag': ['./resources/flag.png', (32, 32)],
+    'flag': ['./resources/flag.png', (40, 40)],
 }
 COLORS = {  # [!] Moved to another file
     'active': '#0081a3',
@@ -29,9 +29,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
         self.setDimensions(diagonal)
         self.__createBoard()
         self.__draw()
-        # [!] Move this to Game
-        self.app.canvas.bind("<Button-1>", self.onLeftClick)
-        self.app.canvas.bind("<Button-3>", self.onRightClick)
+
 
     def __draw(self):
         for i, hgn in enumerate(self.hexagons):
@@ -80,6 +78,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
                     self.size, COLORS['inactive'], COLORS['outline'], hexTags,
                     COLORS['hover'],
                 )
+                self.__data[Coord(row, col)]['hexagon'] = hxg
 
                 self.hexagons.append(hxg)
                 if self.debug:
@@ -119,7 +118,6 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
             if hgn.hovered:
                 return hgn
 
-    # [!] And this two methods too
     def onRightClick(self, event):
         pos = Coord(event.x, event.y, dtype=float)
         clicked = self.findClicked(pos)
@@ -144,4 +142,3 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
             clicked.changeFill(COLORS['active'])
             self.selected.add(clicked)
 
-    # [!] Add methods so Board can open and mark cells

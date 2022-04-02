@@ -18,4 +18,5 @@ class App(tk.Tk):
         self.canvas = tk.Canvas(self, width=width, height=width, bg=COLORS['main'])
         self.canvas.pack(expand='no', fill='both')
 
+        self.game = Game(self)
         self.board = Board(self, 12)
