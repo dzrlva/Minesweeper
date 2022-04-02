@@ -4,11 +4,13 @@ import tkinter as tk
 from .board import Board
 
 
+# [!] Move to another file
 COLORS = {
     'main': '#003153',
 }
 
 
+# [!] Make so App spawns playble hexagon field
 class App(tk.Tk):
     def __init__(self, width=900, height=900):
         super().__init__()
