@@ -1,6 +1,6 @@
 """Draw different boxes with ease."""
 from .screen import Screen
-from util.coord import Coord
+from util import Point
 
 SIDES = {
     'light':      { 'hor': '─', 'ver': '│' },
@@ -53,9 +53,9 @@ class Box:
         self.sides = SIDES[sides]
         self.corners = CORNERS[corners]
 
-    def draw(self, topleft=Coord(0, 0)):
+    def draw(self, topleft=Point(0, 0)):
         """Draw the box at some coordinates."""
-        topleft = Coord(topleft)
+        topleft = Point(topleft)
         botleft = [0, self.height] + topleft
         botright = [self.width, self.height] + topleft
         topright = [self.width, 0] + topleft

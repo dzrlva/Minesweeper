@@ -18,7 +18,7 @@ def main():
         help="command line interface of minesweaper",
     )
     args = parser.parse_args()
-    if args.cli:
+    if True or args.cli:
         CLIAPP().mainloop()
     else:
         GUIAPP().mainloop()

@@ -1,7 +1,7 @@
 """Move, print, color your terminal screen."""
 from blessed import Terminal
 from .color import Color
-from util.coord import Coord
+from util import Point
 
 
 term = Terminal()
@@ -17,7 +17,7 @@ class Screen:
 
     def __init__(self):
         """Create screen."""
-        self.cursor = Coord(0, 0)
+        self.cursor = Point(0, 0)
         self.color = Color.white
 
     def clear(self):
@@ -66,7 +66,7 @@ class Screen:
 
     def drawPixel(self, x, y, pixel=None, color=None):
         """Draw pixel at (x, y) with color."""
-        if isinstance(x, Coord):
+        if type(x) is Point:
             x, y, pixel, color = *x, y, pixel
         elif pixel is None:
             raise ValueError('Cannot draw None pixel')
@@ -110,7 +110,7 @@ class Screen:
                         raise ValueError('Unsupported length of coordinates')
                 elif isinstance(coords[0], slice):
                     x, y, color = coords[0].start, coords[0].stop, coords[1]
-                elif isinstance(coords[0], Coord):
+                elif type(coords[0]) is Point:
                     x, y, color = *coords[0], coords[1]
                 else:
                     x, y, color = *coords, None
@@ -118,7 +118,7 @@ class Screen:
                 x, y, color = None, int(coords), None
             else:
                 raise ValueError('Unsupported length of coordinates')
-        elif isinstance(coords, Coord):
+        elif type(coords) is Point:
             x, y, color = *coords, None
         elif isinstance(coords, int) or isinstance(coords, float):
             x, y, color = None, int(coords), None

@@ -2,7 +2,7 @@
 from .screen import Screen, Color
 from .box import Box
 from util.minepoint import Flag, Mask, Value
-from util.coord import Coord
+from util import Point
 
 
 VALUECOLORS = [ 0, 38, 73, 40, 136, 172, 202, 161, 124, 9 ]
@@ -25,7 +25,7 @@ class Game:
         """Create game."""
         self.field = field
         self.oldPos = None
-        self.pos = Coord.random([field.width, field.height])
+        self.pos = Point.random([field.width, field.height])
         self.cursor = Color(239, bg=True)
         self.stat = field.statistic()
         self.status = 'active'
@@ -57,7 +57,7 @@ class Game:
 
     def drawCursor(self, offset):
         """Draw cursor in current position."""
-        offset = Coord(offset)
+        offset = Point(offset)
         char, color = self.cellInfo(self.pos)
         if self.cheats and self.field[self.pos] == Value.bomb:
             char = '*'
@@ -68,7 +68,7 @@ class Game:
 
     def drawField(self, offset):
         """Draw field at current state."""
-        offset = Coord(offset)
+        offset = Point(offset)
         for x, y in self.field:
             char, color = self.cellInfo(x, y)
             screen.drawPixel(x + offset.x, y + offset.y, char, color)
@@ -83,9 +83,9 @@ class Game:
     def cellInfo(self, x, y=None):
         """Get cell draw character and color used."""
         if y is None:
-            cell = self.field[Coord(x)]
+            cell = self.field[Point(x)]
         else:
-            cell = self.field[Coord(x, y)]
+            cell = self.field[Point(x, y)]
 
         if cell == Mask.closed:
             if cell == Flag.noflag:
@@ -105,19 +105,19 @@ class Game:
     def move(self, direct):
         """Move cursor at certain direction."""
         if self.field.inBounds(self.pos + direct):
-            self.oldPos = Coord(self.pos.x, self.pos.y)
+            self.oldPos = Point(self.pos.x, self.pos.y)
             self.pos += direct
 
     def keyAction(self, key):
         """React to key press."""
         if key == KEYS['up']:
-            self.move(Coord(0, -1))
+            self.move(Point(0, -1))
         elif key == KEYS['down']:
-            self.move(Coord(0, 1))
+            self.move(Point(0, 1))
         elif key == KEYS['left']:
-            self.move(Coord(-1, 0))
+            self.move(Point(-1, 0))
         elif key == KEYS['right']:
-            self.move(Coord(1, 0))
+            self.move(Point(1, 0))
         elif key == KEYS['cheats']:
             self.cheats = not self.cheats
         else:
@@ -146,12 +146,12 @@ class Game:
 
     def win(self, offset):
         """Draw win state."""
-        offset = Coord(offset)
+        offset = Point(offset)
         screen[offset, Color.lime].print('Congrats!').whip()
 
     def gameover(self, offset):
         """Draw lose state."""
-        offset = Coord(offset)
+        offset = Point(offset)
         screen[0, 0, Color.red].print('You have lost!').whip()
 
         for x, y in self.field:
