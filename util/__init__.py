@@ -1,5 +1,5 @@
 from PIL import ImageTk, Image
-from .coord import Coord as CoordBase
+from .coordBase import Coord as CoordBase
 
 
 class Point(CoordBase):
