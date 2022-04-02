@@ -16,38 +16,25 @@ class Game(tk.Tk):
         pass
 
     def draw_hex(self, x, y):
-        for x, y in self.field:
-            if self.field[x, y] == Mask.opened:
-                if self.field[x, y] == Value.bomb:
-                    self.board.drawBomb(x, y)
-                else:
-                    self.board.drawOpenCell(x, y, color, str(self.field[x, y].value))
+        if self.field[x, y] == Mask.opened:
+            if self.field[x, y] == Value.bomb:
+                self.board.drawBomb(x, y)
+            else:
+                self.board.drawOpenCell(Point(x, y,), str(self.field[x, y].value))
 
     def onRightClick(self, event):
-        pixel = Coord(event.x, event.y)
-        clicked = self.findClicked(pixel)
-
-        if clicked in self.marked:
-            flag = self.marked[clicked]
-            self.app.canvas.delete(flag)
-            del self.marked[clicked]
-        else:
-            x, y = clicked.center
-
-            self.flag = self.app.canvas.create_image(x, y, image=self.img['flag'], state='disabled')
-
-            self.marked[clicked] = flag
+        clicked = self.findClicked()
+        self.board.check_flag(clicked)
 
     def onLeftClick(self, event):
-        pixel = Coord(event.x, event.y)
-        clicked = self.findClicked(pixel)
-
-        self.draw_hex()
-
+        points = self.field.reveal(self.findClicked())
+        for p in points:
+            self.draw_hex(p.x, p.y)
+        '''
         if clicked in self.selected:
             clicked.changeFill(COLORS['inactive'])
             self.selected.remove(clicked)
         else:
             clicked.changeFill(COLORS['active'])
             self.selected.add(clicked)
-
+        '''
