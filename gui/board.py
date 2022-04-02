@@ -1,7 +1,7 @@
 """Module that draws the game board."""
 
 from util import loadImage
-from util import Point
+from util import Point, Coord
 from math import sqrt
 from .hexagon import Hexagon
 
@@ -14,6 +14,16 @@ COLORS = {  # [!] Moved to another file
     'inactive': '#ffffff',
     'outline': '#003153',
     'hover': '#03dfaa',
+    '0': "#ffffff"
+    '1': '#59DF9F',
+    '2': '#9BE382',
+    '3': '#D0DA62',
+    '4': '#DEBB60',
+    '5': '#F0923C',
+    '6': '#E46666',
+    '7': '#ffffff',
+    '8': '#ffffff',
+    'bomb': '#AA0000',
 }
 
 
@@ -29,6 +39,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
         self.setDimensions(diagonal)
         self.__createBoard()
         self.__draw()
+        self.__data = {Point(row, col): dict() for row, col in Point.range([self.rows, self.cols])}
 
     def __draw(self):
         for i, hgn in enumerate(self.hexagons):
@@ -80,6 +91,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
                 self.__data[Point(row, col)]['hexagon'] = hxg
 
                 self.hexagons.append(hxg)
+                self.__data[Point(row, col)]['hexagon'] = hxg
                 if self.debug:
                     textX = row * self.size * sqrt(3) + offset + self.size + y_offset - 15,
                     textY = col * self.size * 1.5 + self.size / 2 + 25
@@ -112,9 +124,32 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
             self.size = 10
         self.cols, self.rows = diag + 2, diag
 
-    def findClicked(self, pixel):
-        # pos = Point(?, ?)
-        for hgn in self.hexagons:
-            if hgn.hovered:
-                return hgn
-        return pos
+    def findClicked(self):
+        for pos, cell in self.__data.items():
+            if cell['hexagon'].hovered:
+                return pos
+
+    def drawBomb(self, x, y):
+        ###
+
+    def drawOpenCell(self, p, text):
+        hgx = self.__data[p]['hexagon']
+        coords = self.__data[p]['hexagon'].center
+        self.can.itemconfigure(hgx, fill=COLORS[text])
+        if text != '0':
+            self.app.canvas.create_text(
+                *coords,  anchor='w', font="Purisa 20", fill="white", text=text
+            )
+
+    def check_flag(self):
+        x, y = clicked.center
+        if clicked in self.marked:
+            self.delete_flag(x, y)
+        else:
+            self.set_flag(x, y)
+
+    def set_flag(self, x, y):
+        self.__data[Point(x, y)]['flag'] = self.app.canvas.create_image(x, y, image=self.img['flag'],
+                                                                                  state='disabled')
+    def delete_flag(self, x, y):
+        self.app.canvas.delete(self.__data[Point(x, y)]['flag'])
