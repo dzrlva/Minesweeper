@@ -1,29 +1,29 @@
 """Module for the Field class."""
 
-from util.coord import Coord
+from util import Point
 from util.minepoint import MinePoint, Value, Mask, Flag
 
 
 def NoramlPattern(point):
     return [
-        Coord(-1, -1), Coord(0, -1), Coord(1, -1),
-        Coord(-1, 0), Coord(1, 0),
-        Coord(-1, 1), Coord(0, 1), Coord(1, 1)
+        Point(-1, -1), Point(0, -1), Point(1, -1),
+        Point(-1, 0), Point(1, 0),
+        Point(-1, 1), Point(0, 1), Point(1, 1)
     ]
 
 
 def HexagonPatter(point):
     if point.y % 2 == 0:
         return [
-            Coord(0, -1), Coord(1, -1),
-            Coord(-1, 0), Coord(1, 0),
-            Coord(0, 1), Coord(1, 1),
+            Point(0, -1), Point(1, -1),
+            Point(-1, 0), Point(1, 0),
+            Point(0, 1), Point(1, 1),
         ]
     else:
         return [
-            Coord(-1, -1), Coord(0, -1),
-            Coord(-1, 0), Coord(1, 0),
-            Coord(-1, 1), Coord(0, 1),
+            Point(-1, -1), Point(0, -1),
+            Point(-1, 0), Point(1, 0),
+            Point(-1, 1), Point(0, 1),
         ]
 
 
@@ -50,7 +50,7 @@ class Field:
         self.__calcFieldBombs()
 
     def __isOutOfBounds(self, x, y=None):
-        x, y = Coord(x, y)
+        x, y = Point(x, y)
         return x < 0 or y < 0 or x >= self.width or y >= self.height
 
     def inBounds(self, x, y=None):
@@ -59,14 +59,14 @@ class Field:
 
     def __getitem__(self, coords):
         """Return field minepoint if in bound else OUTOFBOUND value."""
-        x, y = Coord(coords)
+        x, y = Point(coords)
         if self.__isOutOfBounds(x, y):
             return Field.OUTOFBOUND
         return self.__field[y][x]
 
     def __setitem__(self, coords, value):
         """Set minepoint value if in bound."""
-        x, y = Coord(coords)
+        x, y = Point(coords)
         if self.__isOutOfBounds(x, y):
             raise ValueError(f'Coords {coords} are out of bounds')
         self.__field[y][x].set(value)
@@ -74,9 +74,9 @@ class Field:
     def __randomizeBombs(self):
         """Randomize bomb position."""
         for _ in range(self.bombs):
-            x, y = Coord.random([self.width, self.height])
+            x, y = Point.random([self.width, self.height])
             while self[x, y] == Value.bomb:
-                x, y = Coord.random([self.width, self.height])
+                x, y = Point.random([self.width, self.height])
             self[x, y] = Value.bomb
 
     def __calcFieldBombs(self):
@@ -85,7 +85,7 @@ class Field:
             if self[point] == Value.bomb:
                 continue
             bombsAround = 0
-            # for bias in Coord.range(-1, 2):
+            # for bias in Point.range(-1, 2):
             for bias in self.pattern(point):
                 if bias != (0, 0):
                     bombsAround += self[point + bias] == Value.bomb
@@ -93,11 +93,11 @@ class Field:
 
     def __iter__(self):
         """Iterate over all cordinates of the field."""
-        yield from Coord.range([self.width, self.height])
+        yield from Point.range([self.width, self.height])
 
     def cycleFlag(self, x, y=None):
         """Change flag value on a point."""
-        x, y = Coord(x, y)
+        x, y = Point(x, y)
         if self[x, y] == Flag.noflag:
             self[x, y] = Flag.sure
         elif self[x, y] == Flag.sure:
@@ -111,7 +111,7 @@ class Field:
 
         Return freshly revealed list of coordinates or None
         """
-        point = Coord(x, y)
+        point = Point(x, y)
         if self[point] == Value.bomb or self[point] == Mask.opened:
             return None
 
@@ -123,7 +123,7 @@ class Field:
             self[point] = Mask.opened
             revealed.append(point)
 
-            # for bias in Coord.range(-1, 2):
+            # for bias in Point.range(-1, 2):
             for bias in self.pattern(point):
                 curPos = point + bias
                 if self[curPos] != Mask.closed:

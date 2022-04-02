@@ -113,7 +113,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
         self.cols, self.rows = diag + 2, diag
 
     def findClicked(self, pixel):
-        pos = Point(?, ?)
+        # pos = Point(?, ?)
         for hgn in self.hexagons:
             if hgn.hovered:
                 return hgn

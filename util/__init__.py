@@ -1,15 +1,6 @@
 from PIL import ImageTk, Image
-from .coordBase import Coord as CoordBase
-
-
-class Point(CoordBase):
-    def __init__(self, x, y=None):
-        super.__init__(x, y, dtype=int)
-
-
-class Coord(CoordBase):
-    def __init__(self, x, y=None):
-        super.__init__(x, y, dtype=float)
+from .coord import Coord
+from .point import Point
 
 
 class dotdict(dict):
