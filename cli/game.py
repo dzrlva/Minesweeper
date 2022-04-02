@@ -125,8 +125,11 @@ class Game:
                 if self.field[self.pos] == Mask.closed:
                     self.field.cycleFlag(self.pos)
             elif key == KEYS['open']:
-                if self.field[self.pos] != Flag.sure and self.field.reveal(self.pos):
-                    self.status = 'lose'
+                if self.field[self.pos] != Flag.sure:
+                    if self.field[self.pos] == Value.bomb:
+                        self.status = 'lose'
+                    else:
+                        self.field.reveal(self.pos)
             self.redraw = True
             self.checkWin()
 

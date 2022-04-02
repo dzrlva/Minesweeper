@@ -109,18 +109,19 @@ class Field:
         """
         Reveal all possible minepoints around coordinate.
 
-        Return True if revealed point has a bomb.
+        Return freshly revealed list of coordinates or None
         """
         point = Coord(x, y)
-        if self[point] == Value.bomb:
-            return True
-        if self[point] == Mask.opened:
-            return False
+        if self[point] == Value.bomb or self[point] == Mask.opened:
+            return None
 
+        revealed = []
         stack = [point]
+
         while len(stack):
             point = stack.pop()
             self[point] = Mask.opened
+            revealed.append(point)
 
             # for bias in Coord.range(-1, 2):
             for bias in self.pattern(point):
@@ -133,7 +134,7 @@ class Field:
                     stack.append(curPos)
                 elif self[curPos] != Value.bomb:
                     self[curPos] = Mask.opened
-        return False
+        return revealed
 
     def statistic(self):
         """Return current field statistic."""
