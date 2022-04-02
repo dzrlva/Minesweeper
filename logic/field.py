@@ -3,17 +3,28 @@
 from util.coord import Coord
 from util.minepoint import MinePoint, Value, Mask, Flag
 
-NoramlPattern = [
-    Coord(-1, -1), Coord(0, -1), Coord(1, -1),
-    Coord(-1, 0), Coord(1, 0),
-    Coord(-1, 1), Coord(0, 1), Coord(1, 1)
-]
 
-HexagonPatter = [
-    Coord(-1, -1), Coord(0, -1),
-    Coord(-1, 0), Coord(1, 0),
-    Coord(-1, 1), Coord(0, 1),
-]
+def NoramlPattern(point):
+    return [
+        Coord(-1, -1), Coord(0, -1), Coord(1, -1),
+        Coord(-1, 0), Coord(1, 0),
+        Coord(-1, 1), Coord(0, 1), Coord(1, 1)
+    ]
+
+
+def HexagonPatter(point):
+    if point.y % 2 == 0:
+        return [
+            Coord(0, -1), Coord(1, -1),
+            Coord(-1, 0), Coord(1, 0),
+            Coord(0, 1), Coord(1, 1),
+        ]
+    else:
+        return [
+            Coord(-1, -1), Coord(0, -1),
+            Coord(-1, 0), Coord(1, 0),
+            Coord(-1, 1), Coord(0, 1),
+        ]
 
 
 class Field:
@@ -21,13 +32,20 @@ class Field:
 
     OUTOFBOUND = -1
 
-    def __init__(self, width, height, bombsPercent):
+    def __init__(self, width, height, bombsPercent, kind='normal'):
         """Initialize field with size and bombs. Randomly fill it."""
+        if kind == 'normal':
+            self.pattern = NoramlPattern
+        elif kind == 'hexagon':
+            self.pattern = HexagonPatter
+        else:
+            raise ValueError('Unkown kind of field pattern')
+
         self.size = width * height
         self.width, self.height = width, height
         self.bombs = round(self.size * bombsPercent)
-        self.__field = [[MinePoint() for _ in range(height)]
-                        for _ in range(width)]
+        self.__field = [[MinePoint() for _ in range(width)]
+                        for _ in range(height)]
         self.__randomizeBombs()
         self.__calcFieldBombs()
 
@@ -44,14 +62,14 @@ class Field:
         x, y = Coord(coords)
         if self.__isOutOfBounds(x, y):
             return Field.OUTOFBOUND
-        return self.__field[x][y]
+        return self.__field[y][x]
 
     def __setitem__(self, coords, value):
         """Set minepoint value if in bound."""
         x, y = Coord(coords)
         if self.__isOutOfBounds(x, y):
             raise ValueError(f'Coords {coords} are out of bounds')
-        self.__field[x][y].set(value)
+        self.__field[y][x].set(value)
 
     def __randomizeBombs(self):
         """Randomize bomb position."""
@@ -67,7 +85,8 @@ class Field:
             if self[point] == Value.bomb:
                 continue
             bombsAround = 0
-            for bias in Coord.range(-1, 2):
+            # for bias in Coord.range(-1, 2):
+            for bias in self.pattern(point):
                 if bias != (0, 0):
                     bombsAround += self[point + bias] == Value.bomb
             self[point] = Value(bombsAround)
@@ -103,7 +122,8 @@ class Field:
             point = stack.pop()
             self[point] = Mask.opened
 
-            for bias in Coord.range(-1, 2):
+            # for bias in Coord.range(-1, 2):
+            for bias in self.pattern(point):
                 curPos = point + bias
                 if self[curPos] != Mask.closed:
                     continue
@@ -140,3 +160,6 @@ class Field:
         res['bombsLeft'] = self.bombs - res['bombsMarked']
         res['allBombsCorrect'] = res['bombsGuessed'] == self.bombs
         return res
+
+    def recalculate(self):
+        self.__calcFieldBombs()
