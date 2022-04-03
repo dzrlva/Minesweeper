@@ -152,3 +152,6 @@ class Point:
     def __str__(self):
         """Convert to string."""
         return f'({self.x}, {self.y})'
+
+    def __hash__(self):
+        return hash(f'({self.x},{self.y})')
