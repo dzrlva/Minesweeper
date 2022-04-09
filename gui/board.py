@@ -14,7 +14,7 @@ COLORS = {  # [!] Moved to another file
     'inactive': '#ffffff',
     'outline': '#003153',
     'hover': '#03dfaa',
-    '0': "#ffffff"
+    '0': "#ffffff",
     '1': '#59DF9F',
     '2': '#9BE382',
     '3': '#D0DA62',
@@ -130,7 +130,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
                 return pos
 
     def drawBomb(self, x, y):
-        ###
+        pass
 
     def drawOpenCell(self, p, text):
         hgx = self.__data[p]['hexagon']
