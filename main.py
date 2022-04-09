@@ -3,7 +3,7 @@ import sys
 from argparse import ArgumentParser
 from gui.app import App as GUIAPP
 from cli.app import App as CLIAPP
-
+from cli.menu import startmenu
 
 def main():
     parser = ArgumentParser()
@@ -19,7 +19,8 @@ def main():
     )
     args = parser.parse_args()
     if True or args.cli:
-        CLIAPP().mainloop()
+        startmenu()
+        #CLIAPP().mainloop()
     else:
         GUIAPP().mainloop()
     return 0
