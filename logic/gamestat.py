@@ -68,9 +68,9 @@ class Stat:
         """Print statistic and it's best."""
         bestWinTime, meanWinTime, gamesWon = self.findBest()
         winPercent = gamesWon / (len(self.__old) + 1) * 100
-        print('Current game time:', self['gametime'], 'seconds')
-        print('Best win time:    ', bestWinTime, 'seconds')
-        print('Games played:     ', len(self.__old) + 1)
-        print('Games won:        ', gamesWon)
-        print(f'Win percent:       {winPercent:.2f}')
-        print('Mean win time:    ', meanWinTime, 'seconds')
+        print('| Current game time:', self['gametime'], 'seconds')
+        print('| Best win time:    ', bestWinTime, 'seconds')
+        print('| Games played:     ', len(self.__old) + 1)
+        print('| Games won:        ', gamesWon)
+        print(f'| Win percent:       {winPercent:.2f}')
+        print('| Mean win time:    ', meanWinTime, 'seconds')
