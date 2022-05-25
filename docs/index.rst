@@ -12,6 +12,8 @@ Welcome to minesweeper's documentation!
 
    cli
    gui
+   logic
+   utils
 
 This is the legend game minesweeper. It has two variants: simple console and graphical hexogonal.
 

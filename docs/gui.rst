@@ -1,8 +1,7 @@
 Graphical minesweeper
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. TO DO description
-
-.. automodule:: Graphical
+.. automodule:: gui
    :members:
    :private-members:
+   :special-members:
