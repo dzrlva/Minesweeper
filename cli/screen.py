@@ -1,7 +1,7 @@
 """Move, print, color your terminal screen."""
 from blessed import Terminal
 from .color import Color
-from util import Point
+from util.point import Point
 
 
 term = Terminal()
@@ -24,7 +24,7 @@ class Screen:
         """Clear screen."""
         print(term.clear())
 
-    def print(self, *args, sep=' '):
+    def print(self, *args, sep=" "):
         """Print something at screen."""
         string = sep.join(map(str, args))
         self.__printLen = len(string)
@@ -35,7 +35,7 @@ class Screen:
         """Whips (clears) current line after last printed char."""
         x = self.cursor.x
         self.setCursor(x + self.__printLen)
-        self.print(' ' * (term.width - self.cursor.x))
+        self.print(" " * (term.width - self.cursor.x))
         self.setCursor(x)
         return self
 
@@ -47,8 +47,8 @@ class Screen:
             if y is not None:
                 self.cursor.y = int(y)
         except TypeError:
-            raise TypeError('Coordinates must be integer')
-        print(term.move_xy(self.cursor.x, self.cursor.y), end='')
+            raise TypeError("Coordinates must be integer")
+        print(term.move_xy(self.cursor.x, self.cursor.y), end="")
         return self
 
     def setColor(self, color, bg=None):
@@ -60,8 +60,10 @@ class Screen:
                 color = Color(color, bg)
                 self.color = color
         elif not isinstance(color, Color):
-            raise ValueError(f'Color is suppose to be str or Color type, not {type(color)}')
-        print(color, end='')
+            raise ValueError(
+                f"Color is suppose to be str or Color type, not {type(color)}"
+            )
+        print(color, end="")
         return self
 
     def drawPixel(self, x, y, pixel=None, color=None):
@@ -69,7 +71,7 @@ class Screen:
         if type(x) is Point:
             x, y, pixel, color = *x, y, pixel
         elif pixel is None:
-            raise ValueError('Cannot draw None pixel')
+            raise ValueError("Cannot draw None pixel")
         self.setCursor(x, y)
         self.setColor(color)
         self.print(pixel)
@@ -107,7 +109,7 @@ class Screen:
                     elif len(coords) == 2:
                         x, y = coords
                     else:
-                        raise ValueError('Unsupported length of coordinates')
+                        raise ValueError("Unsupported length of coordinates")
                 elif isinstance(coords[0], slice):
                     x, y, color = coords[0].start, coords[0].stop, coords[1]
                 elif type(coords[0]) is Point:
@@ -117,13 +119,13 @@ class Screen:
             elif len(coords) == 1:
                 x, y, color = None, int(coords), None
             else:
-                raise ValueError('Unsupported length of coordinates')
+                raise ValueError("Unsupported length of coordinates")
         elif type(coords) is Point:
             x, y, color = *coords, None
         elif isinstance(coords, int) or isinstance(coords, float):
             x, y, color = None, int(coords), None
         else:
-            raise ValueError('Unsupported value type for coordinates')
+            raise ValueError("Unsupported value type for coordinates")
         self.setColor(color)
         self.setCursor(x, y)
         return self

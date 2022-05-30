@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+"""Main file."""
 import sys
 from argparse import ArgumentParser
-from cli.app import App as CLIAPP
 from cli.menu import startmenu
 
+
 def main():
+    """(Will) release start gui or cli minesweeper."""
     parser = ArgumentParser()
     parser.add_argument(
         "--cli",
@@ -14,7 +16,7 @@ def main():
     args = parser.parse_args()
     if True or args.cli:
         startmenu()
-        #CLIAPP().mainloop()
+        # CLIAPP().mainloop()
     return 0
 
 

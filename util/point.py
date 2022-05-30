@@ -29,9 +29,9 @@ class Point:
             start, end = 0, start
         start, end = Point.__convert(start), Point.__convert(end)
         if start.x >= end.x:
-            raise ValueError('Start x cannot be greater than end x')
+            raise ValueError("Start x cannot be greater than end x")
         if start.y >= end.y:
-            raise ValueError('Start y cannot be greater than end y')
+            raise ValueError("Start y cannot be greater than end y")
         x = randint(start.x, end.x - 1)
         y = randint(start.y, end.y - 1)
         return Point(x, y)
@@ -51,9 +51,9 @@ class Point:
             step = 1
         start, end, step = map(Point.__convert, [start, end, step])
         if start.x > end.x:
-            raise ValueError('Start x cannot be greater than end x')
+            raise ValueError("Start x cannot be greater than end x")
         if start.y > end.y:
-            raise ValueError('Start y cannot be greater than end y')
+            raise ValueError("Start y cannot be greater than end y")
         for x in range(start.x, end.x, step.x):
             for y in range(start.y, end.y, step.y):
                 yield Point(x, y)
@@ -79,29 +79,31 @@ class Point:
                 self.x, self.y, self.__dtype = val.x, val.y, val.__dtype
             elif isinstance(val, tuple) or isinstance(val, list):
                 if len(val) != 2:
-                    raise ValueError('Cannot convert list/tuple to Point with length != 2')
+                    raise ValueError(
+                        "Cannot convert list/tuple to Point with length != 2"
+                    )
                 self.x, self.y = self.__dtype(val[0]), self.__dtype(val[1])
-            elif isinstance(val, dict) and 'x' in val and 'y' in val:
-                self.x, self.y = self.__dtype(val['x']), self.__dtype(val['y'])
+            elif isinstance(val, dict) and "x" in val and "y" in val:
+                self.x, self.y = self.__dtype(val["x"]), self.__dtype(val["y"])
             elif isinstance(val, int) or isinstance(val, float):
                 self.x, self.y = self.__dtype(val), self.__dtype(val)
             else:
-                raise ValueError(f'Cannot convert type {type(val)} to Point')
+                raise ValueError(f"Cannot convert type {type(val)} to Point")
         else:
             self.x, self.y = self.__dtype(val), self.__dtype(y)
 
     def __getitem__(self, idx):
         """Access x/y by 0/1 or a string."""
-        if idx == 0 or idx == 'x':
+        if idx == 0 or idx == "x":
             return self.x
-        if idx == 1 or idx == 'y':
+        if idx == 1 or idx == "y":
             return self.y
 
     def __setitem__(self, idx, val):
         """Set x/y by 0/1 or a string."""
-        if idx == 0 or idx == 'x':
+        if idx == 0 or idx == "x":
             self.x = self.__dtype(val)
-        if idx == 1 or idx == 'y':
+        if idx == 1 or idx == "y":
             self.y = self.__dtype(val)
 
     def __radd__(self, oth):
@@ -147,11 +149,12 @@ class Point:
 
     def __repr__(self):
         """Represent Point in console."""
-        return f'Point <{self.x}, {self.y}>'
+        return f"Point <{self.x}, {self.y}>"
 
     def __str__(self):
         """Convert to string."""
-        return f'({self.x}, {self.y})'
+        return f"({self.x}, {self.y})"
 
     def __hash__(self):
-        return hash(f'({self.x},{self.y})')
+        """Hash coordinates."""
+        return hash(f"({self.x},{self.y})")

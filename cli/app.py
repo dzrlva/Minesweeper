@@ -9,16 +9,19 @@ import time
 
 
 class App:
+    """Realize cli app."""
+
     def mainloop(self):
+        """Create main field."""
         field = Field(30, 20, 0.15)
         term = Terminal()
         screen = Screen()
         game = Game(field)
 
-        username = 'Gamer1'
+        username = "Gamer1"
         # tempname = input(f'Input another name if you are not {username}: ')
         # if tempname:
-            # username = tempname
+        # username = tempname
 
         stat = Stat()
         stat.assignFile(username)
@@ -28,9 +31,9 @@ class App:
             screen.clear()
             game.draw()
             starttime = time.time()
-            key = ''
+            key = ""
 
-            while key != "q" and game.status == 'active':
+            while key != "q" and game.status == "active":
                 key = term.inkey(timeout=3)
                 if not key:
                     continue
@@ -38,10 +41,9 @@ class App:
                 game.keyAction(key)
                 game.draw()
 
-            stat['win'] = game.status == 'win'
+            stat["win"] = game.status == "win"
 
-        stat['gametime'] = round(time.time() - starttime, 1)
+        stat["gametime"] = round(time.time() - starttime, 1)
         stat.saveStatistic()
         screen.setCursor(0, field.height + 6).setColor(Color.reset)
         stat.print()
-

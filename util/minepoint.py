@@ -117,7 +117,7 @@ class MinePoint:
             return self.mask == oth
         elif isinstance(oth, Flag):
             return self.flag == oth
-        raise TypeError(f'Unexpected type {type(oth)} to compare to')
+        raise TypeError(f"Unexpected type {type(oth)} to compare to")
 
     def set(self, oth):
         """Set cell value, mask or flag."""
@@ -128,7 +128,7 @@ class MinePoint:
         elif isinstance(oth, Flag):
             self.flag = oth
         else:
-            raise TypeError(f'Unexpected type {type(oth)} to set to')
+            raise TypeError(f"Unexpected type {type(oth)} to set to")
 
     def __repr__(self):
         """Show binary value of cell."""

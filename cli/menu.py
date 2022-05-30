@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-
+"""Menus for cli minesweeper."""
 from cli.screen import Screen, Color
 from blessed import Terminal
 from cli.app import App as CLIAPP
 from cli.box import Box
-from util import Point
+from util.point import Point
 from logic.field import Field
 from logic.gamestat import Stat
 
@@ -25,6 +25,13 @@ stat.readStatistic()
 
 
 class Menu:
+    """Common class for all menus.
+
+    * item_numb - number of menu items
+    * items - list of item names
+    * field -  field that is used to represent the menu
+    """
+
     def __init__(self, item_numb, items, field):
         """Create abstract menu."""
         self.oldPos = None
@@ -49,7 +56,10 @@ class Menu:
 
 
 class Startmenu(Menu):
+    """Start menu. Appear at the beginning."""
+
     def __init__(self, item_numb, items, field):
+        """Inheritance from Menu."""
         Menu.__init__(self, item_numb, items, field)
 
     def keyAction(self, key):
@@ -71,17 +81,23 @@ class Startmenu(Menu):
                 screen.setCursor(0, 0)
                 screen.clear()
                 exit()
-    
+
     def draw(self):
         """Draw menu."""
         self.box.draw([0, 0])
         self.drawCursor([1, 1 + OFFSET_START])
-        screen[2, 1, Color.white].print(f"Hello, Gamer1!")
-        for i, j in zip(self.items, range(OFFSET_START, len(self.items) + OFFSET_START)):
+        screen[2, 1, Color.white].print("Hello, Gamer1!")
+        for i, j in zip(
+            self.items, range(OFFSET_START, len(self.items) + OFFSET_START)
+        ):
             screen[2, 1 + j, Color.white].print(i)
 
+
 class Statmenu(Menu):
+    """Show statistics."""
+
     def __init__(self, item_numb, items, field):
+        """Inheritance from Menu."""
         Menu.__init__(self, item_numb, items, field)
 
     def keyAction(self, key):
@@ -94,13 +110,17 @@ class Statmenu(Menu):
         """Draw menu."""
         self.box.draw([0, 0])
         self.drawCursor([1, 1 + OFFSET_STAT])
-        screen[2, 1, Color.white].print(f"Gamer1's statistics")
+        screen[2, 1, Color.white].print("Gamer1's statistics")
         stat.print()
         for i, j in zip(self.items, range(OFFSET_STAT, len(self.items) + OFFSET_STAT)):
             screen[2, 1 + j, Color.white].print(i)
 
+
 class Settingsmenu(Menu):
+    """Menu for changing settings."""
+
     def __init__(self, item_numb, items, field):
+        """Inheritance from menu."""
         Menu.__init__(self, item_numb, items, field)
 
     def keyAction(self, key):
@@ -116,11 +136,15 @@ class Settingsmenu(Menu):
         """Draw menu."""
         self.box.draw([0, 0])
         self.drawCursor([1, 1 + OFFSET_START])
-        screen[2, 1, Color.white].print(f"Settings menu")
-        for i, j in zip(self.items, range(OFFSET_START, len(self.items) + OFFSET_START)):
+        screen[2, 1, Color.white].print("Settings menu")
+        for i, j in zip(
+            self.items, range(OFFSET_START, len(self.items) + OFFSET_START)
+        ):
             screen[2, 1 + j, Color.white].print(i)
 
+
 def runmenu(namemenu):
+    """Run abstract menu."""
     term = Terminal()
     with term.cbreak(), term.hidden_cursor():
         screen.clear()
@@ -135,13 +159,27 @@ def runmenu(namemenu):
             namemenu.draw()
         screen.clear()
 
+
 def settingsmenu():
-    settingsmenu_items = ["Language", "Gamer", "Colors", "Sounds", "Cursor", "Keys", "Exit"]
+    """Run settings menu."""
+    settingsmenu_items = [
+        "Language",
+        "Gamer",
+        "Colors",
+        "Sounds",
+        "Cursor",
+        "Keys",
+        "Exit",
+    ]
     settingsfield = Field(MENU_WIDTH, len(settingsmenu_items) + OFFSET_START, 0.15)
-    settingsmenu = Settingsmenu(len(settingsmenu_items), settingsmenu_items, settingsfield)
+    settingsmenu = Settingsmenu(
+        len(settingsmenu_items), settingsmenu_items, settingsfield
+    )
     runmenu(settingsmenu)
 
+
 def statmenu():
+    """Run statmenu menu."""
     statmenu_items = ["Exit"]
     statfield = Field(MENU_WIDTH, len(statmenu_items) + OFFSET_STAT, 0.15)
     statmenu = Statmenu(len(statmenu_items), statmenu_items, statfield)
@@ -149,6 +187,7 @@ def statmenu():
 
 
 def startmenu():
+    """Run startmenu menu."""
     startmenu_items = ["Game", "Statistics", "Settings", "Exit"]
     startfield = Field(MENU_WIDTH, len(startmenu_items) + OFFSET_START, 0.15)
     startmenu = Startmenu(len(startmenu_items), startmenu_items, startfield)

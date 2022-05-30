@@ -1,10 +1,11 @@
 """Module for the Field class."""
 
-from util import Point
+from util.point import Point
 from util.minepoint import MinePoint, Value, Mask, Flag
 
 
 def NoramlPattern(point):
+    """Return cell's neighbours in Cartesian grid."""
     return [
         Point(-1, -1), Point(0, -1), Point(1, -1),
         Point(-1, 0), Point(1, 0),
@@ -13,6 +14,7 @@ def NoramlPattern(point):
 
 
 def HexagonPatter(point):
+    """Return cell's neighbors in hexagonal grid."""
     if point.y % 2 == 0:
         return [
             Point(0, -1), Point(1, -1),
@@ -163,4 +165,5 @@ class Field:
         return res
 
     def recalculate(self):
+        """Recalculate bomb positions."""
         self.__calcFieldBombs()

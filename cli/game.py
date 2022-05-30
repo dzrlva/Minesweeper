@@ -2,18 +2,18 @@
 from .screen import Screen, Color
 from .box import Box
 from util.minepoint import Flag, Mask, Value
-from util import Point
+from util.point import Point
 
 
-VALUECOLORS = [ 0, 38, 73, 40, 136, 172, 202, 161, 124, 9 ]
+VALUECOLORS = [0, 38, 73, 40, 136, 172, 202, 161, 124, 9]
 KEYS = {
-    'up':     'w',
-    'down':   's',
-    'left':   'a',
-    'right':  'd',
-    'open':   ' ',
-    'mark':   'f',
-    'cheats': 'x'
+    "up": "w",
+    "down": "s",
+    "left": "a",
+    "right": "d",
+    "open": " ",
+    "mark": "f",
+    "cheats": "x",
 }
 screen = Screen()
 
@@ -28,8 +28,8 @@ class Game:
         self.pos = Point.random([field.width, field.height])
         self.cursor = Color(239, bg=True)
         self.stat = field.statistic()
-        self.status = 'active'
-        self.box = Box(field.width + 1, field.height + 1, 'soft')
+        self.status = "active"
+        self.box = Box(field.width + 1, field.height + 1, "soft")
         self.redraw = True
         self.fullredraw = True
         self.barsHeight = 2
@@ -37,7 +37,7 @@ class Game:
 
     def draw(self):
         """Draw game attributes."""
-        if self.status == 'active':
+        if self.status == "active":
             if self.fullredraw:
                 self.fullredraw = False
                 self.redraw = True
@@ -47,20 +47,22 @@ class Game:
                 self.drawField([1, self.barsHeight + 1])
             self.drawInfoBars()
             self.drawCursor([1, self.barsHeight + 1])
-        elif self.status == 'lose':
+        elif self.status == "lose":
             self.gameover([1, self.barsHeight + 1])
-        elif self.status == 'win':
+        elif self.status == "win":
             self.drawField([0, self.barsHeight + 1])
             self.win([0, 0])
         else:
-            screen[0, 0, Color.red].print(f'[Error] UNKNOWN GAME STATUS: {self.status}').whip()
+            screen[0, 0, Color.red].print(
+                f"[Error] UNKNOWN GAME STATUS: {self.status}"
+            ).whip()
 
     def drawCursor(self, offset):
         """Draw cursor in current position."""
         offset = Point(offset)
         char, color = self.cellInfo(self.pos)
         if self.cheats and self.field[self.pos] == Value.bomb:
-            char = '*'
+            char = "*"
         screen.drawPixel(self.pos + offset, char, color + self.cursor)
         if self.oldPos is not None:
             char, color = self.cellInfo(self.oldPos)
@@ -76,9 +78,11 @@ class Game:
     def drawInfoBars(self):
         """Draw info bars."""
         stat = self.stat
-        cheats = ' [CHEATS]' if self.cheats else ''
+        cheats = " [CHEATS]" if self.cheats else ""
         screen[1, 0].print(f"Cells: {stat['cellsTotal']}/{self.field.size}").whip()
-        screen[1, 1].print(f"Bombs{cheats}: {stat['bombsMarked']}/{self.field.bombs}").whip()
+        screen[1, 1].print(
+            f"Bombs{cheats}: {stat['bombsMarked']}/{self.field.bombs}"
+        ).whip()
 
     def cellInfo(self, x, y=None):
         """Get cell draw character and color used."""
@@ -89,16 +93,16 @@ class Game:
 
         if cell == Mask.closed:
             if cell == Flag.noflag:
-                return ' ', Color.bg.grey
+                return " ", Color.bg.grey
             elif cell == Flag.guess:
-                return 'G', Color('yellow', 'grey')
+                return "G", Color("yellow", "grey")
             elif cell == Flag.sure:
-                return 'F', Color('banana', 'grey')
+                return "F", Color("banana", "grey")
         else:
             if cell == Value.bomb:
-                return '*', Color.red
+                return "*", Color.red
             elif cell == Value.empty:
-                return ' ', Color.white
+                return " ", Color.white
             else:
                 return str(cell), Color(VALUECOLORS[cell.value])
 
@@ -110,24 +114,24 @@ class Game:
 
     def keyAction(self, key):
         """React to key press."""
-        if key == KEYS['up']:
+        if key == KEYS["up"]:
             self.move(Point(0, -1))
-        elif key == KEYS['down']:
+        elif key == KEYS["down"]:
             self.move(Point(0, 1))
-        elif key == KEYS['left']:
+        elif key == KEYS["left"]:
             self.move(Point(-1, 0))
-        elif key == KEYS['right']:
+        elif key == KEYS["right"]:
             self.move(Point(1, 0))
-        elif key == KEYS['cheats']:
+        elif key == KEYS["cheats"]:
             self.cheats = not self.cheats
         else:
-            if key == KEYS['mark']:
+            if key == KEYS["mark"]:
                 if self.field[self.pos] == Mask.closed:
                     self.field.cycleFlag(self.pos)
-            elif key == KEYS['open']:
+            elif key == KEYS["open"]:
                 if self.field[self.pos] != Flag.sure:
                     if self.field[self.pos] == Value.bomb:
-                        self.status = 'lose'
+                        self.status = "lose"
                     else:
                         self.field.reveal(self.pos)
             self.redraw = True
@@ -141,18 +145,18 @@ class Game:
     def checkWin(self):
         """Check if game is complete."""
         self.updateStat()
-        if self.stat['cellsRemaning'] == 0 and self.stat['allBombsCorrect']:
-            self.status = 'win'
+        if self.stat["cellsRemaning"] == 0 and self.stat["allBombsCorrect"]:
+            self.status = "win"
 
     def win(self, offset):
         """Draw win state."""
         offset = Point(offset)
-        screen[offset, Color.lime].print('Congrats!').whip()
+        screen[offset, Color.lime].print("Congrats!").whip()
 
     def gameover(self, offset):
         """Draw lose state."""
         offset = Point(offset)
-        screen[0, 0, Color.red].print('You have lost!').whip()
+        screen[0, 0, Color.red].print("You have lost!").whip()
 
         for x, y in self.field:
             if self.field[x, y] == Value.bomb:
