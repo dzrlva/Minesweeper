@@ -37,8 +37,7 @@ class Hexagon:
 
     def destroy(self):
         try:
-            if self.hover:
-                self.deactivate()
+            self.deactivate()
             if self.__item:
                 self.canvas.delete(self.__item)
         except tk._tkinter.TclError:
@@ -80,6 +79,8 @@ class Hexagon:
             self.changeFill(self.unhover)
 
     def deactivate(self):
+        if not self.hover:
+            return
         self.hover = self.hovered = False
         self.canvas.tag_unbind(self.__item, '<Enter>', self.entBind)
         self.canvas.tag_unbind(self.__item, '<Leave>', self.lveBind)

@@ -23,7 +23,7 @@ class Game():
         self.status = 'game'
 
         self.board = Board(app, 42)
-        self.field = Field(self.board.rows, self.board.cols, .01, kind='hexagon')
+        self.field = Field(self.board.rows, self.board.cols, .8, kind='hexagon')
         self.board.draw()
         self.updateField()
         self.updateBoard()

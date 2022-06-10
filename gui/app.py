@@ -10,7 +10,7 @@ class Session:
     def __init__(self, app, replayCallback):
         self.app = app
         self.game = Game(app, None)
-        # self.app.bind('<<Foo>>', replayCallback)
+        self.app.bind('<<Foo>>', replayCallback)
 
     def __del__(self):
         self.game.destroy()
