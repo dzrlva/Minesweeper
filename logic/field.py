@@ -130,16 +130,15 @@ class Field:
             self[point] = Mask.opened
             revealed.append(point)
 
-            # for bias in Point.range(-1, 2):
             for bias in self.pattern(point):
                 curPos = point + bias
-                if self[curPos] != Mask.closed:
+                if self[curPos] != Mask.closed or self[curPos] != Flag.noflag:
                     continue
 
                 if self[curPos] == Value.empty:
                     self[curPos] = Mask.pending
                     stack.append(curPos)
-                elif self[curPos] != Value.bomb:
+                elif self[curPos] != Value.bomb and self[curPos] != Value.barrier:
                     self[curPos] = Mask.opened
                     revealed.append(curPos)
         return revealed
