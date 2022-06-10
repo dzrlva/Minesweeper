@@ -7,8 +7,9 @@ from .hexagon import Hexagon
 from .colors import COLORS
 
 
-IMAGES = {
-    'flag': ['./resources/images/flag.png', (32, 32)],
+RESOURCES = {
+    'flag': ['./resources/images/flag.png', { 'size': (32, 32) }],
+    'explosion': [ './resources/animations/explosion1.gif', { 'size': (100, 100) }],
 }
 
 
@@ -16,9 +17,9 @@ class Board:
     def __init__(self, app, diagonal, *, debug=False):
         self.app = app
         self.debug = debug
-        self.img = {}
-        for res, resAttr in IMAGES.items():
-            self.img[res] = loadImage(*resAttr)
+        self.resources = {}
+        for res, resAttr in RESOURCES.items():
+            self.resources[res] = loadImage(resAttr)
         self.setDimensions(diagonal)
         self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
         self.__createBoard()
@@ -86,6 +87,9 @@ class Board:
                     # )
                     # self.board[pos]['debug'] = debugID
 
+    def drawExplosion(self, pos):
+        pass
+
     def toggleFlag(self, pos):
         pos = Point(pos)
         if pos not in self.board or self.board[pos] is None:
@@ -98,7 +102,7 @@ class Board:
         elif pos in self.board:
             coord = cell['hex'].center
             flag = self.app.canvas.create_image(
-                coord.x, coord.y, image=self.img['flag'], state='disabled'
+                coord.x, coord.y, image=self.resources['flag'], state='disabled'
             )
             self.board[pos]['flag'] = flag
 

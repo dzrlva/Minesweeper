@@ -10,9 +10,9 @@ class dotdict(dict):
     __delattr__ = dict.__delitem__
 
 
-def loadImage(imgPath, size=None):
-    if size is None:
+def loadImage(imgPath, attrs={}):
+    if attrs[ 'size' ] is None:
         return ImageTk.PhotoImage(Image.open(imgPath))
-    if isinstance(size, int):
-        size = (size, size)
+    if isinstance(attrs['size'], int):
+        size = (attrs['size'], attrs['size'])
     return ImageTk.PhotoImage(Image.open(imgPath).resize(size))
