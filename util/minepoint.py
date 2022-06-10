@@ -17,6 +17,7 @@ class Value(IntEnum):
     six = 0b0110
     seven = 0b0111
     eight = 0b1000
+    barrier = 0b1110
     bomb = 0b1111
 
 
