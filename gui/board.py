@@ -1,8 +1,7 @@
 """Module that draws the game board."""
 
 import tkinter as tk
-from util import loadImage
-from util.point import Point
+from util import loadImage, Coord, Point, dotdict
 from math import sqrt
 from .hexagon import Hexagon
 from .colors import COLORS
@@ -12,12 +11,16 @@ from time import sleep
 RESOURCES = {
     'flag': {
         'path': './resources/images/flag.png',
-        'size': (32, 32)
+        'size': 32
     },
     'explosion': {
         'path': './resources/animations/explosion1.gif',
         'size': 38
     },
+    'bomb': {
+        'path': './resources/images/bomb.png',
+        'size': 38
+    }
 }
 
 
@@ -87,22 +90,28 @@ class Board:
                 if self.debug:
                     self.app.canvas.tag_raise(cell['debug'])
 
-    def __animation(self, frameIt, delay):
-        frame = next(frameIt, None)
-        self.anim.config(image=frame)
+    def __animation(self, anim):
+        frame = next(anim.frames, None)
+        anim.label.config(image=frame)
         if frame:
-            self.anim.after(delay, self.__animation, frameIt, delay)
+            anim.label.after(anim.delay, self.__animation, anim)
         else:
-            self.anim.destroy()
-            self.anim = None
+            anim.label.destroy()
+            self.app.canvas.create_image(
+                anim.center.x, anim.center.y, image=self.resources['bomb']
+            )
 
     def drawExplosion(self, pos):
         rcs = self.resources['explosion']
-        coord = self.board[pos]['hex'].center - rcs['size'] / 2
-        self.anim = tk.Label(self.app, bg=COLORS['cells']['bomb'])
-        self.anim.place(x=coord.x, y=coord.y)
-        # self.anim.wm_attributes("-transparentcolor", 'white')
-        self.__animation(iter(rcs['frames']), rcs['delay'])
+        bomb = dotdict({
+            'label': tk.Label(self.app, bg=COLORS['cells']['bomb']),
+            'center': self.board[pos]['hex'].center,
+            'frames': iter(rcs['frames']),
+            'delay': rcs['delay']
+        })
+        coord = bomb.center - rcs['size'] / 2
+        bomb.label.place(x=coord.x, y=coord.y)
+        self.__animation(bomb)
 
     def toggleFlag(self, pos):
         pos = Point(pos)

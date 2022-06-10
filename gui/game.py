@@ -42,6 +42,7 @@ class Game():
                     if curBombStack >= self.maxBombStack:
                         self.field[crd] = Value.empty
                         break
+
         self.field.recalculate()
         self.barriers = 0
         for crd in self.field:
