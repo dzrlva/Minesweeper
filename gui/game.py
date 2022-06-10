@@ -61,8 +61,9 @@ class Game():
                     color = COLORS['cells'][text]
                 self.board.openCell(Point(x, y), color, text)
 
-    def gameOver(self):
+    def gameOver(self, pos):
         print('Bro, you died')
+        self.board.drawExplosion(pos)
 
     def gameWin(self):
         print('BRO, YOU WON')
@@ -101,7 +102,7 @@ class Game():
         revealed = self.field.reveal(pos)
         if revealed is None:
             self.field[pos] = Mask.opened
-            self.gameOver()
+            self.gameOver(pos)
         else:
             self.opened += len(revealed)
             if self.checkWin():
