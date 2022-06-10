@@ -5,6 +5,7 @@ from gui.app import App as GUIAPP
 from cli.app import App as CLIAPP
 from cli.menu import startmenu
 
+
 def main():
     parser = ArgumentParser()
     parser.add_argument(
@@ -18,9 +19,9 @@ def main():
         help="command line interface of minesweaper",
     )
     args = parser.parse_args()
-    if True or args.cli:
+    if args.cli:
         startmenu()
-        #CLIAPP().mainloop()
+        # CLIAPP().mainloop()
     else:
         GUIAPP().mainloop()
     return 0
