@@ -23,4 +23,4 @@ class App(tk.Tk):
         if self.session:
             del self.session
             self.session = None
-        self.session = Game(self)
+        self.session = Game(self, 10, .1)
