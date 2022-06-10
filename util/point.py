@@ -6,12 +6,6 @@ class Point:
     """Class that represents integer coordinates."""
 
     @staticmethod
-    def __combineTypes(t1, t2):
-        if t1 is float or t2 is float:
-            return float
-        return int
-
-    @staticmethod
     def __convert(val):
         """Convert value to Point class if needed."""
         return val if isinstance(val, Point) else Point(val)
@@ -58,7 +52,7 @@ class Point:
             for y in range(start.y, end.y, step.y):
                 yield Point(x, y)
 
-    def __init__(self, val, y=None, *, dtype=int):
+    def __init__(self, val, y=None):
         """
         Create Point instance.
 
@@ -72,23 +66,25 @@ class Point:
         If both arguments are given, assuming they are numbers:
         Point(val, y), both converted to int
         """
-        self.__dtype = dtype
-
         if y is None:
             if isinstance(val, Point):
-                self.x, self.y, self.__dtype = val.x, val.y, val.__dtype
+                self.x, self.y = val.x, val.y
+
             elif isinstance(val, tuple) or isinstance(val, list):
                 if len(val) != 2:
                     raise ValueError('Cannot convert list/tuple to Point with length != 2')
-                self.x, self.y = self.__dtype(val[0]), self.__dtype(val[1])
+                self.x, self.y = int(val[0]), int(val[1])
+
             elif isinstance(val, dict) and 'x' in val and 'y' in val:
-                self.x, self.y = self.__dtype(val['x']), self.__dtype(val['y'])
+                self.x, self.y = int(val['x']), int(val['y'])
+
             elif isinstance(val, int) or isinstance(val, float):
-                self.x, self.y = self.__dtype(val), self.__dtype(val)
+                self.x, self.y = int(val), int(val)
+
             else:
                 raise ValueError(f'Cannot convert type {type(val)} to Point')
         else:
-            self.x, self.y = self.__dtype(val), self.__dtype(y)
+            self.x, self.y = int(val), int(y)
 
     def __getitem__(self, idx):
         """Access x/y by 0/1 or a string."""
@@ -100,33 +96,29 @@ class Point:
     def __setitem__(self, idx, val):
         """Set x/y by 0/1 or a string."""
         if idx == 0 or idx == 'x':
-            self.x = self.__dtype(val)
+            self.x = int(val)
         if idx == 1 or idx == 'y':
-            self.y = self.__dtype(val)
+            self.y = int(val)
 
     def __radd__(self, oth):
         """Addition of two Point, given value converted if needed."""
         val = Point.__convert(oth)
-        dtype = Point.__combineTypes(self.__dtype, val.__dtype)
-        return Point(val.x + self.x, val.y + self.y, dtype=dtype)
+        return Point(val.x + self.x, val.y + self.y)
 
     def __rsub__(self, oth):
         """Addition of two Point, given value converted if needed."""
         val = Point.__convert(oth)
-        dtype = Point.__combineTypes(self.__dtype, val.__dtype)
-        return Point(val.x - self.x, val.y - self.y, dtype=dtype)
+        return Point(val.x - self.x, val.y - self.y)
 
     def __sub__(self, oth):
         """Addition of two Point, given value converted if needed."""
         val = Point.__convert(oth)
-        dtype = Point.__combineTypes(self.__dtype, val.__dtype)
-        return Point(self.x - val.x, self.y - val.y, dtype=dtype)
+        return Point(self.x - val.x, self.y - val.y)
 
     def __add__(self, oth):
         """Addition of two Point, given value converted if needed."""
         val = Point.__convert(oth)
-        dtype = Point.__combineTypes(self.__dtype, val.__dtype)
-        return Point(self.x + val.x, self.y + val.y, dtype=dtype)
+        return Point(self.x + val.x, self.y + val.y)
 
     def __eq__(self, oth):
         """Addition of two Point, given value converted if needed."""
