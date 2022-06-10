@@ -1,15 +1,23 @@
 """Module that draws the game board."""
 
+import tkinter as tk
 from util import loadImage
 from util.point import Point
 from math import sqrt
 from .hexagon import Hexagon
 from .colors import COLORS
+from time import sleep
 
 
 RESOURCES = {
-    'flag': ['./resources/images/flag.png', { 'size': (32, 32) }],
-    'explosion': [ './resources/animations/explosion1.gif', { 'size': (100, 100) }],
+    'flag': {
+        'path': './resources/images/flag.png',
+        'size': (32, 32)
+    },
+    'explosion': {
+        'path': './resources/animations/explosion1.gif',
+        'size': 38
+    },
 }
 
 
@@ -18,8 +26,8 @@ class Board:
         self.app = app
         self.debug = debug
         self.resources = {}
-        for res, resAttr in RESOURCES.items():
-            self.resources[res] = loadImage(resAttr)
+        for resName, resAttr in RESOURCES.items():
+            self.resources[resName] = loadImage(resAttr)
         self.setDimensions(diagonal)
         self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
         self.__createBoard()
@@ -78,17 +86,23 @@ class Board:
                 cell['hex'].draw()
                 if self.debug:
                     self.app.canvas.tag_raise(cell['debug'])
-        # if self.debug:
-            # for i, pos, cell in enumerate(self.board.items()):
-                # if cell is not None:
-                    # debugID = self.app.canvas.create_text(
-                        # cell['hex'].center.x, cell['hex'].center.y,
-                        # anchor='w', font="Purisa", fill="black", text=str(i)
-                    # )
-                    # self.board[pos]['debug'] = debugID
+
+    def __animation(self, frameIt, delay):
+        frame = next(frameIt, None)
+        self.anim.config(image=frame)
+        if frame:
+            self.anim.after(delay, self.__animation, frameIt, delay)
+        else:
+            self.anim.destroy()
+            self.anim = None
 
     def drawExplosion(self, pos):
-        pass
+        rcs = self.resources['explosion']
+        coord = self.board[pos]['hex'].center - rcs['size'] / 2
+        self.anim = tk.Label(self.app, bg=COLORS['cells']['bomb'])
+        self.anim.place(x=coord.x, y=coord.y)
+        # self.anim.wm_attributes("-transparentcolor", 'white')
+        self.__animation(iter(rcs['frames']), rcs['delay'])
 
     def toggleFlag(self, pos):
         pos = Point(pos)

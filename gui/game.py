@@ -49,11 +49,11 @@ class Game():
 
     def updateBoard(self):
         for x, y in self.field:
-            if self.field[x, y] == Value.bomb or self.field[x, y] == Mask.opened:
+            if self.field[x, y] == Mask.opened:
                 if self.field[x, y] == Value.barrier:
                     color, text = COLORS['main'], ''
                 elif self.field[x, y] == Value.bomb:
-                    color, text = COLORS['cells']['bomb'], 'BOMB'
+                    color, text = COLORS['cells']['bomb'], ''
                 elif self.field[x, y] == Value.empty:
                     color, text = COLORS['active'], None
                 else:

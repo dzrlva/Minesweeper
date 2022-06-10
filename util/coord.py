@@ -128,6 +128,24 @@ class Coord:
         dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
         return Coord(self.x + val.x, self.y + val.y, dtype=dtype)
 
+    def __floordiv__(self, oth):
+        """Division of two Coord, given value converted if needed."""
+        val = Coord.__convert(oth)
+        dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
+        return Coord(self.x / val.x, self.y / val.y, dtype=dtype)
+
+    def __truediv__(self, oth):
+        """Division of two Coord, given value converted if needed."""
+        val = Coord.__convert(oth)
+        dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
+        return Coord(self.x / val.x, self.y / val.y, dtype=dtype)
+
+    def __div__(self, oth):
+        """Division of two Coord, given value converted if needed."""
+        val = Coord.__convert(oth)
+        dtype = Coord.__combineTypes(self.__dtype, val.__dtype)
+        return Coord(self.x / val.x, self.y / val.y, dtype=dtype)
+
     def __eq__(self, oth):
         """Addition of two Coord, given value converted if needed."""
         val = Coord.__convert(oth)
