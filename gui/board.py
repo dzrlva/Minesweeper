@@ -8,32 +8,43 @@ from .colors import COLORS
 from time import sleep
 
 
-SCALE_FACTOR = 12
+SCALE_FACTOR = 1.2
 RESOURCES = {
-    'flag': {
-        'path': './resources/images/flag.png',
-        'size': 32
-    },
-    'explosion': {
-        'path': './resources/animations/explosion1.gif',
-        'size': 38
-    },
-    'bomb': {
-        'path': './resources/images/bomb.png',
-        'size': 38
-    }
+    'flag': './resources/images/flag.png',
+    'explosion': './resources/animations/explosion1.gif',
+    'bomb': './resources/images/bomb.png',
 }
 
 
 class Board:
-    def __init__(self, app, diagonal):
+    def __init__(self, app, size, width, height):
         self.app = app
-        self.resources = {}
-        for resName, resAttr in RESOURCES.items():
-            self.resources[resName] = loadImage(resAttr, scale=SCALE_FACTOR / diagonal)
-        self.setDimensions(diagonal)
-        self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
+
+        # self.width = app.winfo_width() * width
+        # self.height = app.winfo_height() * height
+        self.width = 900 * width
+        self.height = 700 * height
+
+        size += size % 2
+        if size < 8:
+            raise ValueError('Only sizes 8 and more allowed')
+
         self.topleft = Coord(10, 10)
+        self.cols, self.rows = size + 2, size
+
+        self.hexLength, woh = Hexagon.getMaxLengthByGeom(
+            (self.width - self.topleft.x) / self.cols,
+            (self.height - self.topleft.y) / self.rows
+        )
+        if woh == 'h':
+            self.hexLength -= self.hexLength * (4 / 3) / self.rows
+        else:
+            self.hexLength += self.hexLength * (4 / 3) / self.cols
+
+        self.resources = {}
+        for resName, resPath in RESOURCES.items():
+            self.resources[resName] = loadImage(resPath, SCALE_FACTOR * self.hexLength)
+        self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
         self.__createBoard()
 
     def __del__(self):
@@ -45,7 +56,7 @@ class Board:
 
     def __createBoard(self):
         for col in range(self.cols):
-            offset = 0 if col % 2 else self.size * sqrt(3) / 2
+            offset = 0 if col % 2 else self.hexLength * sqrt(3) / 2
 
             if col == 0:
                 x = x_offset = self.rows
@@ -70,12 +81,12 @@ class Board:
                 if row < x_offset or row >= rx_offset:
                     self.board[Point(row, col)] = None
                     continue  # do not create hexagon if it out of field
-                hexX = row * self.size * sqrt(3) + offset + self.topleft.x
-                hexY = col * self.size * 1.5 + self.topleft.y
+                hexX = row * self.hexLength * sqrt(3) + offset + self.topleft.x
+                hexY = col * self.hexLength * 1.5 + self.topleft.y
                 hexTags = f'{row}.{col}'
                 self.board[Point(row, col)]['hex'] = Hexagon(
                     self.app.canvas, hexX, hexY,
-                    self.size, COLORS['inactive'], COLORS['outline'], hexTags,
+                    self.hexLength, COLORS['inactive'], COLORS['outline'], hexTags,
                     COLORS['hover'],
                 )
 
@@ -125,31 +136,6 @@ class Board:
                 coord.x, coord.y, image=self.resources['flag'], state='disabled'
             )
             self.board[pos]['flag'] = flag
-
-    def setDimensions(self, diag):
-        if diag == 12:
-            self.size = 34
-        elif diag == 14:
-            self.size = 28
-        elif diag == 16:
-            self.size = 26
-        elif diag <= 20:
-            self.size = 21
-        elif diag <= 24:
-            self.size = 17
-        elif diag <= 28:
-            self.size = 16
-        elif diag <= 30:
-            self.size = 15
-        elif diag <= 34:
-            self.size = 13
-        elif diag <= 38:
-            self.size = 12
-        elif diag <= 42:
-            self.size = 11
-        else:
-            self.size = 10
-        self.cols, self.rows = diag + 2, diag
 
     def findClicked(self, pos):
         for pos, cell in self.board.items():

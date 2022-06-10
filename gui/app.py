@@ -6,22 +6,14 @@ from .colors import COLORS
 from random import seed
 
 
-class Session:
-    def __init__(self, app, replayCallback):
-        self.app = app
-        self.game = Game(app, None)
-        self.app.bind('<<Foo>>', replayCallback)
-
-    def __del__(self):
-        self.game.destroy()
-
-
 class App(tk.Tk):
-    def __init__(self, width=900, height=900):
+    def __init__(self, width=900, height=700):
         super().__init__()
         self.title = 'Minesweeper'
-        self.canvas = tk.Canvas(self, width=width, height=width, bg=COLORS['main'])
+        self.canvas = tk.Canvas(self, width=width, height=height, bg=COLORS['main'])
         self.canvas.pack(expand='no', fill='both')
+        self.geometry(f'{width}x{height}')
+        self.resizable(False, False)
 
         self.canvas.bind("<Button-2>", self.newSession)
         self.session = None
@@ -31,5 +23,4 @@ class App(tk.Tk):
         if self.session:
             del self.session
             self.session = None
-        else:
-            self.session = Session(self, self.newSession)
+        self.session = Game(self)

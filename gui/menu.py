@@ -29,7 +29,7 @@ class MainMenu(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         tk.Label(self, text="Minesweeper", font=("Purisa", 20)).pack(side="top", fill="x", pady=50, padx=50)
-        tk.Button(self, text="NEW GAME", font=("Purisa", 13), width=40, height=3,
+        tk.Button(self, text="NEW GAME", font=("Purisa", 13), bg='#123123', fg='#aaaaaa', width=40, height=3,
                   command=lambda: master.switch_frame(NewGameFrame)).pack()
         tk.Button(self, text="STATISTICS", font=("Purisa", 13), width=40, height=3,
                   command=lambda: master.switch_frame(StatisticsFrame)).pack()
