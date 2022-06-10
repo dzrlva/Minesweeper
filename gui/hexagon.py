@@ -37,7 +37,8 @@ class Hexagon:
 
     def destroy(self):
         try:
-            self.deactivate()
+            if self.hover:
+                self.deactivate()
             if self.__item:
                 self.canvas.delete(self.__item)
         except tk._tkinter.TclError:

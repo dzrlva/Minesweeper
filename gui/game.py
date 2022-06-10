@@ -105,13 +105,7 @@ class Game():
             return
 
         pos = Coord(event.x, event.y, dtype=float)
-        clk = Coord(event.x, event.y, dtype=float)
         pos = self.board.findClicked(pos)
-
-        if pos:
-            print(clk, pos, self.field[pos] == Mask.opened)
-        else:
-            print(clk, pos)
 
         if pos is None or self.field[pos] == Mask.opened:
             return
