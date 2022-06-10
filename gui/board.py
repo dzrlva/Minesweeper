@@ -8,7 +8,7 @@ from .colors import COLORS
 
 
 IMAGES = {
-    'flag': ['./resources/flag.png', (32, 32)],
+    'flag': ['./resources/images/flag.png', (32, 32)],
 }
 
 
