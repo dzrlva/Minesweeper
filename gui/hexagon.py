@@ -1,6 +1,6 @@
 """Single hexagon. WARNING: coordinates are sligtly messed up."""
 from math import sin, cos, tan, radians, sqrt
-from util import Coord
+from util.coord import Coord
 
 
 ANGLE = 60
@@ -16,8 +16,8 @@ class Hexagon:
         self.length = length
         self.height = COEF * self.length / sqrt(COEF**2 + 1)
         self.width = COEF * self.height / 2
-        self.topleft = Coord(x, y + self.height / 4)
-        whH = Coord(self.width / 2, -self.height / 2)
+        self.topleft = Coord(x, y + self.height / 4, dtype=float)
+        whH = Coord(self.width / 2, -self.height / 2, dtype=float)
         self.center = self.topleft + whH
 
         self.hovered = False
@@ -29,7 +29,7 @@ class Hexagon:
         self.tags = tags
         self.__item = None
         self.__calculate()
-        self.pos = Coord(self.coords[0], self.coords[1])
+        self.pos = Coord(self.coords[0], self.coords[1], dtype=float)
 
     def __calculate(self):
         startX, startY = self.center
@@ -44,7 +44,7 @@ class Hexagon:
             startX, startY = endX, endY
 
     def distance(self, x, y=None):
-        diff = Coord(x, y) - self.center
+        diff = Coord(x, y, dtype=float) - self.center
         return sqrt(diff.x**2 + diff.y**2)
 
     def changeFill(self, color):
@@ -65,6 +65,14 @@ class Hexagon:
         if self.hover:
             self.changeFill(self.unhover)
 
+    def deactivate(self):
+        self.canvas.tag_unbind(self.__item, '<Enter>')
+        self.canvas.tag_unbind(self.__item, '<Leave>')
+
+    def activate(self):
+        self.canvas.tag_bind(self.__item, '<Enter>', self.onEnter)
+        self.canvas.tag_bind(self.__item, '<Leave>', self.onLeave)
+
     def draw(self):
         if self.__item:
             self.canvas.delete(self.__item)
@@ -72,6 +80,5 @@ class Hexagon:
             *self.coords, fill=self.color, outline=self.outline, tags=self.tags,
         )
         if self.hover:
-            self.canvas.tag_bind(self.__item, '<Enter>', self.onEnter)
-            self.canvas.tag_bind(self.__item, '<Leave>', self.onLeave)
+            self.activate()
         return self.__item

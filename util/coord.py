@@ -1,4 +1,4 @@
-"""Simple Coord class module."""
+"""Simple Coord class module to handle float coordinates."""
 from random import randint
 
 
@@ -152,3 +152,6 @@ class Coord:
     def __str__(self):
         """Convert to string."""
         return f'({self.x}, {self.y})'
+
+    def __hash__(self):
+        return hash(str(self))

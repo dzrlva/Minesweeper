@@ -1,4 +1,4 @@
-"""Simple Point class module."""
+"""Simple Point class module to handle int coordinates only."""
 from random import randint
 
 

@@ -1,17 +1,11 @@
 """Main GUI module that draw all the game attributes."""
 
 import tkinter as tk
-from .board import Board
 from .game import Game
+from logic.field import Field
+from .colors import COLORS
 
 
-# [!] Move to another file
-COLORS = {
-    'main': '#003153',
-}
-
-
-# [!] Make so App spawns playble hexagon field
 class App(tk.Tk):
     def __init__(self, width=900, height=900):
         super().__init__()
@@ -19,5 +13,9 @@ class App(tk.Tk):
         self.canvas = tk.Canvas(self, width=width, height=width, bg=COLORS['main'])
         self.canvas.pack(expand='no', fill='both')
 
-        self.game = Game(self)
-        self.board = Board(self, 12)
+        self.game = Game(self, None)
+        self.field = Field(self.game.board.rows, self.game.board.cols, .3, kind='hexagon')
+        self.game.field = self.field
+        self.game.board.field = self.field
+        self.game.updateField()
+        self.game.updateBoard()
