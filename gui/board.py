@@ -1,43 +1,29 @@
 """Module that draws the game board."""
 
 from util import loadImage
-from util import Point, Coord
+from util.point import Point
 from math import sqrt
 from .hexagon import Hexagon
 from .colors import COLORS
 
 
 IMAGES = {
-    'flag': ['./resources/flag.png', (40, 40)],
+    'flag': ['./resources/flag.png', (32, 32)],
 }
 
 
-class Board:  # [!] Board only should draw hexagons and text. Nothing more!
-    def __init__(self, app, diagonal):
+class Board:
+    def __init__(self, app, diagonal, *, debug=False):
         self.app = app
-        self.debug = False
+        self.debug = debug
         self.img = {}
-        self.selected = set()  # delete as complete
-        self.marked = dict()  # same
         for res, resAttr in IMAGES.items():
             self.img[res] = loadImage(*resAttr)
         self.setDimensions(diagonal)
-        self.__data = {Point(row, col): dict() for row, col in Point.range([self.rows, self.cols])}
+        self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
         self.__createBoard()
-        self.__draw()
-
-    def __draw(self):
-        for i, hgn in enumerate(self.hexagons):
-            hgn.draw()
-        if self.debug:
-            for i, hgn in enumerate(self.hexagons):
-                self.app.canvas.create_text(
-                    hgn.center.x, hgn.center.y,
-                    anchor='w', font="Purisa", fill="black", text=str(i)
-                )
 
     def __createBoard(self):
-        self.hexagons = []
         y_offset = 30 if self.size < 20 else 90
         x = self.rows / 2
         for col in range(self.cols):
@@ -64,6 +50,7 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
             rx_offset = x + x_offset
             for row in range(self.rows):
                 if row < x_offset or row >= rx_offset:
+                    self.board[Point(row, col)] = None
                     continue  # do not create hexagon if it out of field
                 hexX = row * self.size * sqrt(3) + offset + y_offset
                 hexY = col * self.size * 1.5 + 30
@@ -73,16 +60,47 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
                     self.size, COLORS['inactive'], COLORS['outline'], hexTags,
                     COLORS['hover'],
                 )
-                self.__data[Point(row, col)]['hexagon'] = hxg
 
-                self.hexagons.append(hxg)
-                self.__data[Point(row, col)]['hexagon'] = hxg
+                self.board[Point(row, col)]['hex'] = hxg
                 if self.debug:
-                    textX = row * self.size * sqrt(3) + offset + self.size + y_offset - 15,
-                    textY = col * self.size * 1.5 + self.size / 2 + 25
-                    self.app.canvas.create_text(
+                    # textX = row * self.size * sqrt(3) + offset + self.size + y_offset - 20
+                    # textY = col * self.size * 1.5 + self.size / 2 + 25
+                    textX, textY = hxg.center - [10, 0]
+                    debugCoords = self.app.canvas.create_text(
                         textX, textY, anchor='w', font="Purisa", fill="black", text=f'{row}, {col}'
                     )
+                    self.board[Point(row, col)]['debug'] = debugCoords
+
+    def draw(self):
+        for cell in self.board.values():
+            if cell is not None:
+                cell['hex'].draw()
+                if self.debug:
+                    self.app.canvas.tag_raise(cell['debug'])
+        # if self.debug:
+            # for i, pos, cell in enumerate(self.board.items()):
+                # if cell is not None:
+                    # debugID = self.app.canvas.create_text(
+                        # cell['hex'].center.x, cell['hex'].center.y,
+                        # anchor='w', font="Purisa", fill="black", text=str(i)
+                    # )
+                    # self.board[pos]['debug'] = debugID
+
+    def toggleFlag(self, pos):
+        pos = Point(pos)
+        if pos not in self.board or self.board[pos] is None:
+            return
+
+        cell = self.board[pos]
+        if 'flag' in cell:
+            self.app.canvas.delete(cell['flag'])
+            del cell['flag']
+        elif pos in self.board:
+            coord = cell['hex'].center
+            flag = self.app.canvas.create_image(
+                coord.x, coord.y, image=self.img['flag'], state='disabled'
+            )
+            self.board[pos]['flag'] = flag
 
     def setDimensions(self, diag):
         if diag == 12:
@@ -109,32 +127,27 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
             self.size = 10
         self.cols, self.rows = diag + 2, diag
 
-    def findClicked(self):
-        for pos, cell in self.__data.items():
-            if cell['hexagon'].hovered:
+    def findClicked(self, pos):
+        for pos, cell in self.board.items():
+            if cell is not None and cell['hex'].hovered:
                 return pos
+        return None
 
-    def drawBomb(self, x, y):
-        pass
+    def openCell(self, point, color, text=None):
+        point = Point(point)
+        if point not in self.board:
+            return False
+        cell = self.board[point]
+        if cell is None:
+            return False
 
-    def drawOpenCell(self, p, text):
-        hgx = self.__data[p]['hexagon']
-        coords = self.__data[p]['hexagon'].center
-        self.can.itemconfigure(hgx, fill=COLORS[text])
-        if text != '0':
-            self.app.canvas.create_text(
-                *coords,  anchor='w', font="Purisa 20", fill="white", text=text
+        cell['hex'].changeFill(color)
+        # cell['hex'].deactivate()
+        if text is not None and 'text' not in cell:
+            text = self.app.canvas.create_text(
+                cell['hex'].center.x, cell['hex'].center.y,
+                anchor='c', fill='white', text=text,
+                state='disabled'
             )
-
-    def check_flag(self):
-        x, y = clicked.center
-        if clicked in self.marked:
-            self.delete_flag(x, y)
-        else:
-            self.set_flag(x, y)
-
-    def set_flag(self, x, y):
-        self.__data[Point(x, y)]['flag'] = self.app.canvas.create_image(x, y, image=self.img['flag'],
-                                                                                  state='disabled')
-    def delete_flag(self, x, y):
-        self.app.canvas.delete(self.__data[Point(x, y)]['flag'])
+            cell['text'] = text
+        return True
