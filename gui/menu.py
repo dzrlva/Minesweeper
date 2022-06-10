@@ -29,15 +29,15 @@ class MainMenu(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         tk.Label(self, text="Minesweeper", font=("Purisa", 20)).pack(side="top", fill="x", pady=50, padx=50)
-        tk.Button(self, text="NEW GAME", font=("Purisa", 13), width=40, height=3, bd='20',
+        tk.Button(self, text="NEW GAME", font=("Purisa", 13), width=40, height=3,
                   command=lambda: master.switch_frame(NewGameFrame)).pack()
-        tk.Button(self, text="STATISTICS", font=("Purisa", 13), width=40, height=3, bd='10',
+        tk.Button(self, text="STATISTICS", font=("Purisa", 13), width=40, height=3,
                   command=lambda: master.switch_frame(StatisticsFrame)).pack()
-        tk.Button(self, text='SETTINGS', font=("Purisa", 13), width=40, height=3, bd='10',
+        tk.Button(self, text='SETTINGS', font=("Purisa", 13), width=40, height=3,
                   command=lambda: master.switch_frame(SettingsFrame)).pack()
-        tk.Button(self, text="QUIT", font=("Purisa", 13), width=40, height=3, bd='10',
+        tk.Button(self, text="QUIT", font=("Purisa", 13), width=40, height=3,
                   command=lambda: master.quit()).pack()
-        tk.Button(self, text="HELP", font=("Purisa", 13), width=40, height=2, bd='10',
+        tk.Button(self, text="HELP", font=("Purisa", 13), width=40, height=2,
                   command=lambda: master.show_info()).pack(pady=20)
 
 
@@ -67,9 +67,9 @@ class NewGameFrame(tk.Frame):
             tk.Radiobutton(self, text=text, font=("Purisa", 13), variable=vs, value=mode).pack(side="top", fill="y",
                                                                                                padx=10)
 
-        tk.Button(self, text="Start", font=("Purisa", 13), width=25, height=2, bd='20',
+        tk.Button(self, text="Start", font=("Purisa", 13), width=25, height=2,
                   command=lambda: master.switch_frame(MainMenu)).pack(side="top", fill="y", padx=30, pady=15)
-        tk.Button(self, text="Cancel", font=("Purisa", 13), width=25, height=2, bd='20',
+        tk.Button(self, text="Cancel", font=("Purisa", 13), width=25, height=2,
                   command=lambda: master.switch_frame(MainMenu)).pack(side="top", fill="y", padx=30, pady=5)
         #center.grid(row=2, column=3)
 
@@ -100,7 +100,7 @@ class StatisticsFrame(tk.Frame):
         loadgamelb.pack()
         #tk.Button(buttons, text="CONINUE GAME", state="disabled",
         #          command=lambda: master.switch_fame(MainMenu)).pack()
-        tk.Button(buttons, text="CANCEL",font=("Purisa", 13), width=35, height=3, bd='20',
+        tk.Button(buttons, text="CANCEL",font=("Purisa", 13), width=35, height=3,
                   command=lambda: master.switch_frame(MainMenu)).pack(side="top", fill="y", pady=100, padx=100)
 
         listbox.pack(side="top")
@@ -111,8 +111,8 @@ class SettingsFrame(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         center = tk.Frame(self, borderwidth=0, relief="ridge")
-        left = tk.Frame(self, borderwidth=1, relief="ridge")
-        right = tk.Frame(self, borderwidth=1, relief="ridge")
+        left = tk.Frame(self, borderwidth=0, relief="ridge")
+        right = tk.Frame(self, borderwidth=0, relief="ridge")
         bottom = tk.Frame(self, borderwidth=0, relief="solid")
         header = tk.Frame(self, borderwidth=0, relief="ridge")
         tk.Label(bottom, text="\n\n")
@@ -132,11 +132,11 @@ class SettingsFrame(tk.Frame):
         vs.set("1")
         for text, mode in MODES:
             tk.Radiobutton(center, text=text, font=("Purisa", 13), variable=vs, value=mode).pack(side="left", fill="x", padx=50, pady=20)
-        #b1 = tk.Button(center, text="SAVE", font=("Purisa", 10), width=10, height=1, bd='20',
+        #b1 = tk.Button(center, text="SAVE", font=("Purisa", 10), width=10, height=1,
         #            command=lambda: master.saved_info(master.switch_frame(MainMenu)))
-        #b3 = tk.Button(bottom, text="HELP", font=("Purisa", 10), width=25, height=2, bd='20',
+        #b3 = tk.Button(bottom, text="HELP", font=("Purisa", 10), width=25, height=2,
         #               command=lambda: master.show_info())
-        b2 = tk.Button(bottom, text="CANCEL", font=("Purisa", 10), width=25, height=2, bd='20',
+        b2 = tk.Button(bottom, text="CANCEL", font=("Purisa", 10), width=25, height=2,
                     command=lambda: master.switch_frame(MainMenu))
 
 
