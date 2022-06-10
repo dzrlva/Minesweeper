@@ -8,6 +8,7 @@ from .colors import COLORS
 from time import sleep
 
 
+SCALE_FACTOR = 12
 RESOURCES = {
     'flag': {
         'path': './resources/images/flag.png',
@@ -25,24 +26,29 @@ RESOURCES = {
 
 
 class Board:
-    def __init__(self, app, diagonal, *, debug=False):
+    def __init__(self, app, diagonal):
         self.app = app
-        self.debug = debug
         self.resources = {}
         for resName, resAttr in RESOURCES.items():
-            self.resources[resName] = loadImage(resAttr)
+            self.resources[resName] = loadImage(resAttr, scale=SCALE_FACTOR / diagonal)
         self.setDimensions(diagonal)
         self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
         self.topleft = Coord(10, 10)
         self.__createBoard()
 
+    def __del__(self):
+        for cell in self.board.values():
+            if cell is not None:
+                cell['hex'].destroy()
+                if 'text' in cell:
+                    self.app.canvas.delete(cell['text'])
+
     def __createBoard(self):
-        x = self.rows / 2
         for col in range(self.cols):
             offset = 0 if col % 2 else self.size * sqrt(3) / 2
 
             if col == 0:
-                x_offset = self.rows
+                x = x_offset = self.rows
             elif col == 1 or col == self.cols - 1:
                 x_offset = self.rows / 4
                 x = self.rows / 2
@@ -67,28 +73,16 @@ class Board:
                 hexX = row * self.size * sqrt(3) + offset + self.topleft.x
                 hexY = col * self.size * 1.5 + self.topleft.y
                 hexTags = f'{row}.{col}'
-                hxg = Hexagon(
+                self.board[Point(row, col)]['hex'] = Hexagon(
                     self.app.canvas, hexX, hexY,
                     self.size, COLORS['inactive'], COLORS['outline'], hexTags,
                     COLORS['hover'],
                 )
 
-                self.board[Point(row, col)]['hex'] = hxg
-                if self.debug:
-                    # textX = row * self.size * sqrt(3) + offset + self.size + y_offset - 20
-                    # textY = col * self.size * 1.5 + self.size / 2 + 25
-                    textX, textY = hxg.center - [10, 0]
-                    debugCoords = self.app.canvas.create_text(
-                        textX, textY, anchor='w', font="Purisa", fill="black", text=f'{row}, {col}'
-                    )
-                    self.board[Point(row, col)]['debug'] = debugCoords
-
     def draw(self):
         for cell in self.board.values():
             if cell is not None:
                 cell['hex'].draw()
-                if self.debug:
-                    self.app.canvas.tag_raise(cell['debug'])
 
     def __animation(self, anim):
         frame = next(anim.frames, None)
@@ -172,9 +166,8 @@ class Board:
             return False
 
         cell['hex'].changeFill(color)
-        cell['hex'].hover = False
-        # cell['hex'].deactivate()
-        if text is not None and 'text' not in cell:
+        cell['hex'].deactivate()
+        if text is not None and 'text' not in cell and text:
             text = self.app.canvas.create_text(
                 cell['hex'].center.x, cell['hex'].center.y,
                 anchor='c', fill='white', text=text,

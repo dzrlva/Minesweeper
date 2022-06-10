@@ -2,7 +2,6 @@
 
 import tkinter as tk
 from .game import Game
-from logic.field import Field
 from .colors import COLORS
 from random import seed
 
@@ -12,11 +11,9 @@ class Session:
         self.app = app
         self.game = Game(app, None)
         # self.app.bind('<<Foo>>', replayCallback)
-        self.field = Field(self.game.board.rows, self.game.board.cols, .3, kind='hexagon')
-        self.game.field = self.field
-        self.game.board.field = self.field
-        self.game.updateField()
-        self.game.updateBoard()
+
+    def __del__(self):
+        self.game.destroy()
 
 
 class App(tk.Tk):
@@ -33,4 +30,6 @@ class App(tk.Tk):
     def newSession(self, *args):
         if self.session:
             del self.session
-        self.session = Session(self, self.newSession)
+            self.session = None
+        else:
+            self.session = Session(self, self.newSession)

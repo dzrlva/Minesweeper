@@ -1,4 +1,5 @@
 """Single hexagon. WARNING: coordinates are sligtly messed up."""
+import tkinter as tk
 from math import sin, cos, tan, radians, sqrt
 from util import Coord
 
@@ -33,6 +34,14 @@ class Hexagon:
         self.tags = tags
         self.__item = None
         self.__calculate()
+
+    def destroy(self):
+        try:
+            self.deactivate()
+            if self.__item:
+                self.canvas.delete(self.__item)
+        except tk._tkinter.TclError:
+            pass
 
     def __calculate(self):
         startX, startY = self.origin
@@ -70,16 +79,17 @@ class Hexagon:
             self.changeFill(self.unhover)
 
     def deactivate(self):
-        self.canvas.tag_unbind(self.__item, '<Enter>')
-        self.canvas.tag_unbind(self.__item, '<Leave>')
+        self.hover = self.hovered = False
+        self.canvas.tag_unbind(self.__item, '<Enter>', self.entBind)
+        self.canvas.tag_unbind(self.__item, '<Leave>', self.lveBind)
 
     def activate(self):
-        self.canvas.tag_bind(self.__item, '<Enter>', self.onEnter)
-        self.canvas.tag_bind(self.__item, '<Leave>', self.onLeave)
+        self.entBind = self.canvas.tag_bind(self.__item, '<Enter>', self.onEnter)
+        self.lveBind = self.canvas.tag_bind(self.__item, '<Leave>', self.onLeave)
 
     def draw(self):
         if self.__item:
-            self.canvas.delete(self.__item)
+            self.destroy()
         self.__item = self.canvas.create_polygon(
             *self.coords, fill=self.color, outline=self.outline, tags=self.tags,
         )
