@@ -8,9 +8,10 @@ from random import seed
 
 
 class Session:
-    def __init__(self, app):
+    def __init__(self, app, replayCallback):
         self.app = app
         self.game = Game(app, None)
+        # self.app.bind('<<Foo>>', replayCallback)
         self.field = Field(self.game.board.rows, self.game.board.cols, .3, kind='hexagon')
         self.game.field = self.field
         self.game.board.field = self.field
@@ -32,4 +33,4 @@ class App(tk.Tk):
     def newSession(self, *args):
         if self.session:
             del self.session
-        self.session = Session(self)
+        self.session = Session(self, self.newSession)

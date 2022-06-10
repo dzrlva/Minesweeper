@@ -1,6 +1,6 @@
 """Single hexagon. WARNING: coordinates are sligtly messed up."""
 from math import sin, cos, tan, radians, sqrt
-from util.coord import Coord
+from util import Coord
 
 
 ANGLE = 60
@@ -14,11 +14,15 @@ class Hexagon:
         self.canvas = canvas  # canvas
 
         self.length = length
-        self.height = COEF * self.length / sqrt(COEF**2 + 1)
+        # self.height = COEF * self.length / sqrt(COEF**2 + 1)
+        self.height = 2 * self.length
         self.width = COEF * self.height / 2
         self.topleft = Coord(x, y + self.height / 4, dtype=float)
-        whH = Coord(self.width / 2, -self.height / 2, dtype=float)
-        self.center = self.topleft + whH
+        # whH = Coord(self.width / 2, -self.height / 2, dtype=float)
+        whH = Coord(self.width / 2, -self.height / 4, dtype=float)
+        # self.center = self.topleft + whH
+        self.center = Coord(x, y, dtype=float) + whH
+        self.origin = Coord(x, y, dtype=float)
 
         self.hovered = False
         self.hover = hover
@@ -29,13 +33,13 @@ class Hexagon:
         self.tags = tags
         self.__item = None
         self.__calculate()
-        self.pos = Coord(self.coords[0], self.coords[1], dtype=float)
 
     def __calculate(self):
-        startX, startY = self.center
-        startY -= self.height
-        offset, rotation = 0, 30
+        startX, startY = self.origin
+        startY -= self.height / 2
+        offset, rotation = -1, 30
         self.coords = []
+
         for i in range(SIDES):
             endX = startX + self.length * cos(radians(ANGLE * (i + offset) + rotation))
             endY = startY + self.length * sin(radians(ANGLE * (i + offset) + rotation))

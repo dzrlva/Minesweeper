@@ -1,4 +1,6 @@
 """Module that uses logic.Field, draws board, handles user input."""
+
+import tkinter as tk
 from util.point import Point
 from util.coord import Coord
 from .board import Board
@@ -63,18 +65,21 @@ class Game():
                     color = COLORS['cells'][text]
                 self.board.openCell(Point(x, y), color, text)
 
+    def completeGame(self):
+        self.board.disable()
+        self.app.event_generate("<<Foo>>")
+
     def gameOver(self, pos):
         if self.status == 'gameover':
             return
         self.status = 'gameover'
         print('Bro, you died')
-        self.board.drawExplosion(pos)
-        self.board.disable()
+        self.board.drawExplosion(pos, callback=self.completeGame)
 
     def gameWin(self):
         self.status = 'win'
         print('BRO, YOU WON')
-        self.board.disable()
+        self.completeGame()
 
     def checkWin(self):
         if self.marked != self.markedRight:
