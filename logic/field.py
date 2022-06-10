@@ -82,7 +82,7 @@ class Field:
     def __calcFieldBombs(self):
         """Calculate bombs for each point on the field."""
         for point in self:
-            if self[point] == Value.bomb:
+            if self[point] == Value.bomb or self[point] == Value.barrier:
                 continue
             bombsAround = 0
             # for bias in Point.range(-1, 2):
@@ -94,6 +94,11 @@ class Field:
     def __iter__(self):
         """Iterate over all cordinates of the field."""
         yield from Point.range([self.width, self.height])
+
+    def toggleFlag(self, x, y=None):
+        """Toggle sure flag."""
+        x, y = Point(x, y)
+        self[x, y] = Flag.sure if self[x, y] == Flag.noflag else Flag.noflag
 
     def cycleFlag(self, x, y=None):
         """Change flag value on a point."""
@@ -109,11 +114,13 @@ class Field:
         """
         Reveal all possible minepoints around coordinate.
 
-        Return freshly revealed list of coordinates or None
+        Return freshly revealed list of coordinates or None if Bomb was opened
         """
         point = Point(x, y)
-        if self[point] == Value.bomb or self[point] == Mask.opened:
+        if self[point] == Value.bomb:
             return None
+        if self[point] == Mask.opened:
+            return []
 
         revealed = []
         stack = [point]
@@ -134,6 +141,7 @@ class Field:
                     stack.append(curPos)
                 elif self[curPos] != Value.bomb:
                     self[curPos] = Mask.opened
+                    revealed.append(curPos)
         return revealed
 
     def statistic(self):
@@ -164,3 +172,10 @@ class Field:
 
     def recalculate(self):
         self.__calcFieldBombs()
+
+    def dump(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                print(f'{str(self[x, y]):>2}', end=' ')
+            print()
+        print()
