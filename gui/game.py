@@ -17,6 +17,7 @@ class Game():
         self.marked = 0
         self.markedRight = 0
         self.opened = 0
+        self.status = 'game'
 
         self.board = Board(app, 12, debug=False)
         self.board.draw()
@@ -63,11 +64,17 @@ class Game():
                 self.board.openCell(Point(x, y), color, text)
 
     def gameOver(self, pos):
+        if self.status == 'gameover':
+            return
+        self.status = 'gameover'
         print('Bro, you died')
         self.board.drawExplosion(pos)
+        self.board.disable()
 
     def gameWin(self):
+        self.status = 'win'
         print('BRO, YOU WON')
+        self.board.disable()
 
     def checkWin(self):
         if self.marked != self.markedRight:
@@ -77,6 +84,9 @@ class Game():
         return False
 
     def onRightClick(self, event):
+        if self.status != 'game':
+            return
+
         pos = Coord(event.x, event.y, dtype=float)
         pos = self.board.findClicked(pos)
         if pos is None or self.field[pos] == Mask.opened:
@@ -95,6 +105,9 @@ class Game():
             self.gameWin()
 
     def onLeftClick(self, event):
+        if self.status != 'game':
+            return
+
         pos = Coord(event.x, event.y, dtype=float)
         pos = self.board.findClicked(pos)
         if pos is None or self.field[pos] == Flag.sure:
@@ -104,7 +117,7 @@ class Game():
         if revealed is None:
             self.field[pos] = Mask.opened
             self.gameOver(pos)
-        else:
+        elif len(revealed) > 0:
             self.opened += len(revealed)
             if self.checkWin():
                 self.gameWin()

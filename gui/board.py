@@ -169,6 +169,7 @@ class Board:
             return False
 
         cell['hex'].changeFill(color)
+        cell['hex'].hover = False
         # cell['hex'].deactivate()
         if text is not None and 'text' not in cell:
             text = self.app.canvas.create_text(
@@ -178,3 +179,8 @@ class Board:
             )
             cell['text'] = text
         return True
+
+    def disable(self):
+        for cell in self.board.values():
+            if cell is not None:
+                cell['hex'].hover = False
