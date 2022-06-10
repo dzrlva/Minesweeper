@@ -10,8 +10,7 @@ from util.minepoint import Value, Mask, Flag
 
 
 class Game():
-    def __init__(self, app, field, *, maxBombStack=4):
-        self.field = field
+    def __init__(self, app, difficulty=.1, *, maxBombStack=4):
         self.app = app
         self.maxBombStack = maxBombStack
         if maxBombStack <= 0 or maxBombStack >= 6:
@@ -22,8 +21,8 @@ class Game():
         self.opened = 0
         self.status = 'game'
 
-        self.board = Board(app, 42)
-        self.field = Field(self.board.rows, self.board.cols, .8, kind='hexagon')
+        self.board = Board(app, 10, width=1, height=.8)
+        self.field = Field(self.board.rows, self.board.cols, difficulty, kind='hexagon')
         self.board.draw()
         self.updateField()
         self.updateBoard()
@@ -66,12 +65,13 @@ class Game():
     def updateBoard(self):
         for x, y in self.field:
             if self.field[x, y] == Mask.opened:
+                text = None
                 if self.field[x, y] == Value.barrier:
-                    color, text = COLORS['main'], ''
+                    color = COLORS['main']
                 elif self.field[x, y] == Value.bomb:
-                    color, text = COLORS['cells']['bomb'], ''
+                    color = COLORS['cells']['bomb']
                 elif self.field[x, y] == Value.empty:
-                    color, text = COLORS['active'], None
+                    color = COLORS['cells']['empty']
                 else:
                     text = str(self.field[x, y].value)
                     color = COLORS['cells'][text]

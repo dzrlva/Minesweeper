@@ -5,6 +5,7 @@ COLORS = {
     'outline':  '#003153',
     'hover':    '#03dfaa',
     'cells': {
+        'empty': '#ffffff',
         'bomb': '#AA0000',
         '1': '#59DF9F',
         '2': '#9BE382',

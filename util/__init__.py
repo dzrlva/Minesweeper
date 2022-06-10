@@ -10,12 +10,10 @@ class dotdict(dict):
     __delattr__ = dict.__delitem__
 
 
-def loadImage(attrs, scale):
-    path = attrs['path']
-    size = Coord(attrs['size'] * scale, dtype=int)
-
+def loadImage(path, size):
     image = Image.open(path)
     ext = path.split('.')[-1]
+    size = Coord(size, size)
 
     if ext == 'gif':
         frames = []

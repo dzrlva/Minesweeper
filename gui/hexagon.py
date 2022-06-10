@@ -10,6 +10,12 @@ COEF = tan(radians(ANGLE))
 
 
 class Hexagon:
+    @staticmethod
+    def getMaxLengthByGeom(width, height):
+        if width < height:
+            return width / COEF, 'w'
+        else:
+            return height * (2 / 3), 'h'
 
     def __init__(self, canvas, x, y, length, color, outline, tags, hover=None):
         self.canvas = canvas  # canvas
