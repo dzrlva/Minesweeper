@@ -10,26 +10,24 @@ class dotdict(dict):
     __delattr__ = dict.__delitem__
 
 
-def loadImage(attrs):
-    image = Image.open(attrs['path'])
-    ext = attrs['path'].split('.')[-1]
+def loadImage(attrs, scale):
+    path = attrs['path']
+    size = Coord(attrs['size'] * scale, dtype=int)
 
-    if 'size' not in attrs:
-        return ImageTk.PhotoImage(image)
-    if isinstance(attrs['size'], int):
-        attrs['size'] = (attrs['size'], attrs['size'])
+    image = Image.open(path)
+    ext = path.split('.')[-1]
 
     if ext == 'gif':
         frames = []
         for i in range(image.n_frames):
             frames.append(ImageTk.PhotoImage(
-                image.copy().resize(attrs['size']).convert('RGBA')
+                image.copy().resize(size).convert('RGBA')
             ))
             image.seek(i)
         return {
-            'size': Coord(attrs['size']),
+            'size': Coord(size),
             'count': image.n_frames,
             'delay': image.info['duration'],
             'frames': frames
         }
-    return ImageTk.PhotoImage(image.resize(attrs['size']))
+    return ImageTk.PhotoImage(image.resize(size))

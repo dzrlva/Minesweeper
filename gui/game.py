@@ -4,6 +4,7 @@ import tkinter as tk
 from util.point import Point
 from util.coord import Coord
 from .board import Board
+from logic.field import Field
 from .colors import COLORS
 from util.minepoint import Value, Mask, Flag
 
@@ -21,10 +22,21 @@ class Game():
         self.opened = 0
         self.status = 'game'
 
-        self.board = Board(app, 12, debug=False)
+        self.board = Board(app, 42)
+        self.field = Field(self.board.rows, self.board.cols, .01, kind='hexagon')
         self.board.draw()
-        self.app.canvas.bind("<Button-1>", self.onLeftClick)
-        self.app.canvas.bind("<Button-3>", self.onRightClick)
+        self.updateField()
+        self.updateBoard()
+
+        self.lmbBind = self.app.canvas.bind("<Button-1>", self.onLeftClick)
+        self.rmbBind = self.app.canvas.bind("<Button-3>", self.onRightClick)
+
+    def destroy(self):
+        try:
+            self.app.canvas.unbind("<Button-1>", self.lmbBind)
+            self.app.canvas.unbind("<Button-3>", self.rmbBind)
+        except tk._tkinter.TclError:
+            pass
 
     def updateField(self):
         """Set barrier around playble area and remove impossible bombs"""
@@ -93,7 +105,14 @@ class Game():
             return
 
         pos = Coord(event.x, event.y, dtype=float)
+        clk = Coord(event.x, event.y, dtype=float)
         pos = self.board.findClicked(pos)
+
+        if pos:
+            print(clk, pos, self.field[pos] == Mask.opened)
+        else:
+            print(clk, pos)
+
         if pos is None or self.field[pos] == Mask.opened:
             return
 
