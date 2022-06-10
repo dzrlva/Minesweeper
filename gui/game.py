@@ -7,10 +7,11 @@ from .board import Board
 from logic.field import Field
 
 
-class Game(tk.Tk):
+class Game():
     def __init__(self, app):
         self.board = Board(app, 12)
         self.field = Field(self.board.rows, self.board.cols, .2)
+        self.app = app
         self.app.canvas.bind("<Button-1>", self.onLeftClick)
         self.app.canvas.bind("<Button-2>", self.onRightClick)
         pass

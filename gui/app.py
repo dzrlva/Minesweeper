@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from .board import Board
+from .game import Game
 
 
 # [!] Move to another file

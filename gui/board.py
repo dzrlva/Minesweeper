@@ -4,26 +4,11 @@ from util import loadImage
 from util import Point, Coord
 from math import sqrt
 from .hexagon import Hexagon
+from .colors import COLORS
 
 
 IMAGES = {
     'flag': ['./resources/flag.png', (40, 40)],
-}
-COLORS = {  # [!] Moved to another file
-    'active': '#0081a3',
-    'inactive': '#ffffff',
-    'outline': '#003153',
-    'hover': '#03dfaa',
-    '0': "#ffffff",
-    '1': '#59DF9F',
-    '2': '#9BE382',
-    '3': '#D0DA62',
-    '4': '#DEBB60',
-    '5': '#F0923C',
-    '6': '#E46666',
-    '7': '#ffffff',
-    '8': '#ffffff',
-    'bomb': '#AA0000',
 }
 
 
@@ -37,9 +22,9 @@ class Board:  # [!] Board only should draw hexagons and text. Nothing more!
         for res, resAttr in IMAGES.items():
             self.img[res] = loadImage(*resAttr)
         self.setDimensions(diagonal)
+        self.__data = {Point(row, col): dict() for row, col in Point.range([self.rows, self.cols])}
         self.__createBoard()
         self.__draw()
-        self.__data = {Point(row, col): dict() for row, col in Point.range([self.rows, self.cols])}
 
     def __draw(self):
         for i, hgn in enumerate(self.hexagons):
