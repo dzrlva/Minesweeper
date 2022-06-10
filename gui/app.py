@@ -26,6 +26,7 @@ class App(tk.Tk):
         self.canvas.pack(expand='no', fill='both')
 
         self.canvas.bind("<Button-2>", self.newSession)
+        self.newSession()
 
     def newSession(self, *args):
         self.session = Session(self)
