@@ -33,10 +33,10 @@ class Board:
             self.resources[resName] = loadImage(resAttr)
         self.setDimensions(diagonal)
         self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
+        self.topleft = Coord(10, 10)
         self.__createBoard()
 
     def __createBoard(self):
-        y_offset = 30 if self.size < 20 else 90
         x = self.rows / 2
         for col in range(self.cols):
             offset = 0 if col % 2 else self.size * sqrt(3) / 2
@@ -64,8 +64,8 @@ class Board:
                 if row < x_offset or row >= rx_offset:
                     self.board[Point(row, col)] = None
                     continue  # do not create hexagon if it out of field
-                hexX = row * self.size * sqrt(3) + offset + y_offset
-                hexY = col * self.size * 1.5 + 30
+                hexX = row * self.size * sqrt(3) + offset + self.topleft.x
+                hexY = col * self.size * 1.5 + self.topleft.y
                 hexTags = f'{row}.{col}'
                 hxg = Hexagon(
                     self.app.canvas, hexX, hexY,
@@ -100,14 +100,17 @@ class Board:
             self.app.canvas.create_image(
                 anim.center.x, anim.center.y, image=self.resources['bomb']
             )
+            if anim.callback:
+                anim.callback()
 
-    def drawExplosion(self, pos):
+    def drawExplosion(self, pos, *, callback=None):
         rcs = self.resources['explosion']
         bomb = dotdict({
             'label': tk.Label(self.app, bg=COLORS['cells']['bomb']),
             'center': self.board[pos]['hex'].center,
             'frames': iter(rcs['frames']),
-            'delay': rcs['delay']
+            'delay': rcs['delay'],
+            'callback': callback
         })
         coord = bomb.center - rcs['size'] / 2
         bomb.label.place(x=coord.x, y=coord.y)
