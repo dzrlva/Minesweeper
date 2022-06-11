@@ -1,7 +1,10 @@
+"""Styles for gui app."""
+
 from .colors import COLORS
 
 
 def COMMON_STYLE():
+    """Text and background colors."""
     return {
         'fg': COLORS['text'],
         'bg': COLORS['main'],
@@ -9,6 +12,7 @@ def COMMON_STYLE():
 
 
 def COMMON_BUTTON_STYLE():
+    """Remove button border styles."""
     return {
         'borderwidth': 0,
         'highlightthickness': 0,
@@ -16,6 +20,7 @@ def COMMON_BUTTON_STYLE():
 
 
 def RADIO_BUTTON_STYLE():
+    """Radio button styles."""
     return COMMON_STYLE() | COMMON_BUTTON_STYLE() | {
         'activeforeground': COLORS['text'],
         'activebackground': COLORS['main'],
@@ -24,6 +29,7 @@ def RADIO_BUTTON_STYLE():
 
 
 def PUSH_BTTON_STYLE():
+    """Regular button styles."""
     return COMMON_STYLE() | COMMON_BUTTON_STYLE() | {
         'bg': COLORS['buttons.bg'],
         'fg': COLORS['buttons.fg'],

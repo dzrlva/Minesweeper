@@ -1,3 +1,5 @@
+"""Different Menus for gui app."""
+
 import tkinter as tk
 from tkinter import messagebox
 from functools import partial
@@ -13,7 +15,10 @@ CTRL_BTN_MARGIN_BOTTOM = 80
 
 
 class MainMenu:
+    """Main menu of GUI app."""
+
     def __init__(self, app):
+        """Create and display main menu."""
         self.app = app
 
         btnHeight = 2
@@ -22,8 +27,6 @@ class MainMenu:
         self.buttonsConfig = ([
             { 'text': 'New Game',
               'command': partial(self.switchEvent, 'NewGameMenu') },
-            # { 'text': 'Statistics',
-              # 'command': partial(self.switchEvent, 'StatMenu') },
             { 'text': 'Settings',
               'command': partial(self.switchEvent, 'SettingsMenu') },
             { 'text': 'Quit',
@@ -46,21 +49,27 @@ class MainMenu:
         self.pack()
 
     def pack(self):
+        """Show menu."""
         self.title.pack(side="top", fill="x", pady=50, padx=50)
         for button in self.buttons:
             button.pack(pady=5)
 
     def destroy(self):
+        """Destroy all menu objects."""
         self.title.destroy()
         for button in self.buttons:
             button.destroy()
 
     def switchEvent(self, place):
+        """Generate event on button press."""
         self.app.event_generate('<<Switch-Menu>>', data=place)
 
 
 class NewGameMenu:
+    """New game menu settings."""
+
     def __init__(self, app, username=''):
+        """Create new game menu and show it."""
         self.app = app
 
         labelFont = (app.font[0], LABEL_FONT_SIZE)
@@ -137,6 +146,7 @@ class NewGameMenu:
         self.pack()
 
     def pack(self):
+        """Draw menu."""
         self.title.pack(side="top", fill="x", padx=20, pady=38)
 
         # self.plInpTitle.grid(row=0, column=0, padx=20)
@@ -156,11 +166,13 @@ class NewGameMenu:
         self.btnFrame.pack(side=tk.BOTTOM, pady=CTRL_BTN_MARGIN_BOTTOM)
 
     def destroy(self):
+        """Remove all menu objects."""
         self.title.destroy()
         self.frame.destroy()
         self.btnFrame.destroy()
 
     def onStartClick(self):
+        """Generate start game event on 'Start' button press."""
         self.app.event_generate('<<Start-Game>>', data={
             # 'username': self.plInp.get(),
             'difficulty': float(self.curDif.get()),
@@ -169,30 +181,15 @@ class NewGameMenu:
         })
 
     def onBackClick(self):
+        """Generate event to return back."""
         self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
 
 
-class StatisticsFrame(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        tk.Label(self, text="STATISTICS", font=("Purisa", 20)).pack(side="top", fill="x", pady=100)
-        listbox = tk.Frame(self)
-        buttons = tk.Frame(self)
-        loadgamelb = tk.Listbox(listbox, width=60, height=6)
-        loadgamelb.insert(1, "<  player1: Empty  >")
-        scrollbar = tk.Scrollbar(listbox, orient="vertical", command=loadgamelb.yview)
-        scrollbar.pack(side="right", fill= "y")
-        loadgamelb.config(yscrollcommand=scrollbar.set)
-        loadgamelb.pack()
-        tk.Button(buttons, text="Quit",font=("Purisa", 13), width=35, height=3,
-                  command=lambda: master.switch_frame(MainMenu)).pack(side="top", fill="y", pady=100, padx=100)
-
-        listbox.pack(side="top")
-        buttons.pack(side="top")
-
-
 class SettingsMenu:
+    """Menu to configure app settings."""
+
     def __init__(self, app):
+        """Create and show settings menu."""
         self.app = app
         labelFont = (app.font[0], 15)
         optionFont = (app.font[0], 12)
@@ -249,6 +246,7 @@ class SettingsMenu:
         self.pack()
 
     def pack(self):
+        """Draw settings menu."""
         self.title.pack(pady=20)
 
         self.langTitle.grid(row=0, column=0, pady=20)
@@ -265,11 +263,13 @@ class SettingsMenu:
         self.btnFrame.pack(side=tk.BOTTOM, pady=CTRL_BTN_MARGIN_BOTTOM)
 
     def destroy(self):
+        """Destroy settings menu."""
         self.title.destroy()
         self.frame.destroy()
         self.btnFrame.destroy()
 
     def reloadTheme(self):
+        """Reload settings menu theme right now."""
         self.title.configure(**styles.COMMON_STYLE())
         self.langTitle.configure(**styles.COMMON_STYLE())
         self.csTitle.configure(**styles.COMMON_STYLE())
@@ -282,6 +282,7 @@ class SettingsMenu:
         self.backBtn.configure(**styles.PUSH_BTTON_STYLE())
 
     def onApplyClick(self):
+        """Set settings."""
         self.applyBtn['state'] = 'disabled'
         self.app.event_generate('<<Save-Settings>>', data={
             'colorscheme': self.curCS.get(),
@@ -290,10 +291,13 @@ class SettingsMenu:
         self.reloadTheme()
 
     def onBackClick(self):
+        """Return back to main menu event."""
         self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
 
     def onLangChange(self, option):
+        """Change language."""
         self.applyBtn['state'] = 'normal'
 
     def onThemeChange(self):
+        """Change theme."""
         self.applyBtn['state'] = 'normal'

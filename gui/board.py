@@ -17,7 +17,10 @@ RESOURCES = {
 
 
 class Board:
+    """Board to draw hexagon Minesweeper."""
+
     def __init__(self, app, size, width, height):
+        """Create board of given size (rows/cols) and height/width percent."""
         self.app = app
 
         # self.width = app.winfo_width() * width
@@ -52,6 +55,7 @@ class Board:
         self.__createBoard()
 
     def destroy(self):
+        """Carefully clear all board's object."""
         for cell in self.board.values():
             if cell is not None:
                 cell['hex'].destroy()
@@ -100,6 +104,7 @@ class Board:
                 )
 
     def draw(self):
+        """Draw hexagon board."""
         for cell in self.board.values():
             if cell is not None:
                 cell['hex'].draw()
@@ -117,6 +122,7 @@ class Board:
                 callback()
 
     def drawExplosion(self, pos, *, callback=None):
+        """Draw explosion animation in given cell."""
         rcs = self.resources['explosion']
         cell = self.board[pos]
         cell['anim'] = dotdict({
@@ -130,6 +136,7 @@ class Board:
         self.__animation(cell)
 
     def toggleFlag(self, pos):
+        """Toggle flag."""
         pos = Point(pos)
         if pos not in self.board or self.board[pos] is None:
             return
@@ -146,12 +153,14 @@ class Board:
             self.board[pos]['flag'] = flag
 
     def findClicked(self, pos):
+        """Find clicked hexagon."""
         for pos, cell in self.board.items():
             if cell is not None and cell['hex'].hovered:
                 return pos
         return None
 
     def openCell(self, point, color, text=None):
+        """Open given cell."""
         point = Point(point)
         if point not in self.board:
             return False
@@ -183,6 +192,7 @@ class Board:
         return True
 
     def disable(self):
+        """Disable all hexagons on the field."""
         for cell in self.board.values():
             if cell is not None:
                 cell['hex'].hover = False

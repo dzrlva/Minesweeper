@@ -146,4 +146,5 @@ class Point:
         return f'({self.x}, {self.y})'
 
     def __hash__(self):
+        """Hash Point."""
         return hash(f'({self.x},{self.y})')

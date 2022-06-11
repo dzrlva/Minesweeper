@@ -14,7 +14,10 @@ from gui import styles
 
 
 class GameControls:
+    """Additional controls for game window."""
+
     def __init__(self, app, canvas):
+        """Create controls button."""
         self.app = app
         self.canvas = canvas
 
@@ -33,23 +36,30 @@ class GameControls:
         )
 
     def pack(self):
+        """Show control button."""
         self.resetBtn.grid(row=0, column=0, padx=10)
         self.backBtn.grid(row=0, column=1)
         # self.frame.pack()
         self.frame.pack(anchor='w', expand=True, padx=(20, 20))
 
     def destroy(self):
+        """Remove control buttons."""
         self.frame.destroy()
 
     def onResetClick(self):
+        """Reset game with event."""
         self.app.event_generate('<<Reset-Game>>')
 
     def onBackButton(self):
+        """Return to preview menu."""
         self.app.event_generate('<<Switch-Menu>>', data='NewGameMenu')
 
 
 class Game:
+    """Class to paly hexagonal Minesweeper."""
+
     def __init__(self, app, size, difficulty, *, maxBombStack=8):
+        """Create game with given size and difficulty."""
         self.app = app
         self.maxBombStack = maxBombStack
         if maxBombStack <= 0 or maxBombStack >= 12:
@@ -90,6 +100,7 @@ class Game:
         self.rgBind = self.app.bind('<<Reset-Game>>', self.resetGame)
 
     def resetGame(self, event=None):
+        """Create new game."""
         self.marked = 0
         self.markedRight = 0
         self.opened = 0
@@ -105,6 +116,7 @@ class Game:
         self.updateField()
 
     def destroy(self):
+        """Remove all game's objects."""
         self.app.unbind('<Button-1>', self.lmbBind)
         self.app.unbind('<Button-3>', self.rmbBind)
         self.app.unbind('<Button-2>', self.rmbBind2)
@@ -118,7 +130,7 @@ class Game:
         self.app = None
 
     def updateField(self):
-        """Set barrier around playble area and remove impossible bombs"""
+        """Set barrier around playble area and remove impossible bombs."""
         for pos, cell in self.board.board.items():
             if cell is None:
                 self.field[pos] = Value.barrier
@@ -145,6 +157,7 @@ class Game:
             self.barriers += self.field[crd] == Value.barrier
 
     def updateBoard(self):
+        """Draw opened cell of the board."""
         for x, y in self.field:
             if self.field[x, y] == Mask.opened:
                 text = None
@@ -160,6 +173,7 @@ class Game:
                 self.board.openCell(Point(x, y), color, text)
 
     def completeGame(self):
+        """Disable board and display message."""
         for i, pos in enumerate(self.field):
             self.field[pos] = Mask.opened
         self.updateBoard()
@@ -168,13 +182,11 @@ class Game:
             tk.messagebox.showinfo(title='Result', message='You Lose!\nTry better next time! ⚇')
         else:
             tk.messagebox.showinfo(title='Result', message='You won! Nice ☺')
-            # if self.field[pos] == Value.bomb:
-                # self.board.drawExplosion(pos)
 
         self.board.disable()
-        # self.app.event_generate("<<Game-Complete>>", data=self.status)
 
     def gameOver(self, pos):
+        """Set result on lose."""
         if self.status == 'lose':
             return
         self.status = 'lose'
@@ -183,11 +195,13 @@ class Game:
         # self.completeGame()
 
     def gameWin(self):
+        """Set result on win."""
         self.status = 'win'
         print('BRO, YOU WON')
         self.completeGame()
 
     def checkWin(self):
+        """Check if player completed game."""
         if self.marked != self.markedRight:
             return False
         if self.opened + self.marked == self.field.size - self.barriers:
@@ -195,10 +209,12 @@ class Game:
         return False
 
     def updateStat(self):
+        """Update amount of left to open cells."""
         left = self.field.size - self.barriers - self.opened - self.marked
         self.canvas.itemconfigure(self.statLabel, text=f'Bombs left: {left}')
 
     def onRightClick(self, event):
+        """Reaction to right click (place/remove flag)."""
         if self.status != 'game':
             return
 
@@ -222,6 +238,7 @@ class Game:
         self.updateStat()
 
     def onLeftClick(self, event):
+        """Open cell."""
         if self.status != 'game':
             return
 

@@ -10,7 +10,10 @@ from .menu import MainMenu, NewGameMenu, SettingsMenu
 
 
 class App(tk.Tk):
+    """Gui App class."""
+
     def __init__(self, width=900, height=700):
+        """Initialize GUI app."""
         super().__init__()
         EventMaster(self)
         self.title = 'Minesweeper'
@@ -26,7 +29,6 @@ class App(tk.Tk):
 
         self.protocol("WM_DELETE_WINDOW", self.onDeath)
         self.bind("<<Switch-Menu>>", self.switchMenu)
-        self.bind("<<Game-Complete>>", self.onGameComplition)
         self.bind("<<Start-Game>>", self.onGameInit)
         self.bind("<<Save-Settings>>", self.onSettingsSave)
 
@@ -41,32 +43,31 @@ class App(tk.Tk):
         self.newSession()
 
     def onDeath(self):
+        """Application is closed."""
         print('App is dying')
         self.destroy()
 
     def onSettingsSave(self, event):
+        """Save settings given from menu."""
         self.appOpts['colorscheme'] = event.data['colorscheme']
         COLORS.setTheme(self.appOpts['colorscheme'])
         self.configure(bg=COLORS['main'])
 
     def onGameInit(self, event):
+        """Init game with given options by menu."""
         self.gameOpts = event.data
         self.page = 'Game'
         self.newSession()
 
-    def onGameComplition(self, event):
-        self.page = 'MainMenu'
-        self.newSession()
-
     def switchMenu(self, event):
+        """Switch current view to given menu."""
         print('Asked to switch menu to', event)
         if event.data != self.page:
             self.page = event.data
             self.newSession()
 
     def newSession(self, args=None):
-        # if (args):
-            # print(args)
+        """Replace current view with new session based on self.page."""
         if self.session:
             self.session.destroy()
             self.session = None

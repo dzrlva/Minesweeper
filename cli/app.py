@@ -9,7 +9,10 @@ import time
 
 
 class App:
+    """Cli App class."""
+
     def mainloop(self):
+        """Loop game until it's completed."""
         field = Field(30, 20, 0.15)
         term = Terminal()
         screen = Screen()
@@ -44,4 +47,3 @@ class App:
         stat.saveStatistic()
         screen.setCursor(0, field.height + 6).setColor(Color.reset)
         stat.print()
-

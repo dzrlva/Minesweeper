@@ -1,15 +1,19 @@
+"""Module with common used utils."""
+
 from PIL import ImageTk, Image
 from .coord import Coord
 from .point import Point
 
 
 class dotdict(dict):
-    """dot.notation access to dictionary attributes"""
+    """dot.notation access to dictionary attributes."""
+
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
     def __hash__(self):
+        """Hash for dictionary."""
         hashRes = 0
         for k, v in self.items():
             try:
@@ -24,6 +28,7 @@ class dotdict(dict):
 
 
 def loadImage(path, size):
+    """Load image for GUI app."""
     image = Image.open(path)
     ext = path.split('.')[-1]
     size = Coord(size, size)

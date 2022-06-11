@@ -1,3 +1,5 @@
+"""Hacky way to introduce event data in tkinter."""
+
 import tkinter as tk
 from util import dotdict
 from time import time
@@ -6,7 +8,10 @@ import inspect
 
 
 class EventMaster:
+    """Make tkinter virtual event more usfull."""
+
     def __init__(self, root):
+        """Replace tkinter bind/event_generate with better version."""
         self.eventCounter = 0
         self.events = {}
 
@@ -16,15 +21,18 @@ class EventMaster:
         root.event_generate = self.dispatchEvent
 
     def virtEventWrap(self, callback, event):
+        """Parse EventMaster's event data."""
         callback(self.getEvent(event))
 
     def bindWrap(self, name, callback):
+        """Replace original bind function."""
         if name.startswith('<<') and name.endswith('>>'):
             return self.tkBind(name, partial(self.virtEventWrap, callback))
         else:
             return self.tkBind(name, callback)
 
     def getEvent(self, tkEvent):
+        """Parse virtual event for EventMaster data."""
         eventId = tkEvent.x
         if eventId not in self.events:
             return tkEvent
@@ -37,6 +45,7 @@ class EventMaster:
         return eventData
 
     def dispatchEvent(self, name, **kwargs):
+        """Replace original event_generate in order to add data."""
         if 'data' not in kwargs:
             self.tkEventGenerate(name, **kwargs)
         else:

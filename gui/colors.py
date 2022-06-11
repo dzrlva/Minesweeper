@@ -1,3 +1,5 @@
+"""Color space of gui app."""
+
 COLOR_SPACE = {
     'dark': {
         'main': '#003153',
@@ -67,16 +69,21 @@ COLOR_SPACE = {
 
 
 class COLORS:
+    """Colors handler class."""
+
     scheme = COLOR_SPACE['light']
 
     @staticmethod
     def scheme():
+        """Get current scheme."""
         return COLORS.scheme
 
     def setTheme(themeName):
+        """Set another theme. Theme mush exists."""
         COLORS.scheme = COLOR_SPACE[themeName]
 
     def __class_getitem__(cls, colorName):
+        """Get some color from current theme. Color should exists."""
         stack = COLORS.scheme
         for categ in colorName.split('.'):
             if categ not in stack:

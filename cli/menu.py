@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Menu module for cli app."""
 
 from cli.screen import Screen, Color
 from blessed import Terminal
@@ -25,6 +25,8 @@ if __name__ == '__main__':
 
 
 class Menu:
+    """Cli menu baseclass."""
+
     def __init__(self, item_numb, items, field):
         """Create abstract menu."""
         self.oldPos = None
@@ -64,7 +66,10 @@ class Menu:
 
 
 class Startmenu(Menu):
+    """Start menu for cli app."""
+
     def __init__(self, item_numb, items, field):
+        """Init startmenu."""
         Menu.__init__(self, item_numb, items, field)
 
     def keyAction(self, key):
@@ -87,6 +92,7 @@ class Startmenu(Menu):
 
 
 def startmenu():
+    """Crete startmenu."""
     startmenu_item = ["Game", "Statistics", "Settings", "Exit"]
     term = Terminal()
     field = Field(30, len(startmenu_item) + OFFSET, 0.15)
