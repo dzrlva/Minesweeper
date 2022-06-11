@@ -1,5 +1,5 @@
 COLOR_SPACE = {
-    'light': {
+    'dark': {
         'main':     '#003153',
         'active':   '#ffffff',
         'inactive': '#aaaaaa',
@@ -20,23 +20,23 @@ COLOR_SPACE = {
             '8': '#ffffff',
         }
     },
-    'dark': {
-        'main':     'black',
+    'light': {
+        'main':     '#f5f5dc',
         'active':   'white',
-        'inactive': 'grey',
-        'outline':  'yellow',
-        'hover':    'cyan',
+        'inactive': '#ffdab9',
+        'outline':  '#ff4500',
+        'hover':    '#ffe4e1',
         'cells': {
-            'correct-flag': 'green',
-            'incorrect-flag': 'yellow',
+            'correct-flag': '#ccff00',
+            'incorrect-flag': ' #e6e6fa',
             'empty': '#222222',
             'bomb': '#AA0000',
-            '1': '#59DF9F',
-            '2': '#9BE382',
-            '3': '#D0DA62',
-            '4': '#DEBB60',
-            '5': '#F0923C',
-            '6': '#E46666',
+            '1': '#fef7a7',
+            '2': '#eee8aa',
+            '3': '#ffd800',
+            '4': '#ffbf00',
+            '5': '#ff7518',
+            '6': '#ff033e',
             '7': '#ffffff',
             '8': '#ffffff',
         }
@@ -78,3 +78,4 @@ class COLORS:
     # '8': '#ffffff',
     # 'bomb': '#AA0000',
 # }
+
