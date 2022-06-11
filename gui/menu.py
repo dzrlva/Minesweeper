@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from functools import partial
-from util import loadImage
+#from util import loadImage
 
 
 class SampleApp(tk.Tk):
@@ -29,10 +29,10 @@ class SampleApp(tk.Tk):
 
 
 class ButtonArray():
-    def __init__(self, buttons, font):
+    def __init__(self, buttons):
         self.buttons = []
         for button in buttons:
-            self.buttons.append(tk.Button(**button, font=font))
+            self.buttons.append(tk.Button(**button))
 
     def pack(self):
         for button in self.buttons:
@@ -49,7 +49,6 @@ class MainMenu():
 
         btnHeight = 2
         btnWidth = 40
-        font = self.app.font
 
         self.buttons = ButtonArray([
             { 'text': 'New Game',
@@ -68,9 +67,9 @@ class MainMenu():
               'width': btnWidth,
               'height': btnHeight,
               'command': app.destroy },
-        ], font)
+        ])
 
-        self.label = tk.Label(text="Minesweeper", font=font)
+        self.label = tk.Label(text="Minesweeper")
 
         self.label.pack(side="top", fill="x", pady=50, padx=50)
         self.buttons.pack()
@@ -157,13 +156,13 @@ class SettingsFrame(tk.Frame):
         vs.set("1")
         for text, mode in MODES:
             tk.Radiobutton(center, text=text, font=("Purisa", 13), variable=vs, value=mode).pack(side="left", fill="x", padx=50, pady=20)
-        b1 = tk.Button(center, text="SAVE", font=("Purisa", 10), width=10, height=1,
+        b1 = tk.Button(bottom, text="SAVE", font=("Purisa", 10), width=25, height=2,
                     command=lambda: master.saved_info(master.switch_frame(MainMenu)))
         b2 = tk.Button(bottom, text="CANCEL", font=("Purisa", 10), width=25, height=2,
                     command=lambda: master.switch_frame(MainMenu))
 
 
-        b1.pack(side="bottom", padx=20, pady=20)
+        b1.pack(side="bottom", padx=20, pady=10)
         b2.pack(side="bottom", padx=20, pady=20)
 
         header.grid(row=1, column=3)
