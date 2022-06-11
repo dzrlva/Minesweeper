@@ -102,9 +102,9 @@ class NewGameMenu:
         self.difTitle = tk.Label(self.frame, text="Difficulty", font=self.optionFont)
         self.difficulties = [
             ('easy', '0.1'),
-            ('medium', '0.2'),
+            ('medium', '0.3'),
             ('hard', '0.5'),
-            ('extra hard', '0.6')
+            ('extra hard', '0.8')
         ]
 
         self.curDif = tk.StringVar(self.frame, self.difficulties[0][1])
