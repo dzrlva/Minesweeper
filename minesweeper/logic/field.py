@@ -1,7 +1,7 @@
 """Module for the Field class."""
 
-from util.coord import Coord
-from util.minepoint import MinePoint, Value, Mask, Flag
+from minesweeper.util.coord import Coord
+from minesweeper.util.minepoint import MinePoint, Value, Mask, Flag
 
 NoramlPattern = [
     Coord(-1, -1), Coord(0, -1), Coord(1, -1),

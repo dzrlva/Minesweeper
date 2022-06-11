@@ -1,8 +1,8 @@
 """CLI version of game interface."""
 from .screen import Screen, Color
 from .box import Box
-from util.minepoint import Flag, Mask, Value
-from util.coord import Coord
+from minesweeper.util.minepoint import Flag, Mask, Value
+from minesweeper.util.coord import Coord
 
 
 VALUECOLORS = [ 0, 38, 73, 40, 136, 172, 202, 161, 124, 9 ]

@@ -1,6 +1,6 @@
 """Draw different boxes with ease."""
 from .screen import Screen
-from util.coord import Coord
+from minesweeper.util.coord import Coord
 
 SIDES = {
     'light':      { 'hor': '─', 'ver': '│' },

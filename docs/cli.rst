@@ -1,22 +1,22 @@
 Console minesweeper
 ~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: cli.color
+.. automodule:: minesweeper.cli.color
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: cli.box
+.. automodule:: minesweeper.cli.box
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: cli.game
+.. automodule:: minesweeper.cli.game
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: cli.screen
+.. automodule:: minesweeper.cli.screen
    :members:
    :private-members:
    :special-members:

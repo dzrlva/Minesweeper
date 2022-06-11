@@ -33,7 +33,10 @@ class Stat:
 
     def assignFile(self, name):
         """Assign some file to statistic."""
-        self.filepath = os.getcwd() + os.sep + "stat" + os.sep + name + ".bin"
+        self.filepath = os.getcwd() + os.sep + "minesweeper" + os.sep + "stat"
+        if not os.path.exists(self.filepath):
+            os.mkdir(self.filepath)
+        self.filepath += os.sep + name + ".bin"
         if not os.path.exists(self.filepath):
             with open(self.filepath, 'wb') as f:
                 pickle.dump([], f)

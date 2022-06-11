@@ -1,7 +1,7 @@
 """Move, print, color your terminal screen."""
 from blessed import Terminal
 from .color import Color
-from util.coord import Coord
+from minesweeper.util.coord import Coord
 
 
 term = Terminal()

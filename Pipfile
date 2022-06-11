@@ -1,0 +1,11 @@
+[dev-packages]
+doit = "*"
+flake8 = "*"
+pydocstyle = "*"
+sphinx = "*"
+build = "*"
+wheel = "*"
+
+[packages]
+blessed = "*"
+doit = "*"

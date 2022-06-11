@@ -1,10 +1,10 @@
 Common logic
 ~~~~~~~~~~~~
 
-.. automodule:: logic.field
+.. automodule:: minesweeper.logic.field
    :members:
    :special-members:
 
-.. automodule:: logic.gamestat
+.. automodule:: minesweeper.logic.gamestat
    :members:
    :special-members:
