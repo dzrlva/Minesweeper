@@ -23,7 +23,6 @@ class App(tk.Tk):
 
         self.protocol("WM_DELETE_WINDOW", self.onDeath)
         self.bind("<Button-2>", self.newSession)
-        self.bind("<<Foo>>", self.newSession)
         self.bind("<<Switch-Menu>>", self.switchMenu)
 
         self.page = 'MainMenu'
@@ -34,8 +33,11 @@ class App(tk.Tk):
         print('App is dying')
         self.destroy()
 
-    def switchMenu(self, place):
-        print('Asked to switch menu to', place)
+    def switchMenu(self, event):
+        print('Asked to switch menu to', event)
+        if event.data == 'NewGameMenu':
+            self.page = None
+            self.newSession()
 
     def newSession(self, args=None):
         # if (args):
@@ -43,7 +45,8 @@ class App(tk.Tk):
         if self.session:
             self.session.destroy()
             self.session = None
-        elif self.page == 'MainMenu':
+
+        if self.page == 'MainMenu':
             self.session = MainMenu(self)
         else:
-            self.session = Game(self, 40, .1)
+            self.session = Game(self, 8, .1)

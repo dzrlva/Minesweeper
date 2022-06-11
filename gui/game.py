@@ -21,10 +21,11 @@ class Game():
         self.opened = 0
         self.status = 'game'
 
-        self.canvas = tk.Canvas(self, width=app.width, height=app.height, bg=COLORS['main'])
+        self.canvas = tk.Canvas(self.app, width=app.width, height=app.height, bg=COLORS['main'])
         self.canvas.pack(expand='no', fill='both')
+        self.app.canvas = self.canvas
 
-        self.board = Board(app, size, width=1, height=.8)
+        self.board = Board(app, size, width=1, height=1)
         self.field = Field(self.board.rows, self.board.cols, difficulty, kind='hexagon')
         self.board.draw()
         self.updateField()
@@ -36,9 +37,10 @@ class Game():
     def destroy(self):
         self.app.unbind("<Button-1>", self.lmbBind)
         self.app.unbind("<Button-3>", self.rmbBind)
-        self.app = None
         self.board.destroy()
         self.canvas.destroy()
+        self.app.canvas = None
+        self.app = None
 
     def updateField(self):
         """Set barrier around playble area and remove impossible bombs"""
@@ -82,7 +84,6 @@ class Game():
 
     def completeGame(self):
         self.board.disable()
-        self.app.event_generate("<<Foo>>", data=self.status)
 
     def gameOver(self, pos):
         if self.status == 'gameover':
