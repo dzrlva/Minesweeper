@@ -41,13 +41,13 @@ class Hexagon:
         self.__item = None
         self.__calculate()
 
+        self.entBind = self.lveBind = None
+
     def destroy(self):
-        try:
-            self.deactivate()
-            if self.__item:
-                self.canvas.delete(self.__item)
-        except tk._tkinter.TclError:
-            pass
+        self.deactivate()
+        if self.__item:
+            self.canvas.delete(self.__item)
+        self.canvas = None
 
     def __calculate(self):
         startX, startY = self.origin
@@ -88,8 +88,10 @@ class Hexagon:
         if not self.hover:
             return
         self.hover = self.hovered = False
-        self.canvas.tag_unbind(self.__item, '<Enter>', self.entBind)
-        self.canvas.tag_unbind(self.__item, '<Leave>', self.lveBind)
+        if self.entBind:
+            self.canvas.tag_unbind(self.__item, '<Enter>', self.entBind)
+        if self.lveBind:
+            self.canvas.tag_unbind(self.__item, '<Leave>', self.lveBind)
 
     def activate(self):
         self.entBind = self.canvas.tag_bind(self.__item, '<Enter>', self.onEnter)

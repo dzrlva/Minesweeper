@@ -15,9 +15,6 @@ class EventMaster:
         root.bind = self.bindWrap
         root.event_generate = self.dispatchEvent
 
-    def __del__(self):
-        print('EventMaster is dead')
-
     def virtEventWrap(self, callback, event):
         callback(self.getEvent(event))
 
