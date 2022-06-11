@@ -25,7 +25,6 @@ class App(tk.Tk):
         self.width, self.height = width, height
 
         self.protocol("WM_DELETE_WINDOW", self.onDeath)
-        self.bind("<Button-2>", self.newSession)
         self.bind("<<Switch-Menu>>", self.switchMenu)
         self.bind("<<Game-Complete>>", self.onGameComplition)
         self.bind("<<Start-Game>>", self.onGameInit)
