@@ -3,10 +3,11 @@ COLOR_SPACE = {
         'main': '#003153',
         'text': '#ffffff',
         'hexagon': {
-            'text': 'white',
-            'hover': '#03dfaa',
-            'active': '#ffffff',
+            'text':     'white',
+            'hover':    '#03dfaa',
+            'active':   '#ffffff',
             'inactive': '#aaaaaa',
+            'outline':  '#003153',
         },
         'cells': {
             'correct-flag': 'green',
@@ -36,9 +37,9 @@ COLOR_SPACE = {
         'hexagon': {
             'active':   'white',
             'inactive': '#ffdab9',
-            'outline':  '#ff4500',
             'hover':    '#ffe4e1',
-            'text': '#222222',
+            'text':     '#222222',
+            'outline':  '#ff4500',
         },
         'cells': {
             'correct-flag': '#ccff00',
@@ -82,21 +83,3 @@ class COLORS:
                 raise ValueError(f'No color named {colorName}')
             stack = stack[categ]
         return stack
-
-# COLORS = {
-    # 'active': '#0081a3',
-    # 'inactive': '#ffffff',
-    # 'outline': '#003153',
-    # 'hover': '#03dfaa',
-    # '0': "#ffffff",
-    # '1': '#59DF9F',
-    # '2': '#9BE382',
-    # '3': '#D0DA62',
-    # '4': '#DEBB60',
-    # '5': '#F0923C',
-    # '6': '#E46666',
-    # '7': '#ffffff',
-    # '8': '#ffffff',
-    # 'bomb': '#AA0000',
-# }
-
