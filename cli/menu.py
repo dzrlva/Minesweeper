@@ -15,10 +15,13 @@ KEYS = {
     "open": " ",
 }
 OFFSET = 2  # head of menu
+
 screen = Screen()
 stat = Stat()
-stat.assignFile("Gamer1")
-stat.readStatistic()
+
+if __name__ == '__main__':
+    stat.assignFile("Gamer1")
+    stat.readStatistic()
 
 
 class Menu:
