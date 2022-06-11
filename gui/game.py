@@ -16,6 +16,8 @@ from gui import styles
 class GameControls:
     def __init__(self, app, canvas):
         self.app = app
+        self.canvas = canvas
+
         self.frame = tk.Frame(app, bg=COLORS['main'])
         self.resetBtn = tk.Button(
             self.frame, text='Reset',
@@ -69,6 +71,12 @@ class Game:
         self.ctrls = GameControls(app, self.canvas)
         self.ctrls.pack()
 
+        self.label = self.canvas.create_text(
+            10, 10,
+            anchor='nw', fill='black', text='Minesweeper',
+            state='disabled', font=(self.app.font[0], 20)
+        )
+
         self.lmbBind = self.app.bind('<Button-1>', self.onLeftClick)
         self.rmbBind = self.app.bind('<Button-3>', self.onRightClick)
         self.rgBind = self.app.bind('<<Reset-Game>>', self.resetGame)
@@ -92,6 +100,7 @@ class Game:
         self.app.unbind('<Button-3>', self.rmbBind)
         self.app.unbind('<<Reset-Game>>', self.rgBind)
         self.board.destroy()
+        self.canvas.delete(self.label)
         self.canvas.destroy()
         self.ctrls.destroy()
         self.app.canvas = None

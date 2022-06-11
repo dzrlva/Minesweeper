@@ -161,7 +161,7 @@ class NewGameMenu:
 
     def onStartClick(self):
         self.app.event_generate('<<Start-Game>>', data={
-            'username': self.plInp.get(),
+            # 'username': self.plInp.get(),
             'difficulty': float(self.curDif.get()),
             'fieldsize': self.fieldSizes[self.curFieldSize.get()],
         })
