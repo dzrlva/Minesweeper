@@ -1,6 +1,7 @@
 """Module that uses logic.Field, draws board, handles user input."""
 
 import tkinter as tk
+from tkinter import messagebox
 from util.point import Point
 from util.coord import Coord
 from .board import Board
@@ -176,9 +177,9 @@ class Game:
         self.updateBoard()
 
         if self.status == 'lose':
-            tk.messagebox.showinfo(title='Result', message='You Lose!\nTry better next time! ⚇')
+            messagebox.showinfo(title='Result', message='You Lose!\nTry better next time! ⚇')
         else:
-            tk.messagebox.showinfo(title='Result', message='You won! Nice ☺')
+            messagebox.showinfo(title='Result', message='You won! Nice ☺')
 
         self.board.disable()
 
