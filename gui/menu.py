@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 from functools import partial
-from .widgets import ButtonArray
 
 
 class SampleApp(tk.Tk):
@@ -35,33 +34,37 @@ class MainMenu:
         btnHeight = 2
         btnWidth = 40
 
-        self.buttons = ButtonArray([
+        self.buttonsConfig = ([
             { 'text': 'New Game',
-              'width': btnWidth,
-              'height': btnHeight,
               'command': partial(self.switchEvent, 'NewGameMenu') },
             { 'text': 'Statistics',
-              'width': btnWidth,
-              'height': btnHeight,
               'command': partial(self.switchEvent, 'StatMenu') },
             { 'text': 'Settings',
-              'width': btnWidth,
-              'height': btnHeight,
               'command': partial(self.switchEvent, 'SettingsMenu') },
             { 'text': 'Quit',
-              'width': btnWidth,
-              'height': btnHeight,
               'command': app.destroy },
         ])
 
-        self.title = tk.Label(text="Minesweeper", font=font)
+        self.buttons = []
+        for buttonConfig in self.buttonsConfig:
+            self.buttons.append(tk.Button(
+                width=btnWidth, height=btnHeight,
+                **buttonConfig, font=app.font
+            ))
 
+        self.title = tk.Label(text="Minesweeper", font=app.font)
+
+        self.pack()
+
+    def pack(self):
         self.title.pack(side="top", fill="x", pady=50, padx=50)
-        self.buttons.pack()
+        for button in self.buttons:
+            button.pack()
 
     def destroy(self):
         self.title.destroy()
-        self.buttons.destroy()
+        for button in self.buttons:
+            button.destroy()
 
     def switchEvent(self, place):
         self.app.event_generate('<<Switch-Menu>>', data=place)
