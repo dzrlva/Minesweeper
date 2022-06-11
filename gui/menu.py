@@ -2,29 +2,12 @@ import tkinter as tk
 from tkinter import messagebox
 from functools import partial
 
-
-class SampleApp(tk.Tk):
-    def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
-        self._frame = None
-        self.switch_frame(MainMenu)
-
-    def switch_frame(self, frame_class):
-        new_frame = frame_class(self)
-        if self._frame is not None:
-            self._frame.destroy()
-        self._frame = new_frame
-        self._frame.pack()
-
-    def show_info(static):
-        messagebox.showinfo("Info", "please, choose one of possible options")
-
-    def saved_info(self, master):
-        messagebox.showinfo("Saved", "SETTINGS SAVED!")
-        master.switch_frame(MainMenu)
-
-    def quit(self):
-        self.destroy()
+TITLE_FONT_SIZE = 20
+LABEL_FONT_SIZE = 13
+OPTION_FONT_SIZE = 10
+BUTTON_FONT_SIZE = 13
+CTRL_BTN_GAP = 5
+CTRL_BTN_MARGIN_BOTTOM = 80
 
 
 class MainMenu:
@@ -73,14 +56,15 @@ class MainMenu:
 class NewGameMenu:
     def __init__(self, app, username=''):
         self.app = app
-        self.labelFont = (app.font[0], 13)
-        self.optionFont = (app.font[0], 10)
-        self.buttonFont = (app.font[0], 13)
+
+        labelFont = (app.font[0], LABEL_FONT_SIZE)
+        optionFont = (app.font[0], OPTION_FONT_SIZE)
+        btnFont = (app.font[0], BUTTON_FONT_SIZE)
 
         self.title = tk.Label(app, text='New game', font=app.font)
         self.frame = tk.Frame(app)
 
-        self.plInpTitle = tk.Label(self.frame, text='Player name', font=self.labelFont)
+        self.plInpTitle = tk.Label(self.frame, text='Player name', font=labelFont)
         self.plInp = tk.Entry(self.frame)
         self.plInp.insert(0, username)
 
@@ -93,13 +77,13 @@ class NewGameMenu:
             'giant': 22
         }
         self.curFieldSize = tk.StringVar(self.frame, list(self.fieldSizes.keys())[0])
-        self.fsInpTitle = tk.Label(self.frame,  text='Field size', font=self.labelFont)
+        self.fsInpTitle = tk.Label(self.frame,  text='Field size', font=labelFont)
         self.fsInpMenu = tk.OptionMenu(
             self.frame, self.curFieldSize, *list(self.fieldSizes.keys()),
         )
         self.fsInpMenu.config(width=10)
 
-        self.difTitle = tk.Label(self.frame, text="Difficulty", font=self.optionFont)
+        self.difTitle = tk.Label(self.frame, text="Difficulty", font=optionFont)
         self.difficulties = [
             ('easy', '0.1'),
             ('medium', '0.3'),
@@ -111,18 +95,19 @@ class NewGameMenu:
         self.difButtons = []
         for difficulty, value in self.difficulties:
             button = tk.Radiobutton(
-                self.frame, text=difficulty, font=self.optionFont,
+                self.frame, text=difficulty, font=optionFont,
                 variable=self.curDif, value=value,
             )
             self.difButtons.append(button)
 
+        self.btnFrame = tk.Frame()
         self.startBtn = tk.Button(
-            app, text='Start', font=self.optionFont,
+            self.btnFrame, text='Start', font=btnFont,
             width=20, height=1,
             command=self.onStartClick
         )
         self.backBtn = tk.Button(
-            app, text='Back', font=self.optionFont,
+            self.btnFrame, text='Back', font=btnFont,
             width=20, height=1,
             command=self.onBackClick
         )
@@ -142,16 +127,16 @@ class NewGameMenu:
         for i, difButton in enumerate(self.difButtons):
             difButton.grid(row=i + 3, column=0, padx=(90, 0), columnspan=2, sticky='w')
 
-        self.frame.pack()
+        self.startBtn.grid(row=0, column=0, pady=CTRL_BTN_GAP)
+        self.backBtn.grid(row=1, column=0)
 
-        self.startBtn.pack(side="top", fill="y", padx=30, pady=(15, 5))
-        self.backBtn.pack(side="top", fill="y", padx=30, pady=5)
+        self.frame.pack()
+        self.btnFrame.pack(side=tk.BOTTOM, pady=CTRL_BTN_MARGIN_BOTTOM)
 
     def destroy(self):
         self.title.destroy()
         self.frame.destroy()
-        self.startBtn.destroy()
-        self.backBtn.destroy()
+        self.btnFrame.destroy()
 
     def onStartClick(self):
         self.app.event_generate('<<Start-Game>>', data={
@@ -183,44 +168,83 @@ class StatisticsFrame(tk.Frame):
         buttons.pack(side="top")
 
 
-class SettingsFrame(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        center = tk.Frame(self, borderwidth=0, relief="ridge")
-        bottom = tk.Frame(self, borderwidth=0, relief="solid")
-        header = tk.Frame(self, borderwidth=0, relief="ridge")
-        tk.Label(bottom, text="\n\n")
-        tk.Label(header, text="Settings", font=("Purisa", 23)).pack(side="top", fill="both", pady=50)
-        tk.Label(center, text="Language", font=("Purisa", 16)).pack(side="top", fill="x", pady=10, padx=100)
-        resoptions= ["English", "Russian"]
-        resvar = tk.StringVar(master)
-        resvar.set(resoptions_left[0])
-        resmenu = tk.OptionMenu(center, resvar, *resoptions, command=lambda: master.getData())
-        resmenu.pack(side="top", fill="x", pady=20)
+class SettingsMenu:
+    def __init__(self, app):
+        self.app = app
+        labelFont = (app.font[0], 15)
+        optionFont = (app.font[0], 12)
 
-        tk.Label(center, text="Colorscheme", font=("Purisa", 16)).pack(side="top", fill="x", pady=10)
-        MODES = [("dark", "1"),
-                 ("light", "2")]
-        vs = tk.StringVar()
-        vs.set("1")
-        for text, mode in MODES:
-            tk.Radiobutton(center, text=text, font=("Purisa", 13), variable=vs, value=mode).pack(side="left", fill="x", padx=50, pady=20)
-        b1 = tk.Button(bottom, text="SAVE", font=("Purisa", 10), width=25, height=2,
-                    command=lambda: master.saved_info(master.switch_frame(MainMenu)))
-        b2 = tk.Button(bottom, text="CANCEL", font=("Purisa", 10), width=25, height=2,
-                    command=lambda: master.switch_frame(MainMenu))
+        self.title = tk.Label(text="Settings", font=app.font, pady=10)
+        self.frame = tk.Frame(app)
 
-        b1.pack(side="bottom", padx=20, pady=10)
-        b2.pack(side="bottom", padx=20, pady=20)
+        self.langOptions = ['English', 'Russian']
+        self.langTitle = tk.Label(self.frame, text='Language', font=labelFont)
+        self.curLang = tk.StringVar(self.frame, self.langOptions[0])
+        self.langMenu = tk.OptionMenu(
+            self.frame, self.curLang, *self.langOptions,
+            command=self.onLangChange
+        )
+        self.langMenu.config(width=10)
 
-        header.grid(row=1, column=3)
-        bottom.grid(row=5, column=3)
-        center.grid(row=2, column=3)
+        self.colorSchemes = { 'light': 'light', 'dark': 'dark' }
+        self.csLabel = tk.Label(self.frame, text='Colorscheme', font=labelFont)
+        self.curCS = tk.StringVar(self.frame, list(self.colorSchemes.values())[0])
 
+        self.csButtons = []
+        for name, csid in self.colorSchemes.items():
+            self.csButtons.append(tk.Radiobutton(
+                self.frame, text=name, font=optionFont,
+                variable=self.curCS, value=csid,
+                command=self.onThemeChange
+            ))
 
-if __name__ == "__main__":
-    app = SampleApp()
-    app.resvar = '800x600'
-    app.geometry(app.resvar)
-    app.resizable(0, 0)
-    app.mainloop()
+        self.btnFrame = tk.Frame()
+        self.applyBtn = tk.Button(
+            self.btnFrame, text='Apply', font=optionFont,
+            width=20, height=1,
+            command=self.onApplyClick
+        )
+        self.backBtn = tk.Button(
+            self.btnFrame, text='Back', font=optionFont,
+            width=20, height=1,
+            command=self.onBackClick
+        )
+
+        self.applyBtn['state'] = 'disabled'
+        self.pack()
+
+    def pack(self):
+        self.title.pack(pady=20)
+
+        self.langTitle.grid(row=0, column=0, pady=20)
+        self.langMenu.grid(row=0, column=1, columnspan=2, sticky='E')
+
+        self.csLabel.grid(row=1, column=0, padx=10)
+        for i, button in enumerate(self.csButtons):
+            button.grid(row=1, column=i + 1)
+
+        self.applyBtn.grid(row=0, column=0, pady=CTRL_BTN_GAP)
+        self.backBtn.grid(row=1, column=0)
+
+        self.frame.pack()
+        self.btnFrame.pack(side=tk.BOTTOM, pady=CTRL_BTN_MARGIN_BOTTOM)
+
+    def destroy(self):
+        self.title.destroy()
+        self.frame.destroy()
+        self.btnFrame.destroy()
+
+    def onApplyClick(self):
+        self.app.event_generate('<<Save-Settings>>', data={
+            'colorscheme': self.curCS.get(),
+            'language': self.curLang.get()
+        })
+
+    def onBackClick(self):
+        self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
+
+    def onLangChange(self, option):
+        self.applyBtn['state'] = 'normal'
+
+    def onThemeChange(self):
+        self.applyBtn['state'] = 'normal'
