@@ -29,8 +29,8 @@ class App(tk.Tk):
 
         COLORS.setTheme('dark')
 
-        # self.page = 'MainMenu'
-        self.page = 'NewGameMenu'
+        self.page = 'MainMenu'
+        # self.page = 'NewGameMenu'
         self.session = None
         self.newSession()
 
@@ -44,8 +44,8 @@ class App(tk.Tk):
 
     def switchMenu(self, event):
         print('Asked to switch menu to', event)
-        if event.data == 'NewGameMenu':
-            self.page = None
+        if event.data != self.page:
+            self.page = event.data
             self.newSession()
 
     def newSession(self, args=None):
