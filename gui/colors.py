@@ -29,8 +29,8 @@ COLOR_SPACE = {
         'cells': {
             'correct-flag': '#ccff00',
             'incorrect-flag': ' #e6e6fa',
-            'empty': '#222222',
-            'bomb': '#AA0000',
+            'empty': 'white',
+            'bomb': '#ff4500',
             '1': '#fef7a7',
             '2': '#eee8aa',
             '3': '#ffd800',
