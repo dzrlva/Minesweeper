@@ -72,8 +72,8 @@ class Game:
         self.ctrls.pack()
 
         self.label = self.canvas.create_text(
-            10, 10,
-            anchor='nw', fill='black', text='Minesweeper',
+            10, 10, anchor='nw',
+            fill=COLORS['text'], text='Minesweeper',
             state='disabled', font=(self.app.font[0], 20)
         )
 
