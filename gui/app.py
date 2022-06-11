@@ -28,17 +28,27 @@ class App(tk.Tk):
         self.bind("<<Switch-Menu>>", self.switchMenu)
         self.bind("<<Game-Complete>>", self.onGameComplition)
         self.bind("<<Start-Game>>", self.onGameInit)
-
-        COLORS.setTheme('light')
+        self.bind("<<Save-Settings>>", self.onSettingsSave)
 
         # self.page = 'MainMenu'
         self.page = 'SettingsMenu'
+        self.gameOpts = { 'difficulty': 0.1, 'fieldsize': 10 }
+        self.appOpts = { 'colorscheme': 'dark', 'language': 'English' }
+
+        COLORS.setTheme(self.appOpts['colorscheme'])
+        self.configure(bg=COLORS['main'],)
+
         self.session = None
         self.newSession()
 
     def onDeath(self):
         print('App is dying')
         self.destroy()
+
+    def onSettingsSave(self, event):
+        self.appOpts['colorscheme'] = event.data['colorscheme']
+        COLORS.setTheme(self.appOpts['colorscheme'])
+        self.configure(bg=COLORS['main'])
 
     def onGameInit(self, event):
         self.gameOpts = event.data

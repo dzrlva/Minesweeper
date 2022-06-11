@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 from functools import partial
+from .colors import COLORS
+from gui import styles
 
 TITLE_FONT_SIZE = 20
 LABEL_FONT_SIZE = 13
@@ -32,17 +34,21 @@ class MainMenu:
         for buttonConfig in self.buttonsConfig:
             self.buttons.append(tk.Button(
                 width=btnWidth, height=btnHeight,
-                **buttonConfig, font=app.font
+                **buttonConfig, font=app.font,
+                **styles.PUSH_BTTON_STYLE(),
             ))
 
-        self.title = tk.Label(text="Minesweeper", font=app.font)
+        self.title = tk.Label(
+            text="Minesweeper", font=app.font,
+            **styles.COMMON_STYLE()
+        )
 
         self.pack()
 
     def pack(self):
         self.title.pack(side="top", fill="x", pady=50, padx=50)
         for button in self.buttons:
-            button.pack()
+            button.pack(pady=5)
 
     def destroy(self):
         self.title.destroy()
@@ -61,10 +67,16 @@ class NewGameMenu:
         optionFont = (app.font[0], OPTION_FONT_SIZE)
         btnFont = (app.font[0], BUTTON_FONT_SIZE)
 
-        self.title = tk.Label(app, text='New game', font=app.font)
-        self.frame = tk.Frame(app)
+        self.title = tk.Label(
+            app, text='New game', font=app.font,
+            **styles.COMMON_STYLE()
+        )
+        self.frame = tk.Frame(app, bg=COLORS['main'])
 
-        self.plInpTitle = tk.Label(self.frame, text='Player name', font=labelFont)
+        self.plInpTitle = tk.Label(
+            self.frame, text='Player name', font=labelFont,
+            **styles.COMMON_STYLE()
+        )
         self.plInp = tk.Entry(self.frame)
         self.plInp.insert(0, username)
 
@@ -77,13 +89,19 @@ class NewGameMenu:
             'giant': 22
         }
         self.curFieldSize = tk.StringVar(self.frame, list(self.fieldSizes.keys())[0])
-        self.fsInpTitle = tk.Label(self.frame,  text='Field size', font=labelFont)
+        self.fsInpTitle = tk.Label(
+            self.frame,  text='Field size', font=labelFont,
+            **styles.COMMON_STYLE()
+        )
         self.fsInpMenu = tk.OptionMenu(
             self.frame, self.curFieldSize, *list(self.fieldSizes.keys()),
         )
         self.fsInpMenu.config(width=10)
 
-        self.difTitle = tk.Label(self.frame, text="Difficulty", font=optionFont)
+        self.difTitle = tk.Label(
+            self.frame, text="Difficulty", font=optionFont,
+            **styles.COMMON_STYLE()
+        )
         self.difficulties = [
             ('easy', '0.1'),
             ('medium', '0.3'),
@@ -97,18 +115,21 @@ class NewGameMenu:
             button = tk.Radiobutton(
                 self.frame, text=difficulty, font=optionFont,
                 variable=self.curDif, value=value,
+                **styles.RADIO_BUTTON_STYLE(),
             )
             self.difButtons.append(button)
 
-        self.btnFrame = tk.Frame()
+        self.btnFrame = tk.Frame(app, bg=COLORS['main'])
         self.startBtn = tk.Button(
             self.btnFrame, text='Start', font=btnFont,
             width=20, height=1,
+            **styles.PUSH_BTTON_STYLE(),
             command=self.onStartClick
         )
         self.backBtn = tk.Button(
             self.btnFrame, text='Back', font=btnFont,
             width=20, height=1,
+            **styles.PUSH_BTTON_STYLE(),
             command=self.onBackClick
         )
 
@@ -174,11 +195,17 @@ class SettingsMenu:
         labelFont = (app.font[0], 15)
         optionFont = (app.font[0], 12)
 
-        self.title = tk.Label(text="Settings", font=app.font, pady=10)
-        self.frame = tk.Frame(app)
+        self.title = tk.Label(
+            text="Settings", font=app.font, pady=10,
+            **styles.COMMON_STYLE(),
+        )
+        self.frame = tk.Frame(app, bg=COLORS['main'])
 
         self.langOptions = ['English', 'Russian']
-        self.langTitle = tk.Label(self.frame, text='Language', font=labelFont)
+        self.langTitle = tk.Label(
+            self.frame, text='Language', font=labelFont,
+            **styles.COMMON_STYLE(),
+        )
         self.curLang = tk.StringVar(self.frame, self.langOptions[0])
         self.langMenu = tk.OptionMenu(
             self.frame, self.curLang, *self.langOptions,
@@ -187,26 +214,32 @@ class SettingsMenu:
         self.langMenu.config(width=10)
 
         self.colorSchemes = { 'light': 'light', 'dark': 'dark' }
-        self.csLabel = tk.Label(self.frame, text='Colorscheme', font=labelFont)
-        self.curCS = tk.StringVar(self.frame, list(self.colorSchemes.values())[0])
+        self.csLabel = tk.Label(
+            self.frame, text='Colorscheme', font=labelFont,
+            **styles.COMMON_STYLE(),
+        )
+        self.curCS = tk.StringVar(self.frame, app.appOpts['colorscheme'])
 
         self.csButtons = []
         for name, csid in self.colorSchemes.items():
             self.csButtons.append(tk.Radiobutton(
                 self.frame, text=name, font=optionFont,
                 variable=self.curCS, value=csid,
+                **styles.RADIO_BUTTON_STYLE(),
                 command=self.onThemeChange
             ))
 
-        self.btnFrame = tk.Frame()
+        self.btnFrame = tk.Frame(bg=COLORS['main'])
         self.applyBtn = tk.Button(
             self.btnFrame, text='Apply', font=optionFont,
             width=20, height=1,
+            **styles.PUSH_BTTON_STYLE(),
             command=self.onApplyClick
         )
         self.backBtn = tk.Button(
             self.btnFrame, text='Back', font=optionFont,
             width=20, height=1,
+            **styles.PUSH_BTTON_STYLE(),
             command=self.onBackClick
         )
 
@@ -221,7 +254,7 @@ class SettingsMenu:
 
         self.csLabel.grid(row=1, column=0, padx=10)
         for i, button in enumerate(self.csButtons):
-            button.grid(row=1, column=i + 1)
+            button.grid(row=1, column=i + 1, ipadx=10)
 
         self.applyBtn.grid(row=0, column=0, pady=CTRL_BTN_GAP)
         self.backBtn.grid(row=1, column=0)
@@ -235,10 +268,13 @@ class SettingsMenu:
         self.btnFrame.destroy()
 
     def onApplyClick(self):
+        self.applyBtn['state'] = 'disabled'
         self.app.event_generate('<<Save-Settings>>', data={
             'colorscheme': self.curCS.get(),
             'language': self.curLang.get()
         })
+        self.app.event_generate('<<Switch-Menu>>', data='NoMenu')
+        self.app.event_generate('<<Switch-Menu>>', data='SettingsMenu')
 
     def onBackClick(self):
         self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
