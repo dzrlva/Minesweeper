@@ -214,7 +214,7 @@ class SettingsMenu:
         self.langMenu.config(width=10)
 
         self.colorSchemes = { 'light': 'light', 'dark': 'dark' }
-        self.csLabel = tk.Label(
+        self.csTitle = tk.Label(
             self.frame, text='Colorscheme', font=labelFont,
             **styles.COMMON_STYLE(),
         )
@@ -252,7 +252,7 @@ class SettingsMenu:
         self.langTitle.grid(row=0, column=0, pady=20)
         self.langMenu.grid(row=0, column=1, columnspan=2, sticky='E')
 
-        self.csLabel.grid(row=1, column=0, padx=10)
+        self.csTitle.grid(row=1, column=0, padx=10)
         for i, button in enumerate(self.csButtons):
             button.grid(row=1, column=i + 1, ipadx=10)
 
@@ -267,14 +267,22 @@ class SettingsMenu:
         self.frame.destroy()
         self.btnFrame.destroy()
 
+    def reloadTheme(self):
+        self.title.configure(**styles.COMMON_STYLE())
+        self.langTitle.configure(**styles.COMMON_STYLE())
+        self.csTitle.configure(**styles.COMMON_STYLE())
+        self.frame.configure(bg=COLORS['main'])
+        self.btnFrame.configure(bg=COLORS['main'])
+        for button in self.csButtons:
+            button.configure(**styles.RADIO_BUTTON_STYLE())
+
     def onApplyClick(self):
         self.applyBtn['state'] = 'disabled'
         self.app.event_generate('<<Save-Settings>>', data={
             'colorscheme': self.curCS.get(),
             'language': self.curLang.get()
         })
-        self.app.event_generate('<<Switch-Menu>>', data='NoMenu')
-        self.app.event_generate('<<Switch-Menu>>', data='SettingsMenu')
+        self.reloadTheme()
 
     def onBackClick(self):
         self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
