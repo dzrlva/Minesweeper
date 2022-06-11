@@ -71,6 +71,13 @@ class Game:
         self.ctrls = GameControls(app, self.canvas)
         self.ctrls.pack()
 
+        self.statLabel = self.canvas.create_text(
+            10, 60, anchor='nw',
+            fill=COLORS['text'], text=f'Bombs left: {self.field.size - self.barriers}',
+            state='disabled', font=(self.app.font[0], 10)
+        )
+        self.updateStat()
+
         self.label = self.canvas.create_text(
             10, 10, anchor='nw',
             fill=COLORS['text'], text='Minesweeper',
@@ -79,6 +86,7 @@ class Game:
 
         self.lmbBind = self.app.bind('<Button-1>', self.onLeftClick)
         self.rmbBind = self.app.bind('<Button-3>', self.onRightClick)
+        self.rmbBind2 = self.app.bind("<Button-2>", self.onRightClick)
         self.rgBind = self.app.bind('<<Reset-Game>>', self.resetGame)
 
     def resetGame(self, event=None):
@@ -94,13 +102,16 @@ class Game:
         self.board.draw()
         self.updateField()
         self.updateBoard()
+        self.updateField()
 
     def destroy(self):
         self.app.unbind('<Button-1>', self.lmbBind)
         self.app.unbind('<Button-3>', self.rmbBind)
+        self.app.unbind('<Button-2>', self.rmbBind2)
         self.app.unbind('<<Reset-Game>>', self.rgBind)
         self.board.destroy()
         self.canvas.delete(self.label)
+        self.canvas.delete(self.statLabel)
         self.canvas.destroy()
         self.ctrls.destroy()
         self.app.canvas = None
@@ -183,6 +194,10 @@ class Game:
             return True
         return False
 
+    def updateStat(self):
+        left = self.field.size - self.barriers - self.opened - self.marked
+        self.canvas.itemconfigure(self.statLabel, text=f'Bombs left: {left}')
+
     def onRightClick(self, event):
         if self.status != 'game':
             return
@@ -204,6 +219,7 @@ class Game:
 
         if self.checkWin():
             self.gameWin()
+        self.updateStat()
 
     def onLeftClick(self, event):
         if self.status != 'game':
@@ -223,4 +239,5 @@ class Game:
             if self.checkWin():
                 self.gameWin()
         self.updateBoard()
+        self.updateStat()
         # clicked.openCell(COLORS['inactive'], text='I')
