@@ -103,8 +103,8 @@ class NewGameMenu:
         self.difficulties = [
             ('easy', '0.1'),
             ('medium', '0.2'),
-            ('hard', '0.3'),
-            ('extra hard', '0.4')
+            ('hard', '0.5'),
+            ('extra hard', '0.6')
         ]
 
         self.curDif = tk.StringVar(self.frame, self.difficulties[0][1])
