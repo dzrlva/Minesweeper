@@ -143,6 +143,11 @@ class Game:
         for i, pos in enumerate(self.field):
             self.field[pos] = Mask.opened
         self.updateBoard()
+
+        if self.status == 'lose':
+            tk.messagebox.showinfo(title='Result', message='You Lose!\nTry better next time! ⚇')
+        else:
+            tk.messagebox.showinfo(title='Result', message='You won! Nice')
             # if self.field[pos] == Value.bomb:
                 # self.board.drawExplosion(pos)
 
@@ -150,9 +155,9 @@ class Game:
         # self.app.event_generate("<<Game-Complete>>", data=self.status)
 
     def gameOver(self, pos):
-        if self.status == 'gameover':
+        if self.status == 'lose':
             return
-        self.status = 'gameover'
+        self.status = 'lose'
         print('Bro, you died')
         self.board.drawExplosion(pos, callback=self.completeGame)
         # self.completeGame()

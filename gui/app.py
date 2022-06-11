@@ -16,8 +16,9 @@ class App(tk.Tk):
         self.title = 'Minesweeper'
         self.username = 'Gamer1'
 
-        # self.font = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
-        self.font = ('Default', 20)
+        # self.fontLoaded = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
+        self.font = ('Purisa', 20)
+        # self.font = ('Default', 20)
 
         self.geometry(f'{width}x{height}')
         self.resizable(False, False)
