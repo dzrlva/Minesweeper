@@ -5,8 +5,8 @@ from .game import Game
 from .colors import COLORS
 from random import seed
 from .events import EventMaster
-from .menu import MainMenu
-from tkextrafont import Font
+from .menu import MainMenu, NewGameMenu
+# from tkextrafont import Font
 
 
 class App(tk.Tk):
@@ -15,7 +15,8 @@ class App(tk.Tk):
         EventMaster(self)
         self.title = 'Minesweeper'
 
-        self.font = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
+        # self.font = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
+        self.font = ('Default', 20)
 
         self.geometry(f'{width}x{height}')
         self.resizable(False, False)
@@ -28,7 +29,8 @@ class App(tk.Tk):
 
         COLORS.setTheme('dark')
 
-        self.page = 'MainMenu'
+        # self.page = 'MainMenu'
+        self.page = 'NewGameMenu'
         self.session = None
         self.newSession()
 
@@ -53,7 +55,10 @@ class App(tk.Tk):
             self.session.destroy()
             self.session = None
 
-        if self.page == 'MainMenu':
-            self.session = MainMenu(self)
-        else:
-            self.session = Game(self, 8, .1)
+        match self.page:
+            case 'MainMenu':
+                self.session = MainMenu(self)
+            case 'NewGameMenu':
+                self.session = NewGameMenu(self)
+            case 'Game':
+                self.session = Game(self, 8, .1)

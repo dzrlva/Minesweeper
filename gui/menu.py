@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from functools import partial
-#from util import loadImage
+from .widgets import ButtonArray
 
 
 class SampleApp(tk.Tk):
@@ -28,22 +28,7 @@ class SampleApp(tk.Tk):
         self.destroy()
 
 
-class ButtonArray():
-    def __init__(self, buttons):
-        self.buttons = []
-        for button in buttons:
-            self.buttons.append(tk.Button(**button))
-
-    def pack(self):
-        for button in self.buttons:
-            button.pack()
-
-    def destroy(self):
-        for button in self.buttons:
-            button.destroy()
-
-
-class MainMenu():
+class MainMenu:
     def __init__(self, app):
         self.app = app
 
@@ -69,50 +54,106 @@ class MainMenu():
               'command': app.destroy },
         ])
 
-        self.label = tk.Label(text="Minesweeper")
+        self.title = tk.Label(text="Minesweeper", font=font)
 
-        self.label.pack(side="top", fill="x", pady=50, padx=50)
+        self.title.pack(side="top", fill="x", pady=50, padx=50)
         self.buttons.pack()
 
     def destroy(self):
-        self.label.destroy()
+        self.title.destroy()
         self.buttons.destroy()
 
     def switchEvent(self, place):
         self.app.event_generate('<<Switch-Menu>>', data=place)
 
 
-class NewGameFrame(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        #center = tk.Frame(self, borderwidth=0, relief="ridge")
-        tk.Label(self, text="New game", font=("Purisa", 20)).pack(side="top", fill="x", padx=20, pady=38)
-        tk.Label(self, text="Player name", font=("Purisa", 15)).pack(side="top", fill="x")
-        e1 = tk.Entry(self)
-        e1.pack(side="top", fill="x", padx=20, pady=10)
-        tk.Label(self,  text="Field scale", font=("Purisa", 15)).pack(side="top", fill="x")
-        resoptions = ["640x480", "800x600", "960x720"]
-        resvar = tk.StringVar(self, master)
-        resvar.set(resoptions[0])
-        resmenu = tk.OptionMenu(self, resvar, *resoptions, command=lambda: master.getData())
-        resmenu.pack(side="top", fill="x", pady=10)
+class NewGameMenu:
+    def __init__(self, app):
+        self.app = app
+        self.labelFont = (app.font[0], 13)
+        self.optionFont = (app.font[0], 10)
+        self.buttonFont = (app.font[0], 13)
 
+        self.title = tk.Label(app, text='New game', font=app.font)
+        self.frame = tk.Frame(app)
 
-        tk.Label(self, text="Difficulty", font=("Purisa", 15)).pack(side="top", fill="x", padx=10)
-        MODES = [("easy", "1"),
-                 ("medium", "2"),
-                 ("hard", "3")]
-        vs = tk.StringVar()
-        vs.set("1")
-        for text, mode in MODES:
-            tk.Radiobutton(self, text=text, font=("Purisa", 13), variable=vs, value=mode).pack(side="top", fill="y",
-                                                                                               padx=10)
+        self.plInpTitle = tk.Label(self.frame, text='Player name', font=self.labelFont)
+        self.plInp = tk.Entry(self.frame)
 
-        tk.Button(self, text="Start", font=("Purisa", 13), width=25, height=2,
-                  command=lambda: master.switch_frame(MainMenu)).pack(side="top", fill="y", padx=30, pady=15)
-        tk.Button(self, text="Cancel", font=("Purisa", 13), width=25, height=2,
-                  command=lambda: master.switch_frame(MainMenu)).pack(side="top", fill="y", padx=30, pady=5)
+        self.filedSizes = ['tiny', 'small', 'medium', 'big', 'large', 'giant']
+        self.curFieldSize = self.filedSizes[0]
+        self.fsOption = tk.StringVar(self.frame, self.curFieldSize)
+        self.fsInpTitle = tk.Label(self.frame,  text='Field size', font=self.labelFont)
+        self.fsInpMenu = tk.OptionMenu(
+            self.frame, self.fsOption, *self.filedSizes,
+            command=self.onFieldSizeChange
+        )
+        self.fsInpMenu.config(width=10)
 
+        self.difTitle = tk.Label(self.frame, text="Difficulty", font=self.optionFont)
+        self.difficulties = [
+            ('easy', '0.1'),
+            ('medium', '0.2'),
+            ('hard', '0.3'),
+            ('extra hard', '0.4')
+        ]
+
+        self.curDif = self.difficulties[0]
+        self.difOption = tk.StringVar(self.frame, self.curDif)
+        self.difButtons = []
+        for difficulty, value in self.difficulties:
+            button = tk.Radiobutton(
+                self.frame, text=difficulty, font=self.optionFont,
+                variable=self.difOption, value=value,
+                command=self.onDifficultyChange
+            )
+            self.difButtons.append(button)
+
+        self.startBtn = tk.Button(
+            app, text='Start', font=self.optionFont,
+            width=20, height=1,
+            command=self.onStartClick
+        )
+        self.backBtn = tk.Button(
+            app, text='Back', font=self.optionFont,
+            width=20, height=1,
+            command=self.onBackClick
+        )
+
+        self.pack()
+
+    def pack(self):
+        self.title.pack(side="top", fill="x", padx=20, pady=38)
+
+        self.plInpTitle.grid(row=0, column=0, padx=20)
+        self.plInp.grid(row=0, column=1)
+
+        self.fsInpTitle.grid(row=1, column=0)
+        self.fsInpMenu.grid(row=1, column=1, sticky='E')
+
+        self.difTitle.grid(row=2, column=0, padx=10, pady=(10, 5), columnspan=2)
+        for i, difButton in enumerate(self.difButtons):
+            difButton.grid(row=i + 3, column=0, padx=(90, 0), columnspan=2, sticky='w')
+
+        self.frame.pack()
+
+        self.startBtn.pack(side="top", fill="y", padx=30, pady=(15, 5))
+        self.backBtn.pack(side="top", fill="y", padx=30, pady=5)
+
+    def onStartClick(self):
+        self.app.destroy()
+
+    def onBackClick(self):
+        self.app.destroy()
+
+    def onFieldSizeChange(self, choosen):
+        self.curFieldSize = choosen
+
+    def onDifficultyChange(self):
+        print(self.difOption.get())
+
+    def destroy(self):
+        self.title.destroy()
 
 
 class StatisticsFrame(tk.Frame):
@@ -161,7 +202,6 @@ class SettingsFrame(tk.Frame):
         b2 = tk.Button(bottom, text="CANCEL", font=("Purisa", 10), width=25, height=2,
                     command=lambda: master.switch_frame(MainMenu))
 
-
         b1.pack(side="bottom", padx=20, pady=10)
         b2.pack(side="bottom", padx=20, pady=20)
 
@@ -170,11 +210,9 @@ class SettingsFrame(tk.Frame):
         center.grid(row=2, column=3)
 
 
-
 if __name__ == "__main__":
     app = SampleApp()
     app.resvar = '800x600'
     app.geometry(app.resvar)
     app.resizable(0, 0)
     app.mainloop()
-
