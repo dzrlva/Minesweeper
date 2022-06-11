@@ -12,7 +12,7 @@ from threading import Timer
 
 
 class Game():
-    def __init__(self, app, size, difficulty, *, maxBombStack=5):
+    def __init__(self, app, size, difficulty, *, maxBombStack=8):
         self.app = app
         self.maxBombStack = maxBombStack
         if maxBombStack <= 0 or maxBombStack >= 12:
@@ -27,7 +27,7 @@ class Game():
         self.canvas.pack(expand='no', fill='both')
         self.app.canvas = self.canvas
 
-        self.board = Board(app, size, width=1, height=1)
+        self.board = Board(app, size, width=1, height=.8)
         self.field = Field(self.board.rows, self.board.cols, difficulty, kind='hexagon')
         self.board.draw()
         self.updateField()
