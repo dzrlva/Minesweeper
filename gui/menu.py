@@ -71,7 +71,7 @@ class MainMenu:
 
 
 class NewGameMenu:
-    def __init__(self, app):
+    def __init__(self, app, username=''):
         self.app = app
         self.labelFont = (app.font[0], 13)
         self.optionFont = (app.font[0], 10)
@@ -82,14 +82,13 @@ class NewGameMenu:
 
         self.plInpTitle = tk.Label(self.frame, text='Player name', font=self.labelFont)
         self.plInp = tk.Entry(self.frame)
+        self.plInp.insert(0, username)
 
         self.filedSizes = ['tiny', 'small', 'medium', 'big', 'large', 'giant']
-        self.curFieldSize = self.filedSizes[0]
-        self.fsOption = tk.StringVar(self.frame, self.curFieldSize)
+        self.curFieldSize = tk.StringVar(self.frame, self.filedSizes[0])
         self.fsInpTitle = tk.Label(self.frame,  text='Field size', font=self.labelFont)
         self.fsInpMenu = tk.OptionMenu(
-            self.frame, self.fsOption, *self.filedSizes,
-            command=self.onFieldSizeChange
+            self.frame, self.curFieldSize, *self.filedSizes,
         )
         self.fsInpMenu.config(width=10)
 
@@ -101,14 +100,12 @@ class NewGameMenu:
             ('extra hard', '0.4')
         ]
 
-        self.curDif = self.difficulties[0]
-        self.difOption = tk.StringVar(self.frame, self.curDif)
+        self.curDif = tk.StringVar(self.frame, self.difficulties[0][1])
         self.difButtons = []
         for difficulty, value in self.difficulties:
             button = tk.Radiobutton(
                 self.frame, text=difficulty, font=self.optionFont,
-                variable=self.difOption, value=value,
-                command=self.onDifficultyChange
+                variable=self.curDif, value=value,
             )
             self.difButtons.append(button)
 
@@ -150,16 +147,15 @@ class NewGameMenu:
         self.backBtn.destroy()
 
     def onStartClick(self):
-        self.app.destroy()
+        self.app.event_generate('<<Start-Game>>', data={
+            'username': self.plInp.get(),
+            'difficulty': self.curDif.get(),
+            'fieldsize': self.curFieldSize.get()
+        })
 
     def onBackClick(self):
         self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
 
-    def onFieldSizeChange(self, choosen):
-        self.curFieldSize = choosen
-
-    def onDifficultyChange(self):
-        print(self.difOption.get())
 
 class StatisticsFrame(tk.Frame):
     def __init__(self, master):

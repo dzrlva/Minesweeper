@@ -14,6 +14,7 @@ class App(tk.Tk):
         super().__init__()
         EventMaster(self)
         self.title = 'Minesweeper'
+        self.username = 'Gamer1'
 
         # self.font = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
         self.font = ('Default', 20)
@@ -29,8 +30,8 @@ class App(tk.Tk):
 
         COLORS.setTheme('dark')
 
-        self.page = 'MainMenu'
-        # self.page = 'NewGameMenu'
+        # self.page = 'MainMenu'
+        self.page = 'NewGameMenu'
         self.session = None
         self.newSession()
 
@@ -55,10 +56,9 @@ class App(tk.Tk):
             self.session.destroy()
             self.session = None
 
-        match self.page:
-            case 'MainMenu':
-                self.session = MainMenu(self)
-            case 'NewGameMenu':
-                self.session = NewGameMenu(self)
-            case 'Game':
-                self.session = Game(self, 8, .1)
+        if self.page == 'MainMenu':
+            self.session = MainMenu(self)
+        elif self.page == 'NewGameMenu':
+            self.session = NewGameMenu(self, self.username)
+        elif self.page == 'Game':
+            self.session = Game(self, 8, .1)
