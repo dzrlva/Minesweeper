@@ -53,11 +53,6 @@ class Game:
         if maxBombStack <= 0 or maxBombStack >= 12:
             raise ValueError('Maximum bomb stack should not allow impossible bombs!')
 
-        self.marked = 0
-        self.markedRight = 0
-        self.opened = 0
-        self.status = 'game'
-
         self.canvas = tk.Canvas(
             self.app, bg=COLORS['main'],
             borderwidth=0, highlightthickness=0,
@@ -66,21 +61,36 @@ class Game:
         self.canvas.pack(expand='no', fill='both')
         self.app.canvas = self.canvas
 
-        self.board = Board(app, size, width=1, height=.9)
-        self.field = Field(self.board.rows, self.board.cols, difficulty, kind='hexagon')
-        self.board.draw()
-        self.updateField()
-        self.updateBoard()
+        self.size = size
+        self.difficulty = difficulty
+        self.board = None
+        self.resetGame()
 
         self.ctrls = GameControls(app, self.canvas)
         self.ctrls.pack()
 
         self.lmbBind = self.app.bind('<Button-1>', self.onLeftClick)
         self.rmbBind = self.app.bind('<Button-3>', self.onRightClick)
+        self.rgBind = self.app.bind('<<Reset-Game>>', self.resetGame)
+
+    def resetGame(self, event=None):
+        self.marked = 0
+        self.markedRight = 0
+        self.opened = 0
+        self.status = 'game'
+
+        if self.board:
+            self.board.destroy()
+        self.board = Board(self.app, self.size, width=1, height=.9)
+        self.field = Field(self.board.rows, self.board.cols, self.difficulty, kind='hexagon')
+        self.board.draw()
+        self.updateField()
+        self.updateBoard()
 
     def destroy(self):
         self.app.unbind('<Button-1>', self.lmbBind)
         self.app.unbind('<Button-3>', self.rmbBind)
+        self.app.unbind('<<Reset-Game>>', self.rgBind)
         self.board.destroy()
         self.canvas.destroy()
         self.ctrls.destroy()
