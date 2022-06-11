@@ -53,6 +53,10 @@ class Board:
                 cell['hex'].destroy()
                 if 'text' in cell:
                     self.app.canvas.delete(cell['text'])
+                if 'bomb' in cell:
+                    self.app.canvas.delete(cell['bomb'])
+                if 'anim' in cell:
+                    cell['anim'].label.destroy()
         self.app = None
 
     def __createBoard(self):
@@ -96,31 +100,30 @@ class Board:
             if cell is not None:
                 cell['hex'].draw()
 
-    def __animation(self, anim):
-        frame = next(anim.frames, None)
-        anim.label.config(image=frame)
+    def __animation(self, cell):
+        frame = next(cell['anim'].frames, None)
+        cell['anim'].label.config(image=frame)
         if frame:
-            anim.label.after(anim.delay, self.__animation, anim)
+            cell['anim'].label.after(cell['anim'].delay, self.__animation, cell)
         else:
-            anim.label.destroy()
-            self.app.canvas.create_image(
-                anim.center.x, anim.center.y, image=self.resources['bomb']
-            )
-            if anim.callback:
-                anim.callback()
+            cell['anim'].label.destroy()
+            callback = cell['anim'].callback
+            del cell['anim']
+            if callback:
+                callback()
 
     def drawExplosion(self, pos, *, callback=None):
         rcs = self.resources['explosion']
-        bomb = dotdict({
-            'label': tk.Label(self.app, bg=COLORS['cells']['bomb']),
-            'center': self.board[pos]['hex'].center,
+        cell = self.board[pos]
+        cell['anim'] = dotdict({
+            'label': tk.Label(self.app, bg=COLORS['cells.bomb']),
             'frames': iter(rcs['frames']),
             'delay': rcs['delay'],
             'callback': callback
         })
-        coord = bomb.center - rcs['size'] / 2
-        bomb.label.place(x=coord.x, y=coord.y)
-        self.__animation(bomb)
+        coord = cell['hex'].center - rcs['size'] / 2
+        cell['anim'].label.place(x=coord.x, y=coord.y)
+        self.__animation(cell)
 
     def toggleFlag(self, pos):
         pos = Point(pos)
@@ -154,13 +157,25 @@ class Board:
 
         cell['hex'].changeFill(color)
         cell['hex'].deactivate()
-        if text is not None and 'text' not in cell and text:
-            text = self.app.canvas.create_text(
-                cell['hex'].center.x, cell['hex'].center.y,
-                anchor='c', fill='white', text=text,
-                state='disabled'
-            )
-            cell['text'] = text
+
+        if text == 'BOMB':
+            if 'flag' in cell:
+                cell['hex'].changeFill(COLORS['cells.correct-flag'])
+            else:
+                cell['bomb'] = self.app.canvas.create_image(
+                    cell['hex'].center.x, cell['hex'].center.y,
+                    image=self.resources['bomb']
+                )
+        elif text is not None and 'text' not in cell and text:
+            if 'flag' in cell:
+                cell['hex'].changeFill(COLORS['cells.incorrect-flag'])
+            else:
+                text = self.app.canvas.create_text(
+                    cell['hex'].center.x, cell['hex'].center.y,
+                    anchor='c', fill='white', text=text,
+                    state='disabled'
+                )
+                cell['text'] = text
         return True
 
     def disable(self):
