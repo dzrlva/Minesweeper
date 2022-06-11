@@ -7,13 +7,15 @@ from .board import Board
 from logic.field import Field
 from .colors import COLORS
 from util.minepoint import Value, Mask, Flag
+from time import sleep
+from threading import Timer
 
 
 class Game():
-    def __init__(self, app, size, difficulty, *, maxBombStack=4):
+    def __init__(self, app, size, difficulty, *, maxBombStack=5):
         self.app = app
         self.maxBombStack = maxBombStack
-        if maxBombStack <= 0 or maxBombStack >= 6:
+        if maxBombStack <= 0 or maxBombStack >= 12:
             raise ValueError('Maximum bomb stack should not allow impossible bombs!')
 
         self.marked = 0
@@ -56,11 +58,13 @@ class Game():
                 curCrd = crd + bias
                 if curCrd == crd:
                     continue
-                if self.field[curCrd] == Value.bomb or self.field[curCrd] == Value.barrier:
+                if self.field[curCrd] == Value.bomb:
+                    curBombStack += 2
+                elif self.field[curCrd] == Value.barrier:
                     curBombStack += 1
-                    if curBombStack >= self.maxBombStack:
-                        self.field[crd] = Value.empty
-                        break
+                if curBombStack >= self.maxBombStack:
+                    self.field[crd] = Value.empty
+                    break
 
         self.field.recalculate()
         self.barriers = 0
@@ -74,16 +78,23 @@ class Game():
                 if self.field[x, y] == Value.barrier:
                     color = COLORS['main']
                 elif self.field[x, y] == Value.bomb:
-                    color = COLORS['cells']['bomb']
+                    color, text = COLORS['cells.bomb'], 'BOMB'
                 elif self.field[x, y] == Value.empty:
-                    color = COLORS['cells']['empty']
+                    color = COLORS['cells.empty']
                 else:
                     text = str(self.field[x, y].value)
                     color = COLORS['cells'][text]
                 self.board.openCell(Point(x, y), color, text)
 
     def completeGame(self):
+        for i, pos in enumerate(self.field):
+            self.field[pos] = Mask.opened
+        self.updateBoard()
+            # if self.field[pos] == Value.bomb:
+                # self.board.drawExplosion(pos)
+
         self.board.disable()
+        # self.app.event_generate("<<Game-Complete>>", data=self.status)
 
     def gameOver(self, pos):
         if self.status == 'gameover':
@@ -91,6 +102,7 @@ class Game():
         self.status = 'gameover'
         print('Bro, you died')
         self.board.drawExplosion(pos, callback=self.completeGame)
+        # self.completeGame()
 
     def gameWin(self):
         self.status = 'win'
