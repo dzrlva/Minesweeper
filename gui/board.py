@@ -47,12 +47,13 @@ class Board:
         self.board = { Point(row, col): dict() for row, col in Point.range([self.rows, self.cols]) }
         self.__createBoard()
 
-    def __del__(self):
+    def destroy(self):
         for cell in self.board.values():
             if cell is not None:
                 cell['hex'].destroy()
                 if 'text' in cell:
                     self.app.canvas.delete(cell['text'])
+        self.app = None
 
     def __createBoard(self):
         for col in range(self.cols):

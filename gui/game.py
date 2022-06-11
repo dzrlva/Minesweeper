@@ -27,15 +27,14 @@ class Game():
         self.updateField()
         self.updateBoard()
 
-        self.lmbBind = self.app.canvas.bind("<Button-1>", self.onLeftClick)
-        self.rmbBind = self.app.canvas.bind("<Button-3>", self.onRightClick)
+        self.lmbBind = self.app.bind("<Button-1>", self.onLeftClick)
+        self.rmbBind = self.app.bind("<Button-3>", self.onRightClick)
 
     def destroy(self):
-        try:
-            self.app.canvas.unbind("<Button-1>", self.lmbBind)
-            self.app.canvas.unbind("<Button-3>", self.rmbBind)
-        except tk._tkinter.TclError:
-            pass
+        self.app.unbind("<Button-1>", self.lmbBind)
+        self.app.unbind("<Button-3>", self.rmbBind)
+        self.app = None
+        self.board.destroy()
 
     def updateField(self):
         """Set barrier around playble area and remove impossible bombs"""
@@ -79,7 +78,7 @@ class Game():
 
     def completeGame(self):
         self.board.disable()
-        self.app.event_generate("<<Foo>>")
+        self.app.event_generate("<<Foo>>", data=self.status)
 
     def gameOver(self, pos):
         if self.status == 'gameover':
