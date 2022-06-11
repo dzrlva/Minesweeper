@@ -143,21 +143,23 @@ class NewGameMenu:
         self.startBtn.pack(side="top", fill="y", padx=30, pady=(15, 5))
         self.backBtn.pack(side="top", fill="y", padx=30, pady=5)
 
+    def destroy(self):
+        self.title.destroy()
+        self.frame.destroy()
+        self.startBtn.destroy()
+        self.backBtn.destroy()
+
     def onStartClick(self):
         self.app.destroy()
 
     def onBackClick(self):
-        self.app.destroy()
+        self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
 
     def onFieldSizeChange(self, choosen):
         self.curFieldSize = choosen
 
     def onDifficultyChange(self):
         print(self.difOption.get())
-
-    def destroy(self):
-        self.title.destroy()
-
 
 class StatisticsFrame(tk.Frame):
     def __init__(self, master):
