@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Main file to start the APP."""
+
 import sys
 from argparse import ArgumentParser
 from gui.app import App as GUIAPP
@@ -6,7 +8,7 @@ from cli.app import App as CLIAPP
 from cli.menu import startmenu
 
 
-def main():
+if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument(
         "--gui",
@@ -24,8 +26,4 @@ def main():
         # CLIAPP().mainloop()
     else:
         GUIAPP().mainloop()
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(0)
