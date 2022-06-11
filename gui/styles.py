@@ -27,6 +27,6 @@ def PUSH_BTTON_STYLE():
     return COMMON_STYLE() | COMMON_BUTTON_STYLE() | {
         'bg': COLORS['buttons.bg'],
         'fg': COLORS['buttons.fg'],
-        'activebackground': COLORS['buttons.hover'],
+        'activebackground': COLORS['buttons.hover-bg'],
         'activeforeground': COLORS['buttons.hover-text']
     }
