@@ -17,8 +17,9 @@ def COMMON_BUTTON_STYLE():
 
 def RADIO_BUTTON_STYLE():
     return COMMON_STYLE() | COMMON_BUTTON_STYLE() | {
-        'activebackground': COLORS['hover'],
-        'selectcolor': COLORS['outline'],
+        'activeforeground': COLORS['text'],
+        'activebackground': COLORS['main'],
+        'selectcolor': COLORS['buttons.dot'],
     }
 
 

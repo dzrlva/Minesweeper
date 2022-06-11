@@ -11,13 +11,17 @@ COEF = tan(radians(ANGLE))
 
 class Hexagon:
     @staticmethod
+    def getDimensions(length):
+        return COEF * length, 2 * length
+
+    @staticmethod
     def getMaxLengthByGeom(width, height):
         if width < height:
             return width / COEF, 'w'
         else:
             return height * (2 / 3), 'h'
 
-    def __init__(self, canvas, x, y, length, color, outline, tags, hover=None):
+    def __init__(self, canvas, x, y, length, color, outline, hover=None):
         self.canvas = canvas  # canvas
 
         self.length = length
@@ -37,7 +41,6 @@ class Hexagon:
         self.color = color
         self.outline = outline
         self.selected = False
-        self.tags = tags
         self.__item = None
         self.__calculate()
 
@@ -101,7 +104,7 @@ class Hexagon:
         if self.__item:
             self.destroy()
         self.__item = self.canvas.create_polygon(
-            *self.coords, fill=self.color, outline=self.outline, tags=self.tags,
+            *self.coords, fill=self.color, outline=self.outline
         )
         if self.hover:
             self.activate()

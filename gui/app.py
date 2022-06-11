@@ -31,7 +31,7 @@ class App(tk.Tk):
         self.bind("<<Save-Settings>>", self.onSettingsSave)
 
         # self.page = 'MainMenu'
-        self.page = 'SettingsMenu'
+        self.page = 'Game'
         self.gameOpts = { 'difficulty': 0.1, 'fieldsize': 10 }
         self.appOpts = { 'colorscheme': 'dark', 'language': 'English' }
 

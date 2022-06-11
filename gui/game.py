@@ -1,6 +1,7 @@
 """Module that uses logic.Field, draws board, handles user input."""
 
 import tkinter as tk
+import tkinter.ttk as ttk
 from util.point import Point
 from util.coord import Coord
 from .board import Board
@@ -9,9 +10,43 @@ from .colors import COLORS
 from util.minepoint import Value, Mask, Flag
 from time import sleep
 from threading import Timer
+from gui import styles
 
 
-class Game():
+class GameControls:
+    def __init__(self, app, canvas):
+        self.app = app
+        self.frame = tk.Frame(app, bg=COLORS['main'])
+        self.resetBtn = tk.Button(
+            self.frame, text='Reset',
+            width=10, height=1,
+            **styles.PUSH_BTTON_STYLE(),
+            command=self.onResetClick
+        )
+        self.backBtn = tk.Button(
+            self.frame, text='Back',
+            width=10, height=1,
+            **styles.PUSH_BTTON_STYLE(),
+            command=self.onBackButton
+        )
+
+    def pack(self):
+        self.resetBtn.grid(row=0, column=0, padx=10)
+        self.backBtn.grid(row=0, column=1)
+        # self.frame.pack()
+        self.frame.pack(anchor='w', expand=True, padx=(20, 20))
+
+    def destroy(self):
+        self.frame.destroy()
+
+    def onResetClick(self):
+        self.app.event_generate('<<Reset-Game>>')
+
+    def onBackButton(self):
+        self.app.event_generate('<<Switch-Menu>>', data='NewGameMenu')
+
+
+class Game:
     def __init__(self, app, size, difficulty, *, maxBombStack=8):
         self.app = app
         self.maxBombStack = maxBombStack
@@ -23,24 +58,32 @@ class Game():
         self.opened = 0
         self.status = 'game'
 
-        self.canvas = tk.Canvas(self.app, width=app.width, height=app.height, bg=COLORS['main'])
+        self.canvas = tk.Canvas(
+            self.app, bg=COLORS['main'],
+            borderwidth=0, highlightthickness=0,
+            width=app.width, height=app.height * .9,
+        )
         self.canvas.pack(expand='no', fill='both')
         self.app.canvas = self.canvas
 
-        self.board = Board(app, size, width=1, height=.8)
+        self.board = Board(app, size, width=1, height=.9)
         self.field = Field(self.board.rows, self.board.cols, difficulty, kind='hexagon')
         self.board.draw()
         self.updateField()
         self.updateBoard()
 
-        self.lmbBind = self.app.bind("<Button-1>", self.onLeftClick)
-        self.rmbBind = self.app.bind("<Button-3>", self.onRightClick)
+        self.ctrls = GameControls(app, self.canvas)
+        self.ctrls.pack()
+
+        self.lmbBind = self.app.bind('<Button-1>', self.onLeftClick)
+        self.rmbBind = self.app.bind('<Button-3>', self.onRightClick)
 
     def destroy(self):
-        self.app.unbind("<Button-1>", self.lmbBind)
-        self.app.unbind("<Button-3>", self.rmbBind)
+        self.app.unbind('<Button-1>', self.lmbBind)
+        self.app.unbind('<Button-3>', self.rmbBind)
         self.board.destroy()
         self.canvas.destroy()
+        self.ctrls.destroy()
         self.app.canvas = None
         self.app = None
 

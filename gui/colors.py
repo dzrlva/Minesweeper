@@ -2,12 +2,13 @@ COLOR_SPACE = {
     'dark': {
         'main':     '#003153',
         'text':     '#ffffff',
-        'active':   '#ffffff',
-        'inactive': '#aaaaaa',
-        'outline':  '#3215a2',
-        'hover':    '#03dfaa',
-        'cells': {
+        'hexagon': {
             'text': 'white',
+            'hover': '#03dfaa',
+            'active': '#ffffff',
+            'inactive': '#aaaaaa',
+        },
+        'cells': {
             'correct-flag': 'green',
             'incorrect-flag': 'yellow',
             'empty': '#ffffff',
@@ -26,17 +27,19 @@ COLOR_SPACE = {
             'fg': 'white',
             'hover': 'black',
             'hover-text': 'white',
+            'dot': 'black',
         }
     },
     'light': {
         'main':     '#f5f5dc',
         'text':     '#222222',
-        'active':   'white',
-        'inactive': '#ffdab9',
-        'outline':  '#ff4500',
-        'hover':    '#ffe4e1',
+        'hexagon': {
+            'text': 'white',
+            'hover': '#03dfaa',
+            'active': '#ffffff',
+            'inactive': '#aaaaaa',
+        },
         'cells': {
-            'text': 'black',
             'correct-flag': '#ccff00',
             'incorrect-flag': ' #e6e6fa',
             'empty': 'white',
@@ -55,6 +58,7 @@ COLOR_SPACE = {
             'fg': 'white',
             'hover': 'black',
             'hover-text': 'white',
+            'dot': 'white',
         }
     }
 }
