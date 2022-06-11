@@ -84,11 +84,18 @@ class NewGameMenu:
         self.plInp = tk.Entry(self.frame)
         self.plInp.insert(0, username)
 
-        self.filedSizes = ['tiny', 'small', 'medium', 'big', 'large', 'giant']
-        self.curFieldSize = tk.StringVar(self.frame, self.filedSizes[0])
+        self.fieldSizes = {
+            'tiny': 8,
+            'small': 12,
+            'medium': 14,
+            'big': 16,
+            'large': 20,
+            'giant': 22
+        }
+        self.curFieldSize = tk.StringVar(self.frame, list(self.fieldSizes.keys())[0])
         self.fsInpTitle = tk.Label(self.frame,  text='Field size', font=self.labelFont)
         self.fsInpMenu = tk.OptionMenu(
-            self.frame, self.curFieldSize, *self.filedSizes,
+            self.frame, self.curFieldSize, *list(self.fieldSizes.keys()),
         )
         self.fsInpMenu.config(width=10)
 
@@ -149,8 +156,8 @@ class NewGameMenu:
     def onStartClick(self):
         self.app.event_generate('<<Start-Game>>', data={
             'username': self.plInp.get(),
-            'difficulty': self.curDif.get(),
-            'fieldsize': self.curFieldSize.get()
+            'difficulty': float(self.curDif.get()),
+            'fieldsize': self.fieldSizes[self.curFieldSize.get()],
         })
 
     def onBackClick(self):

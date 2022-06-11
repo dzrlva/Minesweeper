@@ -27,6 +27,7 @@ class App(tk.Tk):
         self.bind("<Button-2>", self.newSession)
         self.bind("<<Switch-Menu>>", self.switchMenu)
         self.bind("<<Game-Complete>>", self.onGameComplition)
+        self.bind("<<Start-Game>>", self.onGameInit)
 
         COLORS.setTheme('dark')
 
@@ -38,6 +39,11 @@ class App(tk.Tk):
     def onDeath(self):
         print('App is dying')
         self.destroy()
+
+    def onGameInit(self, event):
+        self.gameOpts = event.data
+        self.page = 'Game'
+        self.newSession()
 
     def onGameComplition(self, event):
         self.page = 'MainMenu'
@@ -61,4 +67,8 @@ class App(tk.Tk):
         elif self.page == 'NewGameMenu':
             self.session = NewGameMenu(self, self.username)
         elif self.page == 'Game':
-            self.session = Game(self, 8, .1)
+            self.session = Game(
+                self,
+                self.gameOpts['fieldsize'],
+                self.gameOpts['difficulty']
+            )
