@@ -95,7 +95,7 @@ class Board:
                 self.board[Point(row, col)]['hex'] = Hexagon(
                     self.app.canvas, hexX, hexY,
                     self.hexLength,
-                    COLORS['hexagon.inactive'], COLORS['main'],
+                    COLORS['hexagon.inactive'], COLORS['hexagon.outline'],
                     COLORS['hexagon.hover'],
                 )
 
