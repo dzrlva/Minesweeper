@@ -5,6 +5,7 @@ from util.minepoint import MinePoint, Value, Mask, Flag
 
 
 def NoramlPattern(point):
+    """Pattern for rectangular minesweeper."""
     return [
         Point(-1, -1), Point(0, -1), Point(1, -1),
         Point(-1, 0), Point(1, 0),
@@ -13,6 +14,7 @@ def NoramlPattern(point):
 
 
 def HexagonPatter(point):
+    """Pattern for Hexagonal minesweeper."""
     if point.y % 2 == 0:
         return [
             Point(0, -1), Point(1, -1),
@@ -170,9 +172,11 @@ class Field:
         return res
 
     def recalculate(self):
+        """Recalculate field values after manual changes."""
         self.__calcFieldBombs()
 
     def dump(self):
+        """Dump field data to console."""
         for y in range(self.height):
             for x in range(self.width):
                 print(f'{str(self[x, y]):>2}', end=' ')
