@@ -21,6 +21,9 @@ class Game():
         self.opened = 0
         self.status = 'game'
 
+        self.canvas = tk.Canvas(self, width=app.width, height=app.height, bg=COLORS['main'])
+        self.canvas.pack(expand='no', fill='both')
+
         self.board = Board(app, size, width=1, height=.8)
         self.field = Field(self.board.rows, self.board.cols, difficulty, kind='hexagon')
         self.board.draw()
@@ -35,6 +38,7 @@ class Game():
         self.app.unbind("<Button-3>", self.rmbBind)
         self.app = None
         self.board.destroy()
+        self.canvas.destroy()
 
     def updateField(self):
         """Set barrier around playble area and remove impossible bombs"""

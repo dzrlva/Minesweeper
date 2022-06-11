@@ -5,6 +5,8 @@ from .game import Game
 from .colors import COLORS
 from random import seed
 from .events import EventMaster
+from .menu import MainMenu
+from tkextrafont import Font
 
 
 class App(tk.Tk):
@@ -12,24 +14,28 @@ class App(tk.Tk):
         super().__init__()
         EventMaster(self)
         self.title = 'Minesweeper'
-        self.canvas = tk.Canvas(self, width=width, height=height, bg=COLORS['main'])
-        self.canvas.pack(expand='no', fill='both')
+
+        self.font = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
+
         self.geometry(f'{width}x{height}')
         self.resizable(False, False)
+        self.width, self.height = width, height
 
         self.protocol("WM_DELETE_WINDOW", self.onDeath)
-
         self.bind("<Button-2>", self.newSession)
         self.bind("<<Foo>>", self.newSession)
+        self.bind("<<Switch-Menu>>", self.switchMenu)
+
+        self.page = 'MainMenu'
         self.session = None
         self.newSession()
 
     def onDeath(self):
         print('App is dying')
-        if self.session:
-            del self.session
-        self.canvas.destroy()
         self.destroy()
+
+    def switchMenu(self, place):
+        print('Asked to switch menu to', place)
 
     def newSession(self, args=None):
         # if (args):
@@ -37,5 +43,7 @@ class App(tk.Tk):
         if self.session:
             self.session.destroy()
             self.session = None
+        elif self.page == 'MainMenu':
+            self.session = MainMenu(self)
         else:
             self.session = Game(self, 40, .1)
