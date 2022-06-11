@@ -73,12 +73,12 @@ class NewGameMenu:
         )
         self.frame = tk.Frame(app, bg=COLORS['main'])
 
-        self.plInpTitle = tk.Label(
-            self.frame, text='Player name', font=labelFont,
-            **styles.COMMON_STYLE()
-        )
-        self.plInp = tk.Entry(self.frame)
-        self.plInp.insert(0, username)
+        # self.plInpTitle = tk.Label(
+            # self.frame, text='Player name', font=labelFont,
+            # **styles.COMMON_STYLE()
+        # )
+        # self.plInp = tk.Entry(self.frame)
+        # self.plInp.insert(0, username)
 
         self.fieldSizes = {
             'tiny': 8,
@@ -138,15 +138,15 @@ class NewGameMenu:
     def pack(self):
         self.title.pack(side="top", fill="x", padx=20, pady=38)
 
-        self.plInpTitle.grid(row=0, column=0, padx=20)
-        self.plInp.grid(row=0, column=1)
+        # self.plInpTitle.grid(row=0, column=0, padx=20)
+        # self.plInp.grid(row=0, column=1)
 
         self.fsInpTitle.grid(row=1, column=0)
-        self.fsInpMenu.grid(row=1, column=1, sticky='E')
+        self.fsInpMenu.grid(row=1, column=1, sticky='E', pady=10)
 
-        self.difTitle.grid(row=2, column=0, padx=10, pady=(10, 5), columnspan=2)
+        self.difTitle.grid(row=2, column=0, padx=10, columnspan=1)
         for i, difButton in enumerate(self.difButtons):
-            difButton.grid(row=i + 3, column=0, padx=(90, 0), columnspan=2, sticky='w')
+            difButton.grid(row=i + 2, column=0, padx=(90, 0), columnspan=2, sticky='w')
 
         self.startBtn.grid(row=0, column=0, pady=CTRL_BTN_GAP)
         self.backBtn.grid(row=1, column=0)
