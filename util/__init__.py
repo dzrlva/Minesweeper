@@ -9,6 +9,19 @@ class dotdict(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
+    def __hash__(self):
+        hashRes = 0
+        for k, v in self.items():
+            try:
+                hashRes += hash(k)
+            except TypeError:
+                pass
+            try:
+                hashRes += hash(v)
+            except TypeError:
+                pass
+        return hashRes % 4294967295 - 2147483648
+
 
 def loadImage(path, size):
     image = Image.open(path)
