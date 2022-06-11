@@ -5,7 +5,7 @@ from .game import Game
 from .colors import COLORS
 from random import seed
 from .events import EventMaster
-from .menu import MainMenu, NewGameMenu
+from .menu import MainMenu, NewGameMenu, SettingsMenu
 # from tkextrafont import Font
 
 
@@ -32,7 +32,7 @@ class App(tk.Tk):
         COLORS.setTheme('light')
 
         # self.page = 'MainMenu'
-        self.page = 'NewGameMenu'
+        self.page = 'SettingsMenu'
         self.session = None
         self.newSession()
 
@@ -66,6 +66,8 @@ class App(tk.Tk):
             self.session = MainMenu(self)
         elif self.page == 'NewGameMenu':
             self.session = NewGameMenu(self, self.username)
+        elif self.page == 'SettingsMenu':
+            self.session = SettingsMenu(self)
         elif self.page == 'Game':
             self.session = Game(
                 self,
