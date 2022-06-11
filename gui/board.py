@@ -41,6 +41,10 @@ class Board:
         else:
             self.hexLength += self.hexLength * (4 / 3) / self.cols
 
+        hexWidth, _ = Hexagon.getDimensions(self.hexLength)
+        actualWidth = (self.cols - 1) * hexWidth - self.cols
+        self.topleft.x = (self.width - actualWidth) / 2
+
         self.resources = {}
         for resName, resPath in RESOURCES.items():
             self.resources[resName] = loadImage(resPath, SCALE_FACTOR * self.hexLength)
@@ -88,11 +92,11 @@ class Board:
                     continue  # do not create hexagon if it out of field
                 hexX = row * self.hexLength * sqrt(3) + offset + self.topleft.x
                 hexY = col * self.hexLength * 1.5 + self.topleft.y
-                hexTags = f'{row}.{col}'
                 self.board[Point(row, col)]['hex'] = Hexagon(
                     self.app.canvas, hexX, hexY,
-                    self.hexLength, COLORS['inactive'], COLORS['outline'], hexTags,
-                    COLORS['hover'],
+                    self.hexLength,
+                    COLORS['hexagon.inactive'], COLORS['main'],
+                    COLORS['hexagon.hover'],
                 )
 
     def draw(self):
@@ -172,7 +176,7 @@ class Board:
             else:
                 text = self.app.canvas.create_text(
                     cell['hex'].center.x, cell['hex'].center.y,
-                    anchor='c', fill=COLORS['cells.text'], text=text,
+                    anchor='c', fill=COLORS['hexagon.text'], text=text,
                     state='disabled'
                 )
                 cell['text'] = text
