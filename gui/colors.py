@@ -6,6 +6,7 @@ COLOR_SPACE = {
         'outline':  '#003153',
         'hover':    '#03dfaa',
         'cells': {
+            'text': 'white',
             'correct-flag': 'green',
             'incorrect-flag': 'yellow',
             'empty': '#ffffff',
@@ -27,6 +28,7 @@ COLOR_SPACE = {
         'outline':  '#ff4500',
         'hover':    '#ffe4e1',
         'cells': {
+            'text': 'black',
             'correct-flag': '#ccff00',
             'incorrect-flag': ' #e6e6fa',
             'empty': '#222222',

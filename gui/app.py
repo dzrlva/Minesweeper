@@ -29,7 +29,7 @@ class App(tk.Tk):
         self.bind("<<Game-Complete>>", self.onGameComplition)
         self.bind("<<Start-Game>>", self.onGameInit)
 
-        COLORS.setTheme('dark')
+        COLORS.setTheme('light')
 
         # self.page = 'MainMenu'
         self.page = 'NewGameMenu'

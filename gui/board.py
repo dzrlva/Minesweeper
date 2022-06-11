@@ -172,7 +172,7 @@ class Board:
             else:
                 text = self.app.canvas.create_text(
                     cell['hex'].center.x, cell['hex'].center.y,
-                    anchor='c', fill='white', text=text,
+                    anchor='c', fill=COLORS['cells.text'], text=text,
                     state='disabled'
                 )
                 cell['text'] = text
