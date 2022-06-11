@@ -177,7 +177,7 @@ class Board:
                 text = self.app.canvas.create_text(
                     cell['hex'].center.x, cell['hex'].center.y,
                     anchor='c', fill=COLORS['hexagon.text'], text=text,
-                    state='disabled'
+                    state='disabled', font=(self.app.font[0], 13)
                 )
                 cell['text'] = text
         return True

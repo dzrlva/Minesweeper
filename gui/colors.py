@@ -24,9 +24,9 @@ COLOR_SPACE = {
             '8': '#ffffff',
         },
         'buttons': {
-            'bg': 'red',
+            'bg': '#456fb8',
             'fg': 'white',
-            'hover-bg': 'black',
+            'hover-bg': '#609aff',
             'hover-text': 'white',
             'dot': 'black',
         }
@@ -56,10 +56,10 @@ COLOR_SPACE = {
             '8': '#ffffff',
         },
         'buttons': {
-            'bg': 'red',
-            'fg': 'white',
-            'hover-bg': 'cyan',
-            'hover-text': 'white',
+            'bg': '#ffc27d',
+            'fg': 'black',
+            'hover-bg': '#ffd061',
+            'hover-text': 'black',
             'dot': 'white',
         }
     }

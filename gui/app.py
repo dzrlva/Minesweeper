@@ -34,7 +34,7 @@ class App(tk.Tk):
         # self.page = 'MainMenu'
         self.page = 'Game'
         self.gameOpts = { 'difficulty': 0.1, 'fieldsize': 10 }
-        self.appOpts = { 'colorscheme': 'dark', 'language': 'English' }
+        self.appOpts = { 'colorscheme': 'light', 'language': 'English' }
 
         COLORS.setTheme(self.appOpts['colorscheme'])
         self.configure(bg=COLORS['main'],)
