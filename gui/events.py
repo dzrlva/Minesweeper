@@ -1,8 +1,6 @@
 """Hacky way to introduce event data in tkinter."""
 
-import tkinter as tk
 from util import dotdict
-from time import time
 from functools import partial
 import inspect
 

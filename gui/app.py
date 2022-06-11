@@ -3,7 +3,6 @@
 import tkinter as tk
 from .game import Game
 from .colors import COLORS
-from random import seed
 from .events import EventMaster
 from .menu import MainMenu, NewGameMenu, SettingsMenu
 # from tkextrafont import Font

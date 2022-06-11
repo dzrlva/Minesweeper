@@ -5,7 +5,6 @@ from util import loadImage, Coord, Point, dotdict
 from math import sqrt
 from .hexagon import Hexagon
 from .colors import COLORS
-from time import sleep
 
 
 SCALE_FACTOR = 1.2

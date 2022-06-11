@@ -21,7 +21,7 @@ class App:
         username = 'Gamer1'
         # tempname = input(f'Input another name if you are not {username}: ')
         # if tempname:
-            # username = tempname
+        #    username = tempname
 
         stat = Stat()
         stat.assignFile(username)

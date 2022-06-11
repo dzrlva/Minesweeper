@@ -2,7 +2,7 @@
 
 from PIL import ImageTk, Image
 from .coord import Coord
-from .point import Point
+from .point import Point  # noqa: F401
 
 
 class dotdict(dict):

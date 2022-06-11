@@ -1,7 +1,6 @@
 """Different Menus for gui app."""
 
 import tkinter as tk
-from tkinter import messagebox
 from functools import partial
 from .colors import COLORS
 from gui import styles
@@ -83,8 +82,8 @@ class NewGameMenu:
         self.frame = tk.Frame(app, bg=COLORS['main'])
 
         # self.plInpTitle = tk.Label(
-            # self.frame, text='Player name', font=labelFont,
-            # **styles.COMMON_STYLE()
+        #    self.frame, text='Player name', font=labelFont,
+        #    **styles.COMMON_STYLE()
         # )
         # self.plInp = tk.Entry(self.frame)
         # self.plInp.insert(0, username)

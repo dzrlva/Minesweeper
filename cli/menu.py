@@ -47,7 +47,7 @@ class Menu:
         if self.redraw:
             self.redraw = False
         self.drawCursor([1, 1 + OFFSET])
-        screen[2, 1, Color.white].print(f"Hello, Gamer1!")
+        screen[2, 1, Color.white].print('Hello, Gamer1!')
         for i, j in zip(self.items, range(2, len(self.items) + OFFSET)):
             screen[2, 1 + j, Color.white].print(i)
 

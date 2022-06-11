@@ -4,7 +4,6 @@
 import sys
 from argparse import ArgumentParser
 from gui.app import App as GUIAPP
-from cli.app import App as CLIAPP
 from cli.menu import startmenu
 
 

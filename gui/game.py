@@ -1,15 +1,12 @@
 """Module that uses logic.Field, draws board, handles user input."""
 
 import tkinter as tk
-import tkinter.ttk as ttk
 from util.point import Point
 from util.coord import Coord
 from .board import Board
 from logic.field import Field
 from .colors import COLORS
 from util.minepoint import Value, Mask, Flag
-from time import sleep
-from threading import Timer
 from gui import styles
 
 
