@@ -147,7 +147,7 @@ class Game:
         if self.status == 'lose':
             tk.messagebox.showinfo(title='Result', message='You Lose!\nTry better next time! ⚇')
         else:
-            tk.messagebox.showinfo(title='Result', message='You won! Nice')
+            tk.messagebox.showinfo(title='Result', message='You won! Nice ☺')
             # if self.field[pos] == Value.bomb:
                 # self.board.drawExplosion(pos)
 

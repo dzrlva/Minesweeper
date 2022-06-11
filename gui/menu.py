@@ -6,7 +6,7 @@ from gui import styles
 
 TITLE_FONT_SIZE = 20
 LABEL_FONT_SIZE = 13
-OPTION_FONT_SIZE = 10
+OPTION_FONT_SIZE = 13
 BUTTON_FONT_SIZE = 13
 CTRL_BTN_GAP = 5
 CTRL_BTN_MARGIN_BOTTOM = 80
@@ -22,8 +22,8 @@ class MainMenu:
         self.buttonsConfig = ([
             { 'text': 'New Game',
               'command': partial(self.switchEvent, 'NewGameMenu') },
-            { 'text': 'Statistics',
-              'command': partial(self.switchEvent, 'StatMenu') },
+            # { 'text': 'Statistics',
+              # 'command': partial(self.switchEvent, 'StatMenu') },
             { 'text': 'Settings',
               'command': partial(self.switchEvent, 'SettingsMenu') },
             { 'text': 'Quit',
@@ -96,7 +96,7 @@ class NewGameMenu:
         self.fsInpMenu = tk.OptionMenu(
             self.frame, self.curFieldSize, *list(self.fieldSizes.keys()),
         )
-        self.fsInpMenu.config(width=10)
+        self.fsInpMenu.config(width=10, **styles.PUSH_BTTON_STYLE())
 
         self.difTitle = tk.Label(
             self.frame, text="Difficulty", font=optionFont,
@@ -211,7 +211,7 @@ class SettingsMenu:
             self.frame, self.curLang, *self.langOptions,
             command=self.onLangChange
         )
-        self.langMenu.config(width=10)
+        self.langMenu.config(width=10, **styles.PUSH_BTTON_STYLE())
 
         self.colorSchemes = { 'light': 'light', 'dark': 'dark' }
         self.csTitle = tk.Label(
@@ -275,6 +275,9 @@ class SettingsMenu:
         self.btnFrame.configure(bg=COLORS['main'])
         for button in self.csButtons:
             button.configure(**styles.RADIO_BUTTON_STYLE())
+        self.langMenu.configure(**styles.PUSH_BTTON_STYLE())
+        self.applyBtn.configure(**styles.PUSH_BTTON_STYLE())
+        self.backBtn.configure(**styles.PUSH_BTTON_STYLE())
 
     def onApplyClick(self):
         self.applyBtn['state'] = 'disabled'
