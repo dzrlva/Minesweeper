@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
+from functools import partial
+from util import loadImage
+
 
 class SampleApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -25,20 +28,59 @@ class SampleApp(tk.Tk):
         self.destroy()
 
 
-class MainMenu(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        tk.Label(self, text="Minesweeper", font=("Purisa", 20)).pack(side="top", fill="x", pady=50, padx=50)
-        tk.Button(self, text="NEW GAME", font=("Purisa", 13), bg='#123123', fg='#aaaaaa', width=40, height=3,
-                  command=lambda: master.switch_frame(NewGameFrame)).pack()
-        tk.Button(self, text="STATISTICS", font=("Purisa", 13), width=40, height=3,
-                  command=lambda: master.switch_frame(StatisticsFrame)).pack()
-        tk.Button(self, text='SETTINGS', font=("Purisa", 13), width=40, height=3,
-                  command=lambda: master.switch_frame(SettingsFrame)).pack()
-        tk.Button(self, text="QUIT", font=("Purisa", 13), width=40, height=3,
-                  command=lambda: master.quit()).pack()
-        tk.Button(self, text="HELP", font=("Purisa", 13), width=40, height=2,
-                  command=lambda: master.show_info()).pack(pady=20)
+class ButtonArray():
+    def __init__(self, buttons, font):
+        self.buttons = []
+        for button in buttons:
+            self.buttons.append(tk.Button(**button, font=font))
+
+    def pack(self):
+        for button in self.buttons:
+            button.pack()
+
+    def destroy(self):
+        for button in self.buttons:
+            button.destroy()
+
+
+class MainMenu():
+    def __init__(self, app):
+        self.app = app
+
+        btnHeight = 2
+        btnWidth = 40
+        font = self.app.font
+
+        self.buttons = ButtonArray([
+            { 'text': 'New Game',
+              'width': btnWidth,
+              'height': btnHeight,
+              'command': partial(self.switchEvent, 'NewGameMenu') },
+            { 'text': 'Statistics',
+              'width': btnWidth,
+              'height': btnHeight,
+              'command': partial(self.switchEvent, 'StatMenu') },
+            { 'text': 'Settings',
+              'width': btnWidth,
+              'height': btnHeight,
+              'command': partial(self.switchEvent, 'SettingsMenu') },
+            { 'text': 'Quit',
+              'width': btnWidth,
+              'height': btnHeight,
+              'command': app.destroy },
+        ], font)
+
+        self.label = tk.Label(text="Minesweeper", font=font)
+
+        self.label.pack(side="top", fill="x", pady=50, padx=50)
+        self.buttons.pack()
+
+    def destroy(self):
+        self.label.destroy()
+        self.buttons.destroy()
+
+    def switchEvent(self, place):
+        self.app.event_generate('<<Switch-Menu>>', data=place)
 
 
 class NewGameFrame(tk.Frame):
@@ -152,9 +194,7 @@ class SettingsFrame(tk.Frame):
 
 
 
-
 if __name__ == "__main__":
-
     app = SampleApp()
     app.resvar = '800x600'
     app.geometry(app.resvar)

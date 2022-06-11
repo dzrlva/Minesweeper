@@ -22,8 +22,8 @@ class Board:
 
         # self.width = app.winfo_width() * width
         # self.height = app.winfo_height() * height
-        self.width = 900 * width
-        self.height = 700 * height
+        self.width = self.app.width * width
+        self.height = self.app.height * height
 
         size += size % 2
         if size < 8:
