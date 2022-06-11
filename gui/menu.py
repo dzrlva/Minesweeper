@@ -88,7 +88,8 @@ class NewGameMenu:
             'large': 20,
             'giant': 22
         }
-        self.curFieldSize = tk.StringVar(self.frame, list(self.fieldSizes.keys())[0])
+
+        self.curFieldSize = tk.StringVar(self.frame, self.app.gameOpts['fieldsize-name'])
         self.fsInpTitle = tk.Label(
             self.frame,  text='Field size', font=labelFont,
             **styles.COMMON_STYLE()
@@ -109,7 +110,7 @@ class NewGameMenu:
             ('extra hard', '0.8')
         ]
 
-        self.curDif = tk.StringVar(self.frame, self.difficulties[0][1])
+        self.curDif = tk.StringVar(self.frame, str(self.app.gameOpts['difficulty']))
         self.difButtons = []
         for difficulty, value in self.difficulties:
             button = tk.Radiobutton(
@@ -164,6 +165,7 @@ class NewGameMenu:
             # 'username': self.plInp.get(),
             'difficulty': float(self.curDif.get()),
             'fieldsize': self.fieldSizes[self.curFieldSize.get()],
+            'fieldsize-name': self.curFieldSize.get(),
         })
 
     def onBackClick(self):
