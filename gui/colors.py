@@ -25,6 +25,7 @@ COLOR_SPACE = {
             'bg': 'red',
             'fg': 'white',
             'hover': 'black',
+            'hover-text': 'white',
         }
     },
     'light': {
@@ -53,6 +54,7 @@ COLOR_SPACE = {
             'bg': 'red',
             'fg': 'white',
             'hover': 'black',
+            'hover-text': 'white',
         }
     }
 }
