@@ -4,6 +4,7 @@ import tkinter as tk
 from functools import partial
 from .colors import COLORS
 from gui import styles
+from translation import _
 
 TITLE_FONT_SIZE = 20
 LABEL_FONT_SIZE = 13
@@ -24,11 +25,11 @@ class MainMenu:
         btnWidth = 40
 
         self.buttonsConfig = ([
-            { 'text': 'New Game',
+            { 'text': _('New Game'),
               'command': partial(self.switchEvent, 'NewGameMenu') },
-            { 'text': 'Settings',
+            { 'text': _('Settings'),
               'command': partial(self.switchEvent, 'SettingsMenu') },
-            { 'text': 'Quit',
+            { 'text': _('Quit'),
               'command': app.destroy },
         ])
 
@@ -41,7 +42,7 @@ class MainMenu:
             ))
 
         self.title = tk.Label(
-            text="Minesweeper", font=app.font,
+            text='Minesweeper', font=app.font,
             **styles.COMMON_STYLE()
         )
 
@@ -76,7 +77,7 @@ class NewGameMenu:
         btnFont = (app.font[0], BUTTON_FONT_SIZE)
 
         self.title = tk.Label(
-            app, text='New game', font=app.font,
+            app, text=_('New game'), font=app.font,
             **styles.COMMON_STYLE()
         )
         self.frame = tk.Frame(app, bg=COLORS['main'])
@@ -89,17 +90,21 @@ class NewGameMenu:
         # self.plInp.insert(0, username)
 
         self.fieldSizes = {
-            'tiny': 8,
-            'small': 12,
-            'medium': 14,
-            'big': 16,
-            'large': 20,
-            'giant': 22
+            _('tiny'): 8,
+            _('small'): 12,
+            _('medium'): 14,
+            _('big'): 16,
+            _('large'): 20,
+            _('giant'): 22
         }
 
-        self.curFieldSize = tk.StringVar(self.frame, self.app.gameOpts['fieldsize-name'])
+        setFS = self.app.gameOpts['fieldsize-name']
+        if setFS == 0:
+            setFS = next(iter(self.fieldSizes))
+
+        self.curFieldSize = tk.StringVar(self.frame, setFS)
         self.fsInpTitle = tk.Label(
-            self.frame,  text='Field size', font=labelFont,
+            self.frame,  text=_('Field size'), font=labelFont,
             **styles.COMMON_STYLE()
         )
         self.fsInpMenu = tk.OptionMenu(
@@ -109,14 +114,14 @@ class NewGameMenu:
         self.fsInpMenu['menu'].config(**styles.OPTION_MENU_STYLE())
 
         self.difTitle = tk.Label(
-            self.frame, text="Difficulty", font=optionFont,
+            self.frame, text=_('Difficulty'), font=optionFont,
             **styles.COMMON_STYLE()
         )
         self.difficulties = [
-            ('easy', '0.1'),
-            ('medium', '0.3'),
-            ('hard', '0.5'),
-            ('extra hard', '0.8')
+            (_('easy'), '0.1'),
+            (_('medium'), '0.3'),
+            (_('hard'), '0.5'),
+            (_('extra hard'), '0.8')
         ]
 
         self.curDif = tk.StringVar(self.frame, str(self.app.gameOpts['difficulty']))
@@ -131,13 +136,13 @@ class NewGameMenu:
 
         self.btnFrame = tk.Frame(app, bg=COLORS['main'])
         self.startBtn = tk.Button(
-            self.btnFrame, text='Start', font=btnFont,
+            self.btnFrame, text=_('Start'), font=btnFont,
             width=20, height=1,
             **styles.PUSH_BTTON_STYLE(),
             command=self.onStartClick
         )
         self.backBtn = tk.Button(
-            self.btnFrame, text='Back', font=btnFont,
+            self.btnFrame, text=_('Back'), font=btnFont,
             width=20, height=1,
             **styles.PUSH_BTTON_STYLE(),
             command=self.onBackClick
@@ -152,10 +157,10 @@ class NewGameMenu:
         # self.plInpTitle.grid(row=0, column=0, padx=20)
         # self.plInp.grid(row=0, column=1)
 
-        self.fsInpTitle.grid(row=1, column=0)
+        self.fsInpTitle.grid(row=1, column=0, sticky='w')
         self.fsInpMenu.grid(row=1, column=1, sticky='E', pady=10)
 
-        self.difTitle.grid(row=2, column=0, padx=10, columnspan=1)
+        self.difTitle.grid(row=2, column=0, padx=(0, 20), columnspan=1, sticky='w')
         for i, difButton in enumerate(self.difButtons):
             difButton.grid(row=i + 2, column=0, padx=(90, 0), columnspan=2, sticky='w')
 
@@ -195,14 +200,14 @@ class SettingsMenu:
         optionFont = (app.font[0], 12)
 
         self.title = tk.Label(
-            text="Settings", font=app.font, pady=10,
+            text=_('Settings'), font=app.font, pady=10,
             **styles.COMMON_STYLE(),
         )
         self.frame = tk.Frame(app, bg=COLORS['main'])
 
         self.langOptions = ['English', 'Russian']
         self.langTitle = tk.Label(
-            self.frame, text='Language', font=labelFont,
+            self.frame, text=_('Language'), font=labelFont,
             **styles.COMMON_STYLE(),
         )
         self.curLang = tk.StringVar(self.frame, self.langOptions[0])
@@ -215,7 +220,7 @@ class SettingsMenu:
 
         self.colorSchemes = { theme: theme for theme in COLORS.getThemeNames() }
         self.csTitle = tk.Label(
-            self.frame, text='Colorscheme', font=labelFont,
+            self.frame, text=_('Colorscheme'), font=labelFont,
             **styles.COMMON_STYLE(),
         )
         self.curCS = tk.StringVar(self.frame, app.appOpts['colorscheme'])
@@ -231,13 +236,13 @@ class SettingsMenu:
 
         self.btnFrame = tk.Frame(bg=COLORS['main'])
         self.applyBtn = tk.Button(
-            self.btnFrame, text='Apply', font=optionFont,
+            self.btnFrame, text=_('Apply'), font=optionFont,
             width=20, height=1,
             **styles.PUSH_BTTON_STYLE(),
             command=self.onApplyClick
         )
         self.backBtn = tk.Button(
-            self.btnFrame, text='Back', font=optionFont,
+            self.btnFrame, text=_('Back'), font=optionFont,
             width=20, height=1,
             **styles.PUSH_BTTON_STYLE(),
             command=self.onBackClick

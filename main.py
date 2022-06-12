@@ -5,6 +5,9 @@ import sys
 from argparse import ArgumentParser
 from gui.app import App as GUIAPP
 from cli.menu import startmenu
+from translation import _
+
+print(_('Welcome'))
 
 
 if __name__ == "__main__":
