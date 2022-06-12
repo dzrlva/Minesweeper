@@ -106,6 +106,7 @@ class NewGameMenu:
             self.frame, self.curFieldSize, *list(self.fieldSizes.keys()),
         )
         self.fsInpMenu.config(width=10, **styles.PUSH_BTTON_STYLE())
+        self.fsInpMenu['menu'].config(**styles.OPTION_MENU_STYLE())
 
         self.difTitle = tk.Label(
             self.frame, text="Difficulty", font=optionFont,
@@ -210,6 +211,7 @@ class SettingsMenu:
             command=self.onLangChange
         )
         self.langMenu.config(width=10, **styles.PUSH_BTTON_STYLE())
+        self.langMenu['menu'].config(**styles.OPTION_MENU_STYLE())
 
         self.colorSchemes = { 'light': 'light', 'dark': 'dark' }
         self.csTitle = tk.Label(
@@ -277,6 +279,7 @@ class SettingsMenu:
         for button in self.csButtons:
             button.configure(**styles.RADIO_BUTTON_STYLE())
         self.langMenu.configure(**styles.PUSH_BTTON_STYLE())
+        self.langMenu['menu'].config(**styles.OPTION_MENU_STYLE())
         self.applyBtn.configure(**styles.PUSH_BTTON_STYLE())
         self.backBtn.configure(**styles.PUSH_BTTON_STYLE())
 

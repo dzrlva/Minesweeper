@@ -19,6 +19,16 @@ def COMMON_BUTTON_STYLE():
     }
 
 
+def OPTION_MENU_STYLE():
+    """OPTION button styles."""
+    return {
+        'bg': COLORS['buttons.bg'],
+        'fg': COLORS['buttons.fg'],
+        'activebackground': COLORS['buttons.hover-bg'],
+        'activeforeground': COLORS['buttons.hover-text']
+    }
+
+
 def RADIO_BUTTON_STYLE():
     """Radio button styles."""
     return COMMON_STYLE() | COMMON_BUTTON_STYLE() | {
