@@ -188,14 +188,14 @@ class Game:
         if self.status == 'lose':
             return
         self.status = 'lose'
-        print('Bro, you died')
+        # print('Bro, you died')
         self.board.drawExplosion(pos, callback=self.completeGame)
         # self.completeGame()
 
     def gameWin(self):
         """Set result on win."""
         self.status = 'win'
-        print('BRO, YOU WON')
+        # print('BRO, YOU WON')
         self.completeGame()
 
     def checkWin(self):

@@ -43,7 +43,7 @@ class App(tk.Tk):
 
     def onDeath(self):
         """Application is closed."""
-        print('App is dying')
+        # print('App is dying')
         self.destroy()
 
     def onSettingsSave(self, event):
@@ -60,7 +60,7 @@ class App(tk.Tk):
 
     def switchMenu(self, event):
         """Switch current view to given menu."""
-        print('Asked to switch menu to', event)
+        # print('Asked to switch menu to', event)
         if event.data != self.page:
             self.page = event.data
             self.newSession()
