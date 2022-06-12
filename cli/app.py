@@ -3,9 +3,9 @@ from cli.game import Game
 from cli.screen import Screen
 from cli.color import Color
 from logic.field import Field
-from logic.gamestat import Stat
+# from logic.gamestat import Stat
 from blessed import Terminal
-import time
+# import time
 
 
 class App:
@@ -23,14 +23,14 @@ class App:
         # if tempname:
         #    username = tempname
 
-        stat = Stat()
+        # stat = Stat()
         # stat.assignFile(username)
         # stat.readStatistic()
 
         with term.cbreak(), term.hidden_cursor():
             screen.clear()
             game.draw()
-            starttime = time.time()
+            # starttime = time.time()
             key = ''
 
             while key != "q" and game.status == 'active':

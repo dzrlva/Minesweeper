@@ -76,6 +76,7 @@ class COLORS:
 
     @staticmethod
     def getThemeNames():
+        """Get available themes."""
         return COLOR_SPACE.keys()
 
     @staticmethod
