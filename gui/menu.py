@@ -250,10 +250,10 @@ class SettingsMenu:
         """Draw settings menu."""
         self.title.pack(pady=20)
 
-        self.langTitle.grid(row=0, column=0, pady=20)
+        self.langTitle.grid(row=0, column=0, pady=20, sticky='W')
         self.langMenu.grid(row=0, column=1, columnspan=2, sticky='E')
 
-        self.csTitle.grid(row=1, column=0, padx=10)
+        self.csTitle.grid(row=1, column=0, padx=(0, 10), sticky='W')
         for i, button in enumerate(self.csButtons):
             button.grid(row=1, column=i + 1, ipadx=10)
 

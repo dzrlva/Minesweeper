@@ -2,19 +2,19 @@
 
 COLOR_SPACE = {
     'octopus': {
-        'main': '#63497C',
+        'main': '#49365C',
         'text': '#ffffff',
         'hexagon': {
             'text':     'white',
-            'hover':    '#03dfaa',
+            'hover':    '#B58CE0',
             'active':   '#ffffff',
-            'inactive': '#aaaaaa',
+            'inactive': '#927CA9',
             'outline':  '#003153',
         },
         'cells': {
             'correct-flag': 'green',
             'incorrect-flag': 'yellow',
-            'empty': '#ffffff',
+            'empty': '#E9D8FB',
             'bomb': '#AA0000',
             '1': '#59DF9F',
             '2': '#9BE382',
@@ -26,9 +26,9 @@ COLOR_SPACE = {
             '8': '#ffffff',
         },
         'buttons': {
-            'bg': '#456fb8',
+            'bg': '#876EBC',
             'fg': 'white',
-            'hover-bg': '#609aff',
+            'hover-bg': '#AE94E7',
             'hover-text': 'white',
             'dot': 'black',
         }
