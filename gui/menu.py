@@ -213,7 +213,7 @@ class SettingsMenu:
         self.langMenu.config(width=10, **styles.PUSH_BTTON_STYLE())
         self.langMenu['menu'].config(**styles.OPTION_MENU_STYLE())
 
-        self.colorSchemes = { 'light': 'light', 'dark': 'dark' }
+        self.colorSchemes = { theme: theme for theme in COLORS.getThemeNames() }
         self.csTitle = tk.Label(
             self.frame, text='Colorscheme', font=labelFont,
             **styles.COMMON_STYLE(),

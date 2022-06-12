@@ -1,8 +1,8 @@
 """Color space of gui app."""
 
 COLOR_SPACE = {
-    'dark': {
-        'main': '#003153',
+    'octopus': {
+        'main': '#63497C',
         'text': '#ffffff',
         'hexagon': {
             'text':     'white',
@@ -33,7 +33,7 @@ COLOR_SPACE = {
             'dot': 'black',
         }
     },
-    'light': {
+    'honeycomb': {
         'main': '#f5f5dc',
         'text': '#222222',
         'hexagon': {
@@ -71,13 +71,19 @@ COLOR_SPACE = {
 class COLORS:
     """Colors handler class."""
 
-    scheme = COLOR_SPACE['light']
+    schemeName = next(iter(COLOR_SPACE))
+    scheme = COLOR_SPACE[schemeName]
+
+    @staticmethod
+    def getThemeNames():
+        return COLOR_SPACE.keys()
 
     @staticmethod
     def scheme():
         """Get current scheme."""
         return COLORS.scheme
 
+    @staticmethod
     def setTheme(themeName):
         """Set another theme. Theme mush exists."""
         COLORS.scheme = COLOR_SPACE[themeName]
