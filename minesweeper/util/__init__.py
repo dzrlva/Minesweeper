@@ -54,10 +54,13 @@ def loadImage(path, size):
 
 
 class Config:
+    """Wrap around configparser."""
+
     file = None
 
     @staticmethod
     def load():
+        """Load config file, generate default if current dosen't exist."""
         if not exists(CONFIG_FILE):
             Config.createDefault()
         Config.file = configparser.ConfigParser()
@@ -65,6 +68,7 @@ class Config:
 
     @staticmethod
     def save(value, field='settings'):
+        """Save config file."""
         if Config.file is None:
             Config.load()
         Config.file[field] = value
@@ -73,12 +77,14 @@ class Config:
 
     @staticmethod
     def get(field='settings'):
+        """Get config values and load config if needed."""
         if Config.file is None:
             Config.load()
         return Config.file[field]
 
     @staticmethod
     def createDefault():
+        """Create defautl config file."""
         with open(CONFIG_FILE, 'w') as configFile:
             configFile.write(
                 "[settings]\n"

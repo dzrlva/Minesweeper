@@ -55,6 +55,7 @@ class App(tk.Tk):
         self.destroy()
 
     def setFullscreen(self):
+        """Set fullscreen mode."""
         screenWidth = self.winfo_screenwidth()
         screenHeight = self.winfo_screenheight()
         self.appOpts["resolution"] = f"{screenWidth}x{screenHeight}"

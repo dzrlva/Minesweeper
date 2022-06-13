@@ -72,9 +72,11 @@ class GameControls:
         self.app.event_generate("<<Game-Help>>")
 
     def enableHelp(self):
+        """Enable help button."""
         self.helpBtn["state"] = "normal"
 
     def disableHelp(self):
+        """Disable help button."""
         self.helpBtn["state"] = "disabled"
 
 
@@ -270,6 +272,7 @@ class Game:
         )
 
     def helpPlayer(self, event):
+        """Provide player with some help."""
         bombs, found, fallback = list(self.field.bombsPos), False, None
         shuffle(bombs)
         for pos in bombs:
@@ -291,6 +294,7 @@ class Game:
                 self.ctrls.disableHelp()
 
     def toggleFlag(self, pos):
+        """Toggle flag on given position."""
         self.board.toggleFlag(pos)
         self.field.toggleFlag(pos)
         if self.field[pos] == Flag.sure:

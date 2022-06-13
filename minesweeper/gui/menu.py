@@ -351,6 +351,7 @@ class SettingsMenu:
         self.btnFrame.destroy()
 
     def reloadLang(self):
+        """Reload settings menu language now."""
         self.title.config(text=_("Settings"))
         self.resLabel.config(text=_("Resolution"))
         self.fsLabel.config(text=_("Fullscreen"))

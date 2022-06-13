@@ -1,10 +1,7 @@
+"""Get text translation."""
+
 import gettext
-import configparser
 from minesweeper.util import Config
-
-
-def getConfigLang():
-    return Config.get()["language"]
 
 
 def _(string):
@@ -15,12 +12,13 @@ def _(string):
 
 
 def setLang(language):
+    """Set current translation language."""
     global LANGUAGE
     LANGUAGE = language
 
 
 if "LANGUAGE" not in globals():
-    LANGUAGE = getConfigLang()
+    LANGUAGE = Config.get()["language"]
     ruTrans = gettext.translation(
         "messages", "minesweeper/translation", languages=("ru",)
     )
