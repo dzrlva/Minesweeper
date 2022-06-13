@@ -1,0 +1,4 @@
+[build-system]
+requires = ["Sphinx", "doit", "flake8", "pydocstyle", "wheel", "setuptools",
+ "blessed", "pillow", "toml"]
+build-backend = "setuptools.build_meta"

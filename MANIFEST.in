@@ -1,0 +1,7 @@
+include \
+	minesweeper/cli/*.py \
+	minesweeper/gui/*.py \
+	minesweeper/util/*.py \
+	minesweeper/logic/*.py \
+	minesweeper/tests/*.py \
+	minesweeper/translation/*.py
