@@ -130,7 +130,9 @@ class Settingsmenu(Menu):
         elif key == KEYS["down"]:
             self.move(Point(0, 1))
         elif key == KEYS["open"]:
-            pass
+            if self.pos.y == 6:
+                screen.clear()
+                startmenu()
 
     def draw(self):
         """Draw menu."""

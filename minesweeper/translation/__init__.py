@@ -21,9 +21,7 @@ def setLang(language):
 
 if "LANGUAGE" not in globals():
     LANGUAGE = getConfigLang()
-    ruTrans = gettext.translation(
-        "messages", "minesweeper/translation", languages=("ru",)
-    )
+    ruTrans = gettext.translation("messages", "minesweeper/translation", languages=("ru",))
     engTrans = gettext.translation("messages", "minesweeper/translation", fallback=True)
     _ru = ruTrans.gettext
     _eng = engTrans.gettext

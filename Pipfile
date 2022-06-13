@@ -5,10 +5,9 @@ pydocstyle = "*"
 sphinx = "*"
 build = "*"
 wheel = "*"
+toml = "*"
 
 [packages]
 blessed = "*"
-doit = "*"
 pillow = "*"
 pybabel = "*"
-toml = "*"

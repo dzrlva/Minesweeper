@@ -1,6 +1,7 @@
 """Main GUI module that draw all the game attributes."""
 
 import tkinter as tk
+import os
 from .game import Game
 from .colors import COLORS
 from .events import EventMaster
@@ -19,7 +20,7 @@ class App(tk.Tk):
         super().__init__()
         EventMaster(self)
         self.title("Minesweeper")
-        self.iconphoto(False, loadImage("resources/images/icon.png", 64))
+        self.iconphoto(False, loadImage("minesweeper" + os.sep + "resources" + os.sep + "images" + os.sep + "icon.png", 64))
         self.username = "Gamer1"
 
         # self.fontLoaded = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
