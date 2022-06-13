@@ -200,7 +200,6 @@ class SettingsMenu:
     def __init__(self, app):
         """Create and show settings menu."""
         self.app = app
-        self.langChanged = False
         labelFont = (app.font[0], 15)
         optionFont = (app.font[0], 12)
 
@@ -313,6 +312,15 @@ class SettingsMenu:
         self.frame.destroy()
         self.btnFrame.destroy()
 
+    def reloadLang(self):
+        self.title.config(text=_('Settings'))
+        self.resLabel.config(text=_('Resolution'))
+        self.fsLabel.config(text=_('Fullscreen'))
+        self.langTitle.config(text=_('Language'))
+        self.csTitle.config(text=_('Colorscheme'))
+        self.applyBtn.config(text=_('Apply'))
+        self.backBtn.config(text=_('Back'))
+
     def reloadTheme(self):
         """Reload settings menu theme right now."""
         self.title.configure(**styles.COMMON_STYLE())
@@ -334,9 +342,6 @@ class SettingsMenu:
 
     def onApplyClick(self):
         """Set settings."""
-        if self.langChanged:
-            messagebox.showinfo(title='Warning', message=_('Restart the app'))
-
         self.applyBtn['state'] = 'disabled'
         self.app.event_generate('<<Save-Settings>>', data={
             'resolution': self.curRes.get(),
@@ -345,6 +350,7 @@ class SettingsMenu:
             'fullscreen': 'True' if self.fsVar.get() == '1' else 'False'
         })
         self.reloadTheme()
+        self.reloadLang()
 
     def onBackClick(self):
         """Return back to main menu event."""
@@ -368,7 +374,6 @@ class SettingsMenu:
 
     def onLangChange(self, option):
         """Change language."""
-        self.langChanged = self.curLang.get() != self.app.appOpts['language']
         self.applyBtn['state'] = 'normal'
 
     def onThemeChange(self):

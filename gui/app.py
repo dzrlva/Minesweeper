@@ -6,6 +6,7 @@ from .colors import COLORS
 from .events import EventMaster
 from .menu import MainMenu, NewGameMenu, SettingsMenu
 import configparser
+from translation import setLang
 # from tkextrafont import Font
 
 
@@ -65,10 +66,14 @@ class App(tk.Tk):
         COLORS.setTheme(self.appOpts['colorscheme'])
         self.configure(bg=COLORS['main'])
 
-        if self.appOpts['resolution'] == 'True':
+        if self.appOpts['fullscreen'] == 'True':
             self.setFullscreen()
+        else:
+            self.attributes('-fullscreen', False)
         self.geometry(self.appOpts['resolution'])
         self.width, self.height = map(int, event.data['resolution'].split('x'))
+
+        setLang(self.appOpts['language'])
 
         self.config['settings'] = self.appOpts
         with open('config.ini', 'w') as configFile:

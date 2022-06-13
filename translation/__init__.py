@@ -1,11 +1,28 @@
 import gettext
 import configparser
 
-if 'translation' not in globals():
+
+def getConfigLang():
     config = configparser.ConfigParser()
     config.read('config.ini')
-    if config['settings']['language'] == 'Russian':
-        translation = gettext.translation('messages', 'translation', languages=('ru',))
-    else:
-        translation = gettext.translation('messages', 'translation', fallback=True)
-    _, ngettext = translation.gettext, translation.ngettext
+    return config['settings']['language']
+
+
+def _(string):
+    global _ru, _eng
+    if LANGUAGE == 'Russian':
+        return _ru(string)
+    return _eng(string)
+
+
+def setLang(language):
+    global LANGUAGE
+    LANGUAGE = language
+
+
+if 'LANGUAGE' not in globals():
+    LANGUAGE = getConfigLang()
+    ruTrans = gettext.translation('messages', 'translation', languages=('ru',))
+    engTrans = gettext.translation('messages', 'translation', fallback=True)
+    _ru = ruTrans.gettext
+    _eng = engTrans.gettext
