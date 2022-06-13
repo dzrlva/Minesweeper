@@ -1,11 +1,10 @@
 import gettext
 import configparser
+from util import Config
 
 
 def getConfigLang():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    return config['settings']['language']
+    return Config.get()['language']
 
 
 def _(string):

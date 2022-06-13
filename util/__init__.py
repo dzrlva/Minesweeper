@@ -3,6 +3,10 @@
 from PIL import ImageTk, Image
 from .coord import Coord
 from .point import Point  # noqa: F401
+from os.path import exists
+import configparser
+
+CONFIG_FILE = 'config.ini'
 
 
 class dotdict(dict):
@@ -47,3 +51,39 @@ def loadImage(path, size):
             'frames': frames
         }
     return ImageTk.PhotoImage(image.resize(size))
+
+
+class Config:
+    file = None
+
+    @staticmethod
+    def load():
+        if not exists(CONFIG_FILE):
+            Config.createDefault()
+        Config.file = configparser.ConfigParser()
+        Config.file.read(CONFIG_FILE)
+
+    @staticmethod
+    def save(value, field='settings'):
+        if Config.file is None:
+            Config.load()
+        Config.file[field] = value
+        with open(CONFIG_FILE, 'w') as configFile:
+            Config.file.write(configFile)
+
+    @staticmethod
+    def get(field='settings'):
+        if Config.file is None:
+            Config.load()
+        return Config.file[field]
+
+    @staticmethod
+    def createDefault():
+        with open(CONFIG_FILE, 'w') as configFile:
+            configFile.write(
+                "[settings]\n"
+                "resolution = 700x600\n"
+                "colorscheme = octopus\n"
+                "language = English\n"
+                "fullscreen = False\n"
+            )

@@ -5,7 +5,7 @@ from .game import Game
 from .colors import COLORS
 from .events import EventMaster
 from .menu import MainMenu, NewGameMenu, SettingsMenu
-import configparser
+from util import Config
 from translation import setLang
 # from tkextrafont import Font
 
@@ -23,10 +23,7 @@ class App(tk.Tk):
         # self.fontLoaded = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
         self.font = ('Purisa', 20)
         # self.font = ('Default', 20)
-
-        self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
-        self.appOpts = self.config['settings']
+        self.appOpts = Config.get()
 
         if self.appOpts['fullscreen'] == 'True':
             self.setFullscreen()
@@ -75,9 +72,7 @@ class App(tk.Tk):
 
         setLang(self.appOpts['language'])
 
-        self.config['settings'] = self.appOpts
-        with open('config.ini', 'w') as configFile:
-            self.config.write(configFile)
+        Config.save(self.appOpts)
 
     def onGameInit(self, event):
         """Init game with given options by menu."""
