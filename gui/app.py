@@ -5,7 +5,7 @@ from .game import Game
 from .colors import COLORS
 from .events import EventMaster
 from .menu import MainMenu, NewGameMenu, SettingsMenu
-from util import Config
+from util import Config, loadImage
 from translation import setLang
 # from tkextrafont import Font
 
@@ -17,7 +17,8 @@ class App(tk.Tk):
         """Initialize GUI app."""
         super().__init__()
         EventMaster(self)
-        self.title = 'Minesweeper'
+        self.title('Minesweeper')
+        self.iconphoto(False, loadImage('resources/images/icon.png', 64))
         self.username = 'Gamer1'
 
         # self.fontLoaded = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
