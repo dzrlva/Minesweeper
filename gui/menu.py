@@ -104,6 +104,8 @@ class NewGameMenu:
         setFS = self.app.gameOpts['fieldsize-name']
         if setFS == 0:
             setFS = next(iter(self.fieldSizes))
+        else:
+            setFS = _(setFS)
 
         self.curFieldSize = tk.StringVar(self.frame, setFS)
         self.fsInpTitle = tk.Label(
