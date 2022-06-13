@@ -1,10 +1,10 @@
 Common utils
 ~~~~~~~~~~~~
 
-.. automodule:: util.coord
+.. automodule:: minesweeper.util.coord
    :members:
    :special-members:
 
-.. automodule:: util.minepoint
+.. automodule:: minesweeper.util.minepoint
    :members:
    :special-members:
