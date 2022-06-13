@@ -8,8 +8,14 @@ from .events import EventMaster
 from .menu import MainMenu, NewGameMenu, SettingsMenu
 from minesweeper.util import Config, loadImage
 from minesweeper.translation import setLang
+import minesweeper.resources as resources
 
-# from tkextrafont import Font
+try:
+    from tkextrafont import Font
+except ModuleNotFoundError:
+    Font = None
+    pass
+Font = None
 
 
 class App(tk.Tk):
@@ -20,12 +26,14 @@ class App(tk.Tk):
         super().__init__()
         EventMaster(self)
         self.title("Minesweeper")
-        self.iconphoto(False, loadImage("minesweeper" + os.sep + "resources" + os.sep + "images" + os.sep + "icon.png", 64))
+        self.iconphoto(False, loadImage(resources.appIcon, 64))
         self.username = "Gamer1"
 
-        # self.fontLoaded = Font(file="./resources/fonts/Purisa_Bold.ttf", size=20, family='Purisa')
-        self.font = ("Purisa", 20)
-        # self.font = ('Default', 20)
+        if Font:
+            self.fontLoaded = Font(file=resources.fontName, size=20, family='Purisa')
+            self.font = ("Purisa", 20)
+        else:
+            self.font = ("Sans", 20)
         self.appOpts = Config.get()
 
         if self.appOpts["fullscreen"] == "True":

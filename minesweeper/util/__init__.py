@@ -5,8 +5,7 @@ from .coord import Coord
 from .point import Point  # noqa: F401
 from os.path import exists
 import configparser
-
-CONFIG_FILE = 'config.ini'
+import minesweeper.resources as resources
 
 
 class dotdict(dict):
@@ -61,10 +60,10 @@ class Config:
     @staticmethod
     def load():
         """Load config file, generate default if current dosen't exist."""
-        if not exists(CONFIG_FILE):
+        if not exists(resources.config):
             Config.createDefault()
         Config.file = configparser.ConfigParser()
-        Config.file.read(CONFIG_FILE)
+        Config.file.read(resources.config)
 
     @staticmethod
     def save(value, field='settings'):
@@ -72,7 +71,7 @@ class Config:
         if Config.file is None:
             Config.load()
         Config.file[field] = value
-        with open(CONFIG_FILE, 'w') as configFile:
+        with open(resources.config, 'w') as configFile:
             Config.file.write(configFile)
 
     @staticmethod
@@ -85,7 +84,7 @@ class Config:
     @staticmethod
     def createDefault():
         """Create defautl config file."""
-        with open(CONFIG_FILE, 'w') as configFile:
+        with open(resources.config, 'w') as configFile:
             configFile.write(
                 "[settings]\n"
                 "resolution = 700x600\n"

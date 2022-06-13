@@ -6,13 +6,14 @@ from minesweeper.util import loadImage, Coord, Point, dotdict
 from math import sqrt
 from .hexagon import Hexagon, COEF
 from .colors import COLORS
+import minesweeper.resources as resources
 
 
 SCALE_FACTOR = 1.2
 RESOURCES = {
-    "flag": "minesweeper" + os.sep + "resources" + os.sep + "images" + os.sep + "flag.png",
-    "explosion":  "minesweeper" + os.sep + "resources" + os.sep + "animations" + os.sep + "explosion1.gif",
-    "bomb":  "minesweeper" + os.sep + "resources" + os.sep + "images" + os.sep + "bomb.png",
+    "flag": resources.flag,
+    "explosion":  resources.explosion,
+    "bomb":  resources.bomb
 }
 
 

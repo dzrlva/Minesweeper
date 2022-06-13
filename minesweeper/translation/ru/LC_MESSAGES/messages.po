@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-06-13 02:05+0300\n"
+"POT-Creation-Date: 2022-06-13 23:50+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -19,19 +19,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: gui/game.py:26
+#: minesweeper/gui/game.py:27
 msgid "Reset"
 msgstr "Сбросить"
 
-#: gui/game.py:32 gui/menu.py:149 gui/menu.py:276
+#: minesweeper/gui/game.py:35 minesweeper/gui/menu.py:162
+#: minesweeper/gui/menu.py:313 minesweeper/gui/menu.py:361
 msgid "Back"
 msgstr "Назад"
 
-#: gui/game.py:38
+#: minesweeper/gui/game.py:43
 msgid "Help"
 msgstr "Помощь"
 
-#: gui/game.py:210
+#: minesweeper/gui/game.py:232
 msgid ""
 "You Lose!\n"
 "Try better next time! ⚇"
@@ -39,119 +40,119 @@ msgstr ""
 "Вы проиграли!\n"
 "Пробуйте лучше в следующий раз! ⚇"
 
-#: gui/game.py:212
+#: minesweeper/gui/game.py:235
 msgid "You won! Nice ☺"
 msgstr "Вы выйграли! Отлично ☺"
 
-#: gui/game.py:243
+#: minesweeper/gui/game.py:266
 msgid "Cell left"
 msgstr "Клеток осталось"
 
-#: gui/game.py:244
+#: minesweeper/gui/game.py:267
 msgid "Bombs left"
 msgstr "Бомб осталось"
 
-#: gui/game.py:245
+#: minesweeper/gui/game.py:268
 msgid "Helps"
 msgstr "Подсказок"
 
-#: gui/menu.py:29
+#: minesweeper/gui/menu.py:29
 msgid "New Game"
 msgstr "Новая Игра"
 
-#: gui/menu.py:31 gui/menu.py:208
+#: minesweeper/gui/menu.py:33 minesweeper/gui/menu.py:225
+#: minesweeper/gui/menu.py:355
 msgid "Settings"
 msgstr "Настройки"
 
-#: gui/menu.py:33
+#: minesweeper/gui/menu.py:36
 msgid "Quit"
 msgstr "Выход"
 
-#: gui/menu.py:81
+#: minesweeper/gui/menu.py:86
 msgid "New game"
 msgstr "Новая Игра"
 
-#: gui/menu.py:94
+#: minesweeper/gui/menu.py:98
 msgid "tiny"
 msgstr "крохотное"
 
-#: gui/menu.py:95
+#: minesweeper/gui/menu.py:99
 msgid "small"
 msgstr "маленькое"
 
-#: gui/menu.py:96 gui/menu.py:125
+#: minesweeper/gui/menu.py:100 minesweeper/gui/menu.py:131
 msgid "medium"
 msgstr "среднее"
 
-#: gui/menu.py:97
+#: minesweeper/gui/menu.py:101
 msgid "big"
 msgstr "большое"
 
-#: gui/menu.py:98
+#: minesweeper/gui/menu.py:102
 msgid "large"
 msgstr "огромное"
 
-#: gui/menu.py:99
+#: minesweeper/gui/menu.py:103
 msgid "extra large"
 msgstr "очень большое"
 
-#: gui/menu.py:100
+#: minesweeper/gui/menu.py:104
 msgid "giant"
 msgstr "гигантское"
 
-#: gui/menu.py:101
+#: minesweeper/gui/menu.py:105
 msgid "enormous"
 msgstr "громадное"
 
-#: gui/menu.py:110
+#: minesweeper/gui/menu.py:116
 msgid "Field size"
 msgstr "Размер поля"
 
-#: gui/menu.py:120
+#: minesweeper/gui/menu.py:127
 msgid "Difficulty"
 msgstr "Сложность"
 
-#: gui/menu.py:124
+#: minesweeper/gui/menu.py:130
 msgid "easy"
 msgstr "легко"
 
-#: gui/menu.py:126
+#: minesweeper/gui/menu.py:132
 msgid "hard"
 msgstr "сложно"
 
-#: gui/menu.py:127
+#: minesweeper/gui/menu.py:133
 msgid "extra hard"
 msgstr "очень сложно"
 
-#: gui/menu.py:128
+#: minesweeper/gui/menu.py:134
 msgid "impossible"
 msgstr "невозможно"
 
-#: gui/menu.py:143
+#: minesweeper/gui/menu.py:153
 msgid "Start"
 msgstr "Начать"
 
-#: gui/menu.py:215
+#: minesweeper/gui/menu.py:235 minesweeper/gui/menu.py:356
 msgid "Resolution"
 msgstr "Разрешение"
 
-#: gui/menu.py:229
+#: minesweeper/gui/menu.py:252 minesweeper/gui/menu.py:357
 msgid "Fullscreen"
 msgstr "Полный экран"
 
-#: gui/menu.py:241
+#: minesweeper/gui/menu.py:267 minesweeper/gui/menu.py:358
 msgid "Language"
 msgstr "Язык"
 
-#: gui/menu.py:254
+#: minesweeper/gui/menu.py:281 minesweeper/gui/menu.py:359
 msgid "Colorscheme"
 msgstr "Цветовая схема"
 
-#: gui/menu.py:270
+#: minesweeper/gui/menu.py:304 minesweeper/gui/menu.py:360
 msgid "Apply"
 msgstr "Применить"
 
-#: gui/menu.py:336
-msgid "Restart the app"
-msgstr "Перезапустите приложение"
+#~ msgid "Restart the app"
+#~ msgstr "Перезапустите приложение"
 

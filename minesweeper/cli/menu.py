@@ -20,8 +20,8 @@ MENU_WIDTH = 30
 
 screen = Screen()
 stat = Stat()
-stat.assignFile("Gamer1")
-stat.readStatistic()
+# stat.assignFile("Gamer1")
+# stat.readStatistic()
 
 
 class Menu:
@@ -72,8 +72,8 @@ class Startmenu(Menu):
             if self.pos.y == 0:
                 CLIAPP().mainloop()
                 exit()
-            elif self.pos.y == 1:
-                statmenu()
+            # elif self.pos.y == 1:
+                # statmenu()
             elif self.pos.y == 2:
                 settingsmenu()
                 pass

@@ -2,6 +2,7 @@
 
 import pickle
 import os
+import minesweeper.resources as resources
 
 
 class Stat:
@@ -31,10 +32,10 @@ class Stat:
 
     def assignFile(self, name):
         """Assign some file to statistic."""
-        self.filepath = os.getcwd() + os.sep + "minesweeper" + os.sep + "stat"
+        self.filepath = resources.statFolder
         if not os.path.exists(self.filepath):
             os.mkdir(self.filepath)
-        self.filepath += os.sep + name + ".bin"
+        self.filepath = os.path.join(self.filepath, name + '.bin')
         if not os.path.exists(self.filepath):
             with open(self.filepath, "wb") as f:
                 pickle.dump([], f)
