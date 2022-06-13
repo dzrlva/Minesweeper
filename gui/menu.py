@@ -1,6 +1,7 @@
 """Different Menus for gui app."""
 
 import tkinter as tk
+from tkinter import messagebox
 from functools import partial
 from .colors import COLORS
 from gui import styles
@@ -90,12 +91,14 @@ class NewGameMenu:
         # self.plInp.insert(0, username)
 
         self.fieldSizes = {
-            _('tiny'): 8,
-            _('small'): 12,
-            _('medium'): 14,
+            _('tiny'): 6,
+            _('small'): 8,
+            _('medium'): 12,
             _('big'): 16,
             _('large'): 20,
-            _('giant'): 22
+            _('extra large'): 24,
+            _('giant'): 28,
+            _('enormous'): 32
         }
 
         setFS = self.app.gameOpts['fieldsize-name']
@@ -119,9 +122,10 @@ class NewGameMenu:
         )
         self.difficulties = [
             (_('easy'), '0.1'),
-            (_('medium'), '0.3'),
-            (_('hard'), '0.5'),
-            (_('extra hard'), '0.8')
+            (_('medium'), '0.2'),
+            (_('hard'), '0.3'),
+            (_('extra hard'), '0.4'),
+            (_('impossible'), '0.7')
         ]
 
         self.curDif = tk.StringVar(self.frame, str(self.app.gameOpts['difficulty']))
@@ -160,9 +164,9 @@ class NewGameMenu:
         self.fsInpTitle.grid(row=1, column=0, sticky='w')
         self.fsInpMenu.grid(row=1, column=1, sticky='E', pady=10)
 
-        self.difTitle.grid(row=2, column=0, padx=(0, 20), columnspan=1, sticky='w')
+        self.difTitle.grid(row=2, column=0, padx=(0, 10), columnspan=1, sticky='w')
         for i, difButton in enumerate(self.difButtons):
-            difButton.grid(row=i + 2, column=0, padx=(90, 0), columnspan=2, sticky='w')
+            difButton.grid(row=i + 2, column=0, padx=(100, 0), columnspan=2, sticky='w')
 
         self.startBtn.grid(row=0, column=0, pady=CTRL_BTN_GAP)
         self.backBtn.grid(row=1, column=0)
@@ -196,6 +200,7 @@ class SettingsMenu:
     def __init__(self, app):
         """Create and show settings menu."""
         self.app = app
+        self.langChanged = False
         labelFont = (app.font[0], 15)
         optionFont = (app.font[0], 12)
 
@@ -205,12 +210,40 @@ class SettingsMenu:
         )
         self.frame = tk.Frame(app, bg=COLORS['main'])
 
+        self.resOptions = ['700x600', '800x700', '1000x900', '1000x600', '1200x1000']
+        self.resLabel = tk.Label(
+            self.frame, text=_('Resolution'), font=labelFont,
+            **styles.COMMON_STYLE(),
+        )
+        self.curRes = tk.StringVar(self.frame, app.appOpts['resolution'])
+        self.resMenu = tk.OptionMenu(
+            self.frame, self.curRes, *self.resOptions,
+            command=self.onResChange
+        )
+        self.resMenu.config(width=10, **styles.PUSH_BTTON_STYLE())
+        self.resMenu['menu'].config(**styles.OPTION_MENU_STYLE())
+        if app.appOpts['fullscreen'] == 'True':
+            self.resMenu['state'] = 'disabled'
+
+        self.fsVar = tk.StringVar(self.frame, '1' if app.appOpts['fullscreen'] == 'True' else '0')
+        self.fsLabel = tk.Label(
+            self.frame, font=labelFont,
+            text=_('Fullscreen'),
+            **styles.COMMON_STYLE()
+        )
+        self.fsBtn = tk.Checkbutton(
+            self.frame, font=labelFont,
+            width=2, height=1, variable=self.fsVar,
+            command=self.onFullscreenChange,
+            **styles.RADIO_BUTTON_STYLE()
+        )
+
         self.langOptions = ['English', 'Russian']
         self.langTitle = tk.Label(
             self.frame, text=_('Language'), font=labelFont,
             **styles.COMMON_STYLE(),
         )
-        self.curLang = tk.StringVar(self.frame, self.langOptions[0])
+        self.curLang = tk.StringVar(self.frame, app.appOpts['language'])
         self.langMenu = tk.OptionMenu(
             self.frame, self.curLang, *self.langOptions,
             command=self.onLangChange
@@ -258,9 +291,15 @@ class SettingsMenu:
         self.langTitle.grid(row=0, column=0, pady=20, sticky='W')
         self.langMenu.grid(row=0, column=1, columnspan=2, sticky='E')
 
-        self.csTitle.grid(row=1, column=0, padx=(0, 10), sticky='W')
+        self.resLabel.grid(row=1, column=0, pady=(0, 20), sticky='W')
+        self.resMenu.grid(row=1, column=1, columnspan=2, sticky='E')
+
+        self.fsLabel.grid(row=2, column=0, pady=(0, 20), sticky='W')
+        self.fsBtn.grid(row=2, column=1, pady=(0, 10), sticky='W')
+
+        self.csTitle.grid(row=3, column=0, padx=(0, 10), sticky='W')
         for i, button in enumerate(self.csButtons):
-            button.grid(row=1, column=i + 1, ipadx=10)
+            button.grid(row=3, column=i + 1, ipadx=10)
 
         self.applyBtn.grid(row=0, column=0, pady=CTRL_BTN_GAP)
         self.backBtn.grid(row=1, column=0)
@@ -277,12 +316,17 @@ class SettingsMenu:
     def reloadTheme(self):
         """Reload settings menu theme right now."""
         self.title.configure(**styles.COMMON_STYLE())
+        self.resLabel.configure(**styles.COMMON_STYLE())
+        self.fsLabel.configure(**styles.COMMON_STYLE())
         self.langTitle.configure(**styles.COMMON_STYLE())
         self.csTitle.configure(**styles.COMMON_STYLE())
         self.frame.configure(bg=COLORS['main'])
         self.btnFrame.configure(bg=COLORS['main'])
         for button in self.csButtons:
             button.configure(**styles.RADIO_BUTTON_STYLE())
+        self.fsBtn.configure(**styles.RADIO_BUTTON_STYLE())
+        self.resMenu.configure(**styles.PUSH_BTTON_STYLE())
+        self.resMenu['menu'].config(**styles.OPTION_MENU_STYLE())
         self.langMenu.configure(**styles.PUSH_BTTON_STYLE())
         self.langMenu['menu'].config(**styles.OPTION_MENU_STYLE())
         self.applyBtn.configure(**styles.PUSH_BTTON_STYLE())
@@ -290,10 +334,15 @@ class SettingsMenu:
 
     def onApplyClick(self):
         """Set settings."""
+        if self.langChanged:
+            messagebox.showinfo(title='Warning', message=_('Restart the app'))
+
         self.applyBtn['state'] = 'disabled'
         self.app.event_generate('<<Save-Settings>>', data={
+            'resolution': self.curRes.get(),
             'colorscheme': self.curCS.get(),
-            'language': self.curLang.get()
+            'language': self.curLang.get(),
+            'fullscreen': 'True' if self.fsVar.get() == '1' else 'False'
         })
         self.reloadTheme()
 
@@ -301,8 +350,25 @@ class SettingsMenu:
         """Return back to main menu event."""
         self.app.event_generate('<<Switch-Menu>>', data='MainMenu')
 
+    def onFullscreenChange(self):
+        """Change fullscreen."""
+        self.applyBtn['state'] = 'normal'
+        if self.fsVar.get() == '1':
+            self.resMenu['state'] = 'disabled'
+            screenWidth = self.app.winfo_screenwidth()
+            screenHeight = self.app.winfo_screenheight()
+            self.curRes.set(f'{screenWidth}x{screenHeight}')
+        else:
+            self.resMenu['state'] = 'normal'
+            self.curRes.set(self.resOptions[0])
+
+    def onResChange(self, option):
+        """Change resolution."""
+        self.applyBtn['state'] = 'normal'
+
     def onLangChange(self, option):
         """Change language."""
+        self.langChanged = self.curLang.get() != self.app.appOpts['language']
         self.applyBtn['state'] = 'normal'
 
     def onThemeChange(self):

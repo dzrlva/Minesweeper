@@ -48,6 +48,7 @@ class Field:
         self.bombs = round(self.size * bombsPercent)
         self.__field = [[MinePoint() for _ in range(width)]
                         for _ in range(height)]
+        self.bombsPos = set()
         self.__randomizeBombs()
         self.__calcFieldBombs()
 
@@ -71,6 +72,12 @@ class Field:
         x, y = Point(coords)
         if self.__isOutOfBounds(x, y):
             raise ValueError(f'Coords {coords} are out of bounds')
+
+        if isinstance(value, Value):
+            if value == Value.bomb:
+                self.bombsPos.add(Point(x, y))
+            elif self[x, y] == Value.bomb:
+                self.bombsPos.remove(Point(x, y))
         self.__field[y][x].set(value)
 
     def __randomizeBombs(self):

@@ -5,13 +5,14 @@ from .game import Game
 from .colors import COLORS
 from .events import EventMaster
 from .menu import MainMenu, NewGameMenu, SettingsMenu
+import configparser
 # from tkextrafont import Font
 
 
 class App(tk.Tk):
     """Gui App class."""
 
-    def __init__(self, width=900, height=700):
+    def __init__(self):
         """Initialize GUI app."""
         super().__init__()
         EventMaster(self)
@@ -22,9 +23,15 @@ class App(tk.Tk):
         self.font = ('Purisa', 20)
         # self.font = ('Default', 20)
 
-        self.geometry(f'{width}x{height}')
+        self.config = configparser.ConfigParser()
+        self.config.read('config.ini')
+        self.appOpts = self.config['settings']
+
+        if self.appOpts['fullscreen'] == 'True':
+            self.setFullscreen()
+        self.width, self.height = map(int, self.appOpts['resolution'].split('x'))
+        self.geometry(f'{self.width}x{self.height}')
         self.resizable(False, False)
-        self.width, self.height = width, height
 
         self.protocol("WM_DELETE_WINDOW", self.onDeath)
         self.bind("<<Switch-Menu>>", self.switchMenu)
@@ -33,7 +40,6 @@ class App(tk.Tk):
 
         self.page = 'MainMenu'
         self.gameOpts = { 'difficulty': 0.1, 'fieldsize-name': 0 }
-        self.appOpts = { 'colorscheme': COLORS.schemeName, 'language': 'English' }
 
         COLORS.setTheme(self.appOpts['colorscheme'])
         self.configure(bg=COLORS['main'],)
@@ -46,11 +52,27 @@ class App(tk.Tk):
         # print('App is dying')
         self.destroy()
 
+    def setFullscreen(self):
+        screenWidth = self.winfo_screenwidth()
+        screenHeight = self.winfo_screenheight()
+        self.appOpts['resolution'] = f'{screenWidth}x{screenHeight}'
+        self.attributes('-fullscreen', True)
+
     def onSettingsSave(self, event):
         """Save settings given from menu."""
-        self.appOpts['colorscheme'] = event.data['colorscheme']
+        self.appOpts = event.data
+
         COLORS.setTheme(self.appOpts['colorscheme'])
         self.configure(bg=COLORS['main'])
+
+        if self.appOpts['resolution'] == 'True':
+            self.setFullscreen()
+        self.geometry(self.appOpts['resolution'])
+        self.width, self.height = map(int, event.data['resolution'].split('x'))
+
+        self.config['settings'] = self.appOpts
+        with open('config.ini', 'w') as configFile:
+            self.config.write(configFile)
 
     def onGameInit(self, event):
         """Init game with given options by menu."""

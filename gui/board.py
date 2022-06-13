@@ -3,7 +3,7 @@
 import tkinter as tk
 from util import loadImage, Coord, Point, dotdict
 from math import sqrt
-from .hexagon import Hexagon
+from .hexagon import Hexagon, COEF
 from .colors import COLORS
 
 
@@ -22,14 +22,12 @@ class Board:
         """Create board of given size (rows/cols) and height/width percent."""
         self.app = app
 
-        # self.width = app.winfo_width() * width
-        # self.height = app.winfo_height() * height
         self.width = self.app.width * width
         self.height = self.app.height * height
 
         size += size % 2
-        if size < 8:
-            raise ValueError('Only sizes 8 and more allowed')
+        # if size < 8:
+            # raise ValueError('Only sizes 8 and more allowed')
 
         self.topleft = Coord(10, 10)
         self.cols, self.rows = size + 2, size
@@ -41,10 +39,10 @@ class Board:
         if woh == 'h':
             self.hexLength -= self.hexLength * (4 / 3) / self.rows
         else:
-            self.hexLength += self.hexLength * (4 / 3) / self.cols
+            self.hexLength -= self.hexLength * (1 / COEF) / self.cols
 
         hexWidth, _ = Hexagon.getDimensions(self.hexLength)
-        actualWidth = (self.cols - 1) * hexWidth - self.cols
+        actualWidth = (self.cols - 2) * hexWidth
         self.topleft.x = (self.width - actualWidth) / 2
 
         self.resources = {}
