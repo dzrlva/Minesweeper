@@ -9,7 +9,7 @@ def _(string):
     global _ru, _eng
     if LANGUAGE == "Russian":
         return _ru(string)
-    return _eng(string)
+    return string
 
 
 def setLang(language):
@@ -23,6 +23,4 @@ if "LANGUAGE" not in globals():
     ruTrans = gettext.translation(
         "messages", resources.translation, languages=("ru",)
     )
-    engTrans = gettext.translation("messages", resources.translation, fallback=True)
     _ru = ruTrans.gettext
-    _eng = engTrans.gettext
