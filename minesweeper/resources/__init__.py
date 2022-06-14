@@ -21,7 +21,7 @@ font = setResource(RSCPATH, 'fonts/Purisa_Bold.ttf')
 
 # gui/board releated
 flag = setImage('flag.png')
-explosion = setImage('explosion1.gif')
+explosion = setResource(RSCPATH, 'animations/explosion1.gif')
 bomb = setImage('bomb.png')
 
 statFolder = setResource(PKGHOME, 'stat')
