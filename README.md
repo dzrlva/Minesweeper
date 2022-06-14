@@ -37,6 +37,7 @@ easy/medium/hard/extra hard.
 
 ### Запуск
 Требования: Python version > 3.9
+
 Запуск игры:
 ```sh
 python3 -m minesweeper
