@@ -38,6 +38,7 @@ easy/medium/hard/extra hard.
 ### Сборка
 - Для запуска тестов: `doit test`
 - Для создания sphinx документации: `doit html`
+- Сборка wheel `python3 -m build -w .`
 
 ### Запуск
 Требования: Python version > 3.9
