@@ -35,6 +35,10 @@ easy/medium/hard/extra hard.
 
 Далее игра начинается!
 
+### Сборка
+- Для запуска тестов: `doit test`
+- Для создания sphinx документации: `doit html`
+
 ### Запуск
 Требования: Python version > 3.9
 
