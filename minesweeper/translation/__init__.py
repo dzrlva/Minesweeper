@@ -6,7 +6,7 @@ import minesweeper.resources as resources
 
 
 def _(string):
-    global _ru, _eng
+    global _ru
     if LANGUAGE == "Russian":
         return _ru(string)
     return string
