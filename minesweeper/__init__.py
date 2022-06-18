@@ -5,7 +5,7 @@ from minesweeper.cli.menu import startmenu
 
 
 def main(mode='gui'):
-    """Main function for the game."""
+    """Run the game."""
     if mode == 'cli':
         startmenu()
     elif mode == 'gui':

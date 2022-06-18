@@ -1,11 +1,14 @@
+"""Module to handle proper resources initialization."""
 import os
 
 
 def setResource(root, path):
+    """Set resource by it's name."""
     return os.path.join(root, *path.split('/'))
 
 
 def setImage(path):
+    """Set image path by it's name."""
     global IMGPATH
     return setResource(IMGPATH, path)
 
