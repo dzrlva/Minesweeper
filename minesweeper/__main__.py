@@ -1,10 +1,6 @@
-"""Main file to start the APP."""
-
-import sys
+"""Start game as a module."""
 from argparse import ArgumentParser
-from minesweeper.gui.app import App as GUIAPP
-from minesweeper.cli.menu import startmenu
-
+from minesweeper import main
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -19,8 +15,4 @@ if __name__ == "__main__":
         help="command line interface of minesweaper",
     )
     args = parser.parse_args()
-    if args.cli:
-        startmenu()
-    else:
-        GUIAPP().mainloop()
-    sys.exit(0)
+    main('cli' if args.cli else 'gui')

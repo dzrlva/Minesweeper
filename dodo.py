@@ -16,7 +16,9 @@ def task_html():
 
 def task_test():
     """Test Module."""
-    pass
+    return {
+            'actions': ['python3 -m unittest discover tests']
+           }
 
 
 def task_pot():

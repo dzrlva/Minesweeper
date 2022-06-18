@@ -1,7 +1,6 @@
 """Module that draws the game board."""
 
 import tkinter as tk
-import os
 from minesweeper.util import loadImage, Coord, Point, dotdict
 from math import sqrt
 from .hexagon import Hexagon, COEF

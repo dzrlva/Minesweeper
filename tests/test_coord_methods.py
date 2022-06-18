@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 #from coord import Coord
 
 
-from util import coord
+from minesweeper.util import coord
 
 
 class TestMock(unittest.TestCase):

@@ -1,7 +1,6 @@
 """Main GUI module that draw all the game attributes."""
 
 import tkinter as tk
-import os
 from .game import Game
 from .colors import COLORS
 from .events import EventMaster
